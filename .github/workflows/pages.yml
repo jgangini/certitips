@@ -21,7 +21,7 @@ jobs:
           metadata = json.loads((root / 'release.json').read_text(encoding='utf-8'))
           assert metadata['schemaVersion'] == 1
           assert re.fullmatch(r'[a-z0-9][a-z0-9._-]{0,119}', metadata['releaseId'])
-          allowed = {'.gitattributes', 'release.json', '.github/workflows/pages.yml'}
+          allowed = {'.gitattributes', 'README.md', 'release.json', '.github/workflows/pages.yml'}
           files = []
           for file in sorted(root.rglob('*'), key=lambda item: item.as_posix()):
               parts = file.parts
