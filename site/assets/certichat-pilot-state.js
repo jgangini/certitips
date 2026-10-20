@@ -1,5 +1,5 @@
-import { indexGraph } from './certichat-explorer.js?v=845612f31882';
-import { normalizeTrace } from './certichat-trace.js?v=845612f31882';
+import { indexGraph } from './certichat-explorer.js?v=34550d9fa378';
+import { normalizeTrace } from './certichat-trace.js?v=34550d9fa378';
 
 export const collectionIds = ['certitips', 'certitube', 'certisearch'];
 export const pilotColors = { certitips: '#c74634', certitube: '#0d65ad', certisearch: '#2e7d32', unknown: '#747680' };

@@ -25,7 +25,7 @@ jobs:
           files = []
           for file in sorted(root.rglob('*'), key=lambda item: item.as_posix()):
               parts = file.parts
-              if '.git' in parts:
+              if parts[0] == '.git':
                   continue
               assert not file.is_symlink(), f'Symlink refused: {file}'
               if not file.is_file():
@@ -35,8 +35,10 @@ jobs:
               if name in allowed:
                   continue
               relative = file.relative_to('site').as_posix()
+              assert relative in ('index.html', '404.html', '.nojekyll') or pathlib.PurePosixPath(relative).parts[0] in ('assets', 'es', 'en', 'pt', 'it'), f'Non-canonical site root: {relative}'
+              assert not any(part.lower() in ('quarantine', 'cuarentena', 'output', 'outputs', 'releases') for part in pathlib.PurePosixPath(relative).parts), f'Private artifact directory: {relative}'
               permitted = relative in ('.nojekyll', 'assets/oci/NOTICE.md') or (not any(part.startswith('.') for part in pathlib.PurePosixPath(relative).parts) and re.search(r'\.(html|css|js|json|svg|png|jpe?g|webp|ico|woff2?|mp4|txt)$', relative))
-              assert permitted, f'Non-public payload: {relative}'
+              assert permitted and not re.match(r'^(scripts|services|tests|data|node_modules|output|outputs|dist|graphify-out|hostinger-vps|publication)/', relative), f'Non-public payload: {relative}'
               files.append({'path': relative, 'size': file.stat().st_size, 'sha256': hashlib.sha256(file.read_bytes()).hexdigest()})
           assert files and any(item['path'] == 'index.html' for item in files)
           assert files == metadata['site']['files'], 'Missing, extra, or altered site files'

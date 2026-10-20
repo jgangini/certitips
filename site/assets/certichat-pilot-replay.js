@@ -1,4 +1,4 @@
-import { collectionIds, pilotNodeCollections } from './certichat-pilot-state.js?v=845612f31882';
+import { collectionIds, pilotNodeCollections } from './certichat-pilot-state.js?v=34550d9fa378';
 
 // Core first, staggered feelers; on exit retract before fading the core.
 export function pilotSpiderEnvelope(elapsed, closing = false) {

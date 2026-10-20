@@ -1,15 +1,15 @@
-import { navigateSite } from "./site-navigation.js?v=845612f31882";
-import { t, locale, language, localizedURL, siteBase } from "./i18n.js?v=845612f31882";
-import { readStored, writeStored } from "./storage.js?v=845612f31882";
-import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./certichat-trace.js?v=845612f31882";
-import { installVoiceChatControls } from "./certivoice-chat.js?v=845612f31882";
-import { performVoiceAction, voiceContext, voicePageURL } from "./certivoice-actions.js?v=845612f31882";
-import { activityTrail, validActivityTrail } from "./certichat-activity.js?v=845612f31882";
-import { getSearchAdvisor, isSearchPage, registerChatTransport } from "./certisearch-client.js?v=845612f31882";
-import { readChatStream } from "./certichat-stream.js?v=845612f31882";
-import { watchChatPresentation } from './certichat-presentation.js?v=845612f31882';
-import { createChatAnnotation, chatAnnotationStyles } from './certichat-annotation.js?v=845612f31882';
-export { safeSourceURL } from "./certichat-trace.js?v=845612f31882";
+import { navigateSite } from "./site-navigation.js?v=34550d9fa378";
+import { t, locale, language, localizedURL, siteBase } from "./i18n.js?v=34550d9fa378";
+import { readStored, writeStored } from "./storage.js?v=34550d9fa378";
+import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./certichat-trace.js?v=34550d9fa378";
+import { installVoiceChatControls } from "./certivoice-chat.js?v=34550d9fa378";
+import { performVoiceAction, voiceContext, voicePageURL } from "./certivoice-actions.js?v=34550d9fa378";
+import { activityTrail, validActivityTrail } from "./certichat-activity.js?v=34550d9fa378";
+import { getSearchAdvisor, isSearchPage, registerChatTransport } from "./certisearch-client.js?v=34550d9fa378";
+import { readChatStream } from "./certichat-stream.js?v=34550d9fa378";
+import { watchChatPresentation } from './certichat-presentation.js?v=34550d9fa378';
+import { createChatAnnotation, chatAnnotationStyles } from './certichat-annotation.js?v=34550d9fa378';
+export { safeSourceURL } from "./certichat-trace.js?v=34550d9fa378";
 
 const escapeChat = text => String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const responseIdPattern = /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -452,7 +452,7 @@ if (root) {
 
   async function initialize() {
     if (!chat) {
-      await import("./deep-chat.js?v=845612f31882");
+      await import("./deep-chat.js?v=34550d9fa378");
       window.remarkable_plugins = [{ plugin: markdown => configureChatMarkdown(markdown, root.dataset.siteRoot) }];
       chat = document.createElement("deep-chat");
       chat.chatStyle = { border: "none", width: "100%", height: "100%", backgroundColor: "var(--paper)", color: "var(--ink)", fontFamily: "inherit" };

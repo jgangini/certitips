@@ -1,14 +1,13 @@
-import { installPageNavigation, navigateSite } from "./site-navigation.js?v=845612f31882";
-import { t, locale, localizedURL, siteBase } from "./i18n.js?v=845612f31882";
-import { readStored, writeStored } from "./storage.js?v=845612f31882";
-import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt } from "./site-search.js?v=845612f31882";
+import { installPageNavigation, navigateSite } from "./site-navigation.js?v=34550d9fa378";
+import { t, locale, localizedURL, siteBase } from "./i18n.js?v=34550d9fa378";
+import { readStored, writeStored } from "./storage.js?v=34550d9fa378";
+import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt } from "./site-search.js?v=34550d9fa378";
 
-// Explicit locale paths take priority; legacy entry links can recall the last choice.
-if (!/^(?:es|en|pt|it)\//.test(location.pathname.slice(siteBase.length))) {
-  try {
-    const preferred = localStorage.getItem('certitips:locale');
-    if (['es', 'en', 'pt', 'it'].includes(preferred)) location.replace(localizedURL(location.href, preferred));
-  } catch { /* URLs remain usable without storage. */ }
+// The root entry recalls a language; missing routes are handled by the 404 allowlist.
+if (/^(?:index\.html)?$/.test(location.pathname.slice(siteBase.length))) {
+  let preferred = 'es';
+  try { const saved = localStorage.getItem('certitips:locale'); if (['es', 'en', 'pt', 'it'].includes(saved)) preferred = saved; } catch { /* Storage is optional. */ }
+  location.replace(localizedURL(location.href, preferred));
 }
 
 function mountNavigation(signal) {

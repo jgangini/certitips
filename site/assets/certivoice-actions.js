@@ -1,6 +1,6 @@
-import { t, canonicalURL, localizedURL, siteBase } from "./i18n.js?v=845612f31882";
-import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./certivoice-practice.js?v=845612f31882";
-import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./certivoice-study.js?v=845612f31882";
+import { t, canonicalURL, localizedURL, siteBase } from "./i18n.js?v=34550d9fa378";
+import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./certivoice-practice.js?v=34550d9fa378";
+import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./certivoice-study.js?v=34550d9fa378";
 
 function nextPresentationSlide(doc) {
   const slides = [...doc.querySelectorAll('#diagram-viewer[open].is-presenting .diagram-presentation-nav button[data-slide-number][data-source-id]')];

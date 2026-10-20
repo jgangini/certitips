@@ -1,4 +1,4 @@
-import { t, locale } from './i18n.js?v=845612f31882';
+import { t, locale } from './i18n.js?v=34550d9fa378';
 const app = document.querySelector('#app');
 const apiOrigin = document.querySelector('.certiquiz-app').dataset.apiOrigin;
 const siteBase = document.body.dataset.base;

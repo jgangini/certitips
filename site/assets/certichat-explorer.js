@@ -1,6 +1,6 @@
-import { t, locale, language, localizedURL, canonicalURL, siteBase } from "./i18n.js?v=845612f31882";
-import { createNetwork, videoEvidence } from "./certichat-network.js?v=845612f31882";
-import { normalizeTrace, readTrace, sourcePath } from "./certichat-trace.js?v=845612f31882";
+import { t, locale, language, localizedURL, canonicalURL, siteBase } from "./i18n.js?v=34550d9fa378";
+import { createNetwork, videoEvidence } from "./certichat-network.js?v=34550d9fa378";
+import { normalizeTrace, readTrace, sourcePath } from "./certichat-trace.js?v=34550d9fa378";
 
 export function indexGraph(data) {
   if (!data || !Array.isArray(data.nodes) || !Array.isArray(data.edges)) throw new Error("Invalid knowledge graph");

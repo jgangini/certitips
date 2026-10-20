@@ -1,6 +1,6 @@
-import { t, language, siteBase } from './i18n.js?v=845612f31882';
-import { relevantQuestions } from './certisearch-case.js?v=845612f31882';
-import { architectureLayouts, architectureOverview, connectorPath, connectionLabel, serviceLayer, segments } from './certisearch-architecture.js?v=845612f31882';
+import { t, language, siteBase } from './i18n.js?v=34550d9fa378';
+import { relevantQuestions } from './certisearch-case.js?v=34550d9fa378';
+import { architectureLayouts, architectureOverview, connectorPath, connectionLabel, serviceLayer, segments } from './certisearch-architecture.js?v=34550d9fa378';
 
 export const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 export const money = (value, currency, unitPrice=false) => value === null || value === undefined ? t('Pendiente') : new Intl.NumberFormat(language, { style: 'currency', currency, ...(unitPrice?{maximumFractionDigits:8}:{}) }).format(Number(value));

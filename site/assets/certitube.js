@@ -1,4 +1,4 @@
-import { t, language } from './i18n.js?v=845612f31882';
+import { t, language } from './i18n.js?v=34550d9fa378';
 let youtubeReady;
 
 function loadYouTube() {

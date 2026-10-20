@@ -1,11 +1,11 @@
 import * as THREE from './vendor/three/three.module.js';
 import { OrbitControls } from './vendor/three/OrbitControls.js';
-import { collectionIds, pilotLayout, pilotNodeCollections, pilotNodeCollection, pilotSourceZone, pilotColors } from './certichat-pilot-state.js?v=845612f31882';
-import { pilotCameraStep, pilotFrame, pilotResultCluster } from './certichat-pilot-camera.js?v=845612f31882';
-import { createPilotMotion, pilotWorldPixel } from './certichat-pilot-motion.js?v=845612f31882';
-import { buildPilotReplay, pilotReplayFrame, pilotPresentationFrame, pilotQueryFrame } from './certichat-pilot-replay.js?v=845612f31882';
-import { createPilotSpider } from './certichat-pilot-spider.js?v=845612f31882';
-import { createPilotHighlight } from './certichat-pilot-highlight.js?v=845612f31882';
+import { collectionIds, pilotLayout, pilotNodeCollections, pilotNodeCollection, pilotSourceZone, pilotColors } from './certichat-pilot-state.js?v=34550d9fa378';
+import { pilotCameraStep, pilotFrame, pilotResultCluster } from './certichat-pilot-camera.js?v=34550d9fa378';
+import { createPilotMotion, pilotWorldPixel } from './certichat-pilot-motion.js?v=34550d9fa378';
+import { buildPilotReplay, pilotReplayFrame, pilotPresentationFrame, pilotQueryFrame } from './certichat-pilot-replay.js?v=34550d9fa378';
+import { createPilotSpider } from './certichat-pilot-spider.js?v=34550d9fa378';
+import { createPilotHighlight } from './certichat-pilot-highlight.js?v=34550d9fa378';
 
 function blendZoneColor(zones, colors, key, value) {
   const matches = zones.filter(zone => zone[key].has(value));

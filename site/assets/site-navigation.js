@@ -1,4 +1,4 @@
-import { t, siteBase, prepareLocale } from "./i18n.js?v=845612f31882";
+import { t, siteBase, prepareLocale } from "./i18n.js?v=34550d9fa378";
 
 let navigate;
 export function navigateSite(url, options) { return navigate ? navigate(url, options) : Promise.resolve(false); }
@@ -11,11 +11,11 @@ function supportedURL(value) {
 }
 async function pageModules(doc) {
   const mounts = [];
-  if (doc.querySelector('#quiz')) mounts.push((await import('./quiz.js?v=845612f31882')).mountQuiz);
-  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('./certitube.js?v=845612f31882')).mountTube);
-  if (doc.querySelector('[data-knowledge-graph]')) mounts.push((await import('./certichat-explorer.js?v=845612f31882')).mountExplorer);
-  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('./certichat-pilot.js?v=845612f31882')).mountGraphPilot);
-  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('./certisearch.js?v=845612f31882')).mountSearch);
+  if (doc.querySelector('#quiz')) mounts.push((await import('./quiz.js?v=34550d9fa378')).mountQuiz);
+  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('./certitube.js?v=34550d9fa378')).mountTube);
+  if (doc.querySelector('[data-knowledge-graph]')) mounts.push((await import('./certichat-explorer.js?v=34550d9fa378')).mountExplorer);
+  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('./certichat-pilot.js?v=34550d9fa378')).mountGraphPilot);
+  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('./certisearch.js?v=34550d9fa378')).mountSearch);
   return mounts;
 }
 async function stylesFor(doc, signal) {

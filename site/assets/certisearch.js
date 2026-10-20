@@ -1,10 +1,10 @@
-import { t, locale, siteBase } from './i18n.js?v=845612f31882';
-import { createCase, validateCase, parseCase, reviseCase, stamp, applyProposal, applyEstimate, restoreOracleEstimate, canRetryRequest, assertCurrentResponse, stageIssues, recordStageReview, caseStorage, downloadJSON } from './certisearch-case.js?v=845612f31882';
-import { esc, caseView, architectureView, estimateView, stagesView, reportView, sourceLinks, oracleChangesView, proposalReview } from './certisearch-view.js?v=845612f31882';
-import { mountDecks } from './certisearch-deck.js?v=845612f31882';
-import { setSearchAdvisor, refreshSearchChat, searchRequest } from './certisearch-client.js?v=845612f31882';
-import { mountChapterScroll } from './certitube.js?v=845612f31882';
-import { appendMeetingText } from './certisearch-meeting.js?v=845612f31882';
+import { t, locale, siteBase } from './i18n.js?v=34550d9fa378';
+import { createCase, validateCase, parseCase, reviseCase, stamp, applyProposal, applyEstimate, restoreOracleEstimate, canRetryRequest, assertCurrentResponse, stageIssues, recordStageReview, caseStorage, downloadJSON } from './certisearch-case.js?v=34550d9fa378';
+import { esc, caseView, architectureView, estimateView, stagesView, reportView, sourceLinks, oracleChangesView, proposalReview } from './certisearch-view.js?v=34550d9fa378';
+import { mountDecks } from './certisearch-deck.js?v=34550d9fa378';
+import { setSearchAdvisor, refreshSearchChat, searchRequest } from './certisearch-client.js?v=34550d9fa378';
+import { mountChapterScroll } from './certitube.js?v=34550d9fa378';
+import { appendMeetingText } from './certisearch-meeting.js?v=34550d9fa378';
 
 export async function mountSearch(signal) {
   const root=document.querySelector('[data-certisearch]');

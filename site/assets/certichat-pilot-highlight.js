@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three/three.module.js';
-import { collectionIds, pilotColors, pilotSourceZone } from './certichat-pilot-state.js?v=845612f31882';
+import { collectionIds, pilotColors, pilotSourceZone } from './certichat-pilot-state.js?v=34550d9fa378';
 
 // The overlay contains only existing members/edges; it never strengthens grey context.
 export function createPilotHighlight(scene) {

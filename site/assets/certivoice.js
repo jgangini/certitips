@@ -1,13 +1,13 @@
-import { navigateSite } from "./site-navigation.js?v=845612f31882";
-import { t, locale, language, canonicalURL, localizedURL, siteBase } from "./i18n.js?v=845612f31882";
-import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./certivoice-audio.js?v=845612f31882";
-import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./certivoice-actions.js?v=845612f31882";
-import { diagramPointer } from "./certivoice-pointer.js?v=845612f31882";
-import { clearVoiceHighlight } from "./certivoice-study.js?v=845612f31882";
-import { activityTrail } from "./certichat-activity.js?v=845612f31882";
-import { voiceDiagnostics } from "./certivoice-telemetry.js?v=845612f31882";
-import { getSearchAdvisor } from "./certisearch-client.js?v=845612f31882";
-import { MeetingAudioBuffer, MEETING_DURATION, MEETING_REVIEW_INTERVAL } from "./certisearch-meeting.js?v=845612f31882";
+import { navigateSite } from "./site-navigation.js?v=34550d9fa378";
+import { t, locale, language, canonicalURL, localizedURL, siteBase } from "./i18n.js?v=34550d9fa378";
+import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./certivoice-audio.js?v=34550d9fa378";
+import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./certivoice-actions.js?v=34550d9fa378";
+import { diagramPointer } from "./certivoice-pointer.js?v=34550d9fa378";
+import { clearVoiceHighlight } from "./certivoice-study.js?v=34550d9fa378";
+import { activityTrail } from "./certichat-activity.js?v=34550d9fa378";
+import { voiceDiagnostics } from "./certivoice-telemetry.js?v=34550d9fa378";
+import { getSearchAdvisor } from "./certisearch-client.js?v=34550d9fa378";
+import { MeetingAudioBuffer, MEETING_DURATION, MEETING_REVIEW_INTERVAL } from "./certisearch-meeting.js?v=34550d9fa378";
 
 const root = typeof document === "undefined" ? null : document.querySelector("[data-certivoice]");
 if (root) {

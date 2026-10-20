@@ -1,5 +1,5 @@
-import { t } from "./i18n.js?v=845612f31882";
-import { voiceContext } from "./certivoice-actions.js?v=845612f31882";
+import { t } from "./i18n.js?v=34550d9fa378";
+import { voiceContext } from "./certivoice-actions.js?v=34550d9fa378";
 
 export function installVoiceChatControls(chat) {
   let state = { enabled: false, active: false, muted: false }, requestBusy = false;
