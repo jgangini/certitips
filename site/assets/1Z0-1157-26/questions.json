@@ -1,0 +1,1322 @@
+[
+  {
+    "id": "agentic-quiz-01",
+    "domain": "oci-enterprise",
+    "question": "¿Qué es la memoria a corto plazo en OCI Enterprise AI Agents?",
+    "options": [
+      {
+        "id": "a",
+        "text": "El estado de la conversación conservado durante varios turnos dentro de una sesión.",
+        "explanation": "La memoria a corto plazo mantiene el contexto activo de la conversación durante una sesión para que el agente pueda hacer referencia a intercambios anteriores."
+      },
+      {
+        "id": "b",
+        "text": "Una caché de embeddings utilizada por los flujos de recuperación.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "La RAM asignada a un contenedor en ejecución.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Una copia de seguridad de los pesos del modelo.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "a",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "plataforma-y-bloques-de-construccion",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-02",
+    "domain": "openai",
+    "question": "¿Cuándo es el patrón Manager (agente como herramienta) una mejor opción que Handoffs?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Cuando se necesita exactamente un agente especialista disponible para gestionar todas las subtareas de conversación delegadas.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Cuando se necesitan flujos de procesamiento por lotes sin conexión, sin ninguna interacción activa con el usuario ni conversación.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Cuando se necesita una orquestación centralizada mientras se delegan subtareas especializadas a agentes de trabajo.",
+        "explanation": "El patrón Manager (agente como herramienta) se adapta a los escenarios en los que el usuario debe sentir que habla con un único asistente. El gestor mantiene el control de la conversación y delega discretamente subtareas a agentes de trabajo especializados, lo que resulta ideal para una orquestación compleja con una voz coherente."
+      },
+      {
+        "id": "d",
+        "text": "Cuando se necesita que los agentes especialistas asuman de forma independiente todo el flujo de conversación con el usuario.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "openai",
+      "anchor": "handoffs-y-responsabilidad",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-03",
+    "domain": "oci-enterprise",
+    "question": "¿Cuál es el formato de empaquetado estándar para desplegar una aplicación de agente alojada en OCI Enterprise AI Agents?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Una imagen de contenedor compatible con Docker en OCI Container Registry.",
+        "explanation": "Las aplicaciones de agentes alojadas se empaquetan como imágenes de contenedor, se cargan en OCI Container Registry (OCIR) y se despliegan en una infraestructura de ejecución gestionada por OCI."
+      },
+      {
+        "id": "b",
+        "text": "Un PDF cargado en Object Storage.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Un archivo Java (JAR) independiente distribuido por correo electrónico.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Un archivo WAR desplegado en un servidor de aplicaciones.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "a",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "desplegar-y-escalar",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-04",
+    "domain": "oci-enterprise",
+    "question": "¿Qué recurso de OCI se necesita antes de utilizar las API de OCI Enterprise AI Agents?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Una máquina virtual dedicada",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Una tenencia de OCI independiente",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Un Generative AI Project",
+        "explanation": "Respuesta correcta: Las solicitudes de OCI Enterprise AI se circunscriben a un Generative AI Project, que organiza conversaciones, archivos, memoria, almacenes vectoriales y recursos de IA relacionados."
+      },
+      {
+        "id": "d",
+        "text": "Un clúster de Kubernetes",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "primeros-pasos-verificados",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-05",
+    "domain": "oci-enterprise",
+    "question": "¿Por qué se necesita un entorno de ejecución gestionado además de un framework de agentes como LangChain o el OpenAI Agents SDK?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Las aplicaciones de IA en producción están obligadas a utilizar entornos de ejecución gestionados por motivos de cumplimiento.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Los frameworks de agentes se centran en los prompts y no pueden gestionar de forma independiente los requisitos de infraestructura de producción.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Los entornos de ejecución gestionados generan automáticamente prompts, herramientas y flujos de trabajo para los agentes de IA conversacional.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Los frameworks de agentes proporcionan la lógica del agente, mientras que los entornos de ejecución gestionan el escalado, el estado, las integraciones y la observabilidad.",
+        "explanation": "Los frameworks de agentes proporcionan principalmente la lógica de razonamiento y orquestación. Los despliegues en producción requieren, además: endpoints de API, autenticación, escalado, gestión de sesiones, aislamiento de herramientas en entornos restringidos (sandboxing), registro y observabilidad, y operaciones de infraestructura."
+      }
+    ],
+    "correctOption": "d",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "conceptos-clave",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-06",
+    "domain": "oracle-database",
+    "question": "¿Cómo suele empaquetarse y desplegarse Oracle AI Database Private Agent Factory?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Como una aplicación de Oracle Forms.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Únicamente como un instalador de escritorio de Windows.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Como una aplicación en contenedores que utiliza Podman y Podman Compose.",
+        "explanation": "Oracle AI Database Private Agent Factory se empaqueta como una aplicación en contenedores que utiliza Podman y Podman Compose. La documentación de Oracle describe tanto despliegues en producción como entornos de inicio rápido que utilizan modelos de despliegue basados en contenedores."
+      },
+      {
+        "id": "d",
+        "text": "Como un dispositivo de hardware incluido con Oracle Exadata.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "private-agent-factory",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-07",
+    "domain": "oci-enterprise",
+    "question": "Al utilizar el OpenAI SDK con la OCI Responses API, ¿qué cambios de configuración se necesitan?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Configurar base_url de OCI, la autenticación de OCI y el contexto del proyecto de OCI Generative AI",
+        "explanation": "La integración de OCI compatible con OpenAI suele requerir: una base_url específica de OCI, una autenticación admitida por OCI y la asociación con un Generative AI Project."
+      },
+      {
+        "id": "b",
+        "text": "Cambiar el lenguaje de programación de Java a Node",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Desactivar HTTPS en el endpoint de OCI",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Sustituir el SDK por un SDK propietario de OCI",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "a",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "primeros-pasos-verificados",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-08",
+    "domain": "agents",
+    "question": "¿Qué patrón de arquitectura describe a un agente de IA basado en un LLM?",
+    "options": [
+      {
+        "id": "a",
+        "text": "LLM + interfaz + supervisión",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "LLM + herramientas + orquestación",
+        "explanation": "Un agente de IA basado en un LLM es una arquitectura que combina un LLM para el razonamiento, herramientas para acciones externas o recuperación, y una lógica de orquestación que gestiona la ejecución iterativa."
+      },
+      {
+        "id": "c",
+        "text": "LLM + ajuste fino + despliegue",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "LLM + almacenamiento vectorial + recuperación",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "agents",
+      "anchor": "componentes-y-estado",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-09",
+    "domain": "openai",
+    "question": "¿Qué hace el argumento handoffs=[math_agent, history_agent] en una definición de Agent?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Importa e inicializa módulos auxiliares adicionales durante la ejecución.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Permite transferir el control a agentes especializados cuando una solicitud del usuario coincide con su área de especialización.",
+        "explanation": "handoffs=[...] declara el conjunto de otros agentes a los que el agente actual puede transferir el control. Durante la ejecución, el agente decide si debe transferir el control a uno de ellos en función de la pregunta del usuario y del handoff_description de cada especialista."
+      },
+      {
+        "id": "c",
+        "text": "Habilita y registra la facturación por uso de varios servicios de agentes conectados.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Configura y gestiona el comportamiento del registro detallado de los componentes de agentes conectados.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "openai",
+      "anchor": "handoffs-y-responsabilidad",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-10",
+    "domain": "oracle-database",
+    "question": "¿Qué es Select AI Agent?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Un hint de SQL que acelera las consultas.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Un framework para crear y gestionar agentes autónomos.",
+        "explanation": "Select AI Agent ejecuta el bucle de orquestación dentro de la propia base de datos. Los agentes se definen y se invocan con SQL/PL/SQL (por ejemplo, DBMS_CLOUD_AI_AGENT.CREATE_AGENT) y tienen acceso directo a RAG, NL2SQL, PL/SQL personalizado y herramientas REST."
+      },
+      {
+        "id": "c",
+        "text": "Un tipo de hardware físico para cargas de trabajo de IA.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Un formato de archivo de copia de seguridad.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "select-ai-agent",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-11",
+    "domain": "oracle-database",
+    "question": "¿Qué capacidad puede utilizar Select AI Agent como herramienta integrada?",
+    "options": [
+      {
+        "id": "a",
+        "text": "RAG y flujos de trabajo de lenguaje natural a SQL.",
+        "explanation": "Select AI Agent incluye capacidades integradas como la generación aumentada por recuperación (RAG) y la conversión de lenguaje natural a SQL (NL2SQL). Los agentes pueden combinarlas con procedimientos PL/SQL personalizados y herramientas externas basadas en REST."
+      },
+      {
+        "id": "b",
+        "text": "Configuración del BIOS y diagnóstico de hardware.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Macros de hojas de cálculo y scripts de automatización de escritorio.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Flujos de trabajo de copia de seguridad en cinta y desfragmentación de discos.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "a",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "select-ai-agent",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-12",
+    "domain": "oracle-database",
+    "question": "¿Qué es un índice vectorial híbrido en Oracle AI Vector Search?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Un índice que funciona únicamente con embeddings de imágenes.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Un índice que combina la búsqueda vectorial y la búsqueda por palabras clave.",
+        "explanation": "Un índice vectorial híbrido combina la búsqueda vectorial semántica con la búsqueda tradicional de texto o palabras clave. Esto permite que las aplicaciones utilicen tanto coincidencias basadas en el significado como el filtrado por palabras clave en el mismo flujo de búsqueda."
+      },
+      {
+        "id": "c",
+        "text": "Un índice que almacena únicamente vectores cifrados.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Un índice que sustituye a todos los índices relacionales.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "vectores-y-similitud",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-13",
+    "domain": "openai",
+    "question": "En el OpenAI Agents SDK, ¿qué es un «tripwire» en el contexto de un guardrail?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Un mecanismo de limitación de la frecuencia de solicitudes aplicado por la plataforma OpenAI.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Una condición que, al activarse, genera una excepción y detiene al agente principal.",
+        "explanation": "Un tripwire es la señal de fallo de un guardrail. Cuando el guardrail devuelve GuardrailFunctionOutput(tripwire_triggered=True), el SDK genera una excepción que detiene al agente principal antes de que se realice cualquier acción insegura o se entregue una salida insegura."
+      },
+      {
+        "id": "c",
+        "text": "Un hook de registro de diagnóstico que registra cada prompt que recibe el agente.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Un tiempo de espera de red que termina la conversación si el LLM es lento.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "openai",
+      "anchor": "guardrails-y-trazas",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-14",
+    "domain": "oracle-database",
+    "question": "¿Qué transporte utiliza Autonomous AI Database MCP Server para comunicarse con los clientes MCP?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Correo electrónico/SMTP",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Streamable HTTP a través de un endpoint HTTPS",
+        "explanation": "Los clientes (Claude Desktop, OCI AI Agents, VS Code + Cline y aplicaciones personalizadas) se conectan a través de HTTPS mediante el transporte MCP streamable-http. El endpoint se expone por OCID de base de datos y se autentica mediante credenciales de la base de datos."
+      },
+      {
+        "id": "c",
+        "text": "FTP",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Emparejamiento Bluetooth",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "mcp-en-autonomous-ai-database",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-15",
+    "domain": "mcp",
+    "question": "¿Cuál es el propósito de Model Context Protocol (MCP)?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Proporcionar una interfaz estándar para que los sistemas de IA se conecten con herramientas y datos.",
+        "explanation": "MCP es un estándar abierto que ofrece a las aplicaciones de IA una forma universal de conectarse con herramientas, datos y sistemas externos de manera segura y coherente, independientemente de quién haya creado cada parte."
+      },
+      {
+        "id": "b",
+        "text": "Reemplazar los grandes modelos de IA por modelos de lenguaje ligeros más pequeños y rápidos.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Comprimir modelos de redes neuronales para desplegarlos de forma eficiente en dispositivos de computación en el borde.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Entrenar modelos de lenguaje con conjuntos de datos empresariales propietarios y datos internos del negocio.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "a",
+    "reference": {
+      "module": "mcp",
+      "anchor": "conceptos-clave",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-16",
+    "domain": "mcp",
+    "question": "Si dos servidores MCP conectados exponen el mismo nombre de herramienta, ¿cómo evitan la ambigüedad los hosts o clientes?",
+    "options": [
+      {
+        "id": "a",
+        "text": "MCP prohíbe que distintos servidores expongan herramientas con el mismo nombre.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "El LLM debe invocar ambas herramientas y comparar los resultados.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "El protocolo MCP selecciona automáticamente la herramienta correcta según la latencia del servidor.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "El host o cliente debe distinguir las herramientas según su servidor de origen.",
+        "explanation": "MCP no exige que los nombres de las herramientas sean globalmente únicos entre servidores. Los hosts o las bibliotecas cliente suelen llevar un registro del servidor del que procede cada herramienta para poder dirigir las llamadas correctamente."
+      }
+    ],
+    "correctOption": "d",
+    "reference": {
+      "module": "mcp",
+      "anchor": "conceptos-clave",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-17",
+    "domain": "openai",
+    "question": "¿Qué afirmación describe la diferencia entre la OpenAI Responses API y la Chat Completions API al recuperar el texto del asistente?",
+    "options": [
+      {
+        "id": "a",
+        "text": "El SDK de la Responses API expone response.output_text, mientras que las respuestas de Chat Completions se leen desde response.choices[0].message.content.",
+        "explanation": "En los SDK de OpenAI, response.output_text se proporciona como una propiedad de acceso que facilita obtener la salida de texto generada al agruparla. Las respuestas de Chat Completions suelen leerse desde response.choices[0].message.content."
+      },
+      {
+        "id": "b",
+        "text": "Las respuestas de Chat Completions siempre devuelven datos binarios que deben decodificarse manualmente.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Ambas API exponen la respuesta del asistente mediante response.output_text.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "La Responses API solo puede devolver JSON, mientras que Chat Completions solo puede devolver texto plano.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "a",
+    "reference": {
+      "module": "openai",
+      "anchor": "responses-y-contexto",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-18",
+    "domain": "openai",
+    "question": "En el OpenAI Agents SDK, ¿cuál es el propósito principal del campo instructions al definir un agente?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Determina qué mecanismos de protección se habilitan automáticamente.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Define el comportamiento a nivel de sistema y las directrices de funcionamiento del agente.",
+        "explanation": "El campo instructions actúa como el prompt de sistema del agente y define cómo debe comportarse, responder y priorizar las tareas. Proporciona las directrices generales de comportamiento que el modelo sigue durante todo el ciclo del agente."
+      },
+      {
+        "id": "c",
+        "text": "Especifica qué modelo de OpenAI debe utilizar el agente.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Registra las herramientas de función disponibles para el agente.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "openai",
+      "anchor": "agentes-runner-y-herramientas",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-19",
+    "domain": "oci-enterprise",
+    "question": "En una arquitectura de entorno de ejecución de agentes, ¿qué incluye la gestión de solicitudes?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Renderizar interfaces de navegador para aplicaciones y flujos de trabajo interactivos de agentes conversacionales.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Ejecutar consultas de base de datos directamente en sistemas empresariales sin soporte de middleware.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Autenticar solicitudes, enrutar las llamadas a las API e invocar a los agentes conversacionales adecuados.",
+        "explanation": "La gestión de solicitudes suele incluir: autenticación, validación de solicitudes, enrutamiento mediante una puerta de enlace de API y conversión de las solicitudes en flujos de trabajo de ejecución de agentes."
+      },
+      {
+        "id": "d",
+        "text": "Compilar el código de la aplicación en bytecode optimizado antes de que comience la ejecución.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "conceptos-clave",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-20",
+    "domain": "agents",
+    "question": "¿Qué hace que un agente de IA sea autónomo?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Sigue flujos de trabajo fijos.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Se reentrena continuamente.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Decide dinámicamente la siguiente acción.",
+        "explanation": "Los agentes de IA son autónomos porque pueden razonar sobre los objetivos y decidir qué acción realizar a continuación sin instrucciones explícitas paso a paso."
+      },
+      {
+        "id": "d",
+        "text": "Responde con respuestas predefinidas.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "agents",
+      "anchor": "conceptos-clave",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-21",
+    "domain": "oci-enterprise",
+    "question": "¿Qué aprovisiona y administra OCI para un despliegue de agentes alojado?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Conjuntos de datos de entrenamiento, trabajos de ajuste de modelos y servicios de generación automática de prompts.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Endpoints administrados, escalado del entorno de ejecución, redes, almacenamiento y servicios de autenticación.",
+        "explanation": "Los despliegues alojados en OCI proporcionan: endpoints HTTP administrados, escalado del entorno de ejecución, integración de redes, integración de autenticación y operaciones de infraestructura."
+      },
+      {
+        "id": "c",
+        "text": "GPU, controladores locales y ajustes de configuración del hardware de la estación de trabajo del desarrollador.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Dominios públicos, enrutamiento DNS y servicios externos de registro de sitios web.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "desplegar-y-escalar",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-22",
+    "domain": "oci-enterprise",
+    "question": "¿Qué capacidad de OCI Enterprise AI Agents se utiliza principalmente para la recuperación semántica de documentos?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Dedicated AI Clusters",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Function Calling",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Vector Stores API",
+        "explanation": "La Vector Stores API permite flujos de trabajo de recuperación semántica al administrar la ingesta de documentos, los embeddings, los índices vectoriales y las operaciones de búsqueda basadas en similitud."
+      },
+      {
+        "id": "d",
+        "text": "OCI Monitoring",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "plataforma-y-bloques-de-construccion",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-23",
+    "domain": "oracle-database",
+    "question": "¿Qué dos agentes predefinidos suelen incluirse de serie en Agent Factory?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Agentes de copia de seguridad y restauración.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Knowledge Agent y Data Analysis Agent.",
+        "explanation": "Knowledge Agent se encarga de la búsqueda de documentos empresariales con fuentes trazables, mientras que Data Analysis Agent convierte lenguaje natural en SQL con visualización automática. Ambos están listos para usarse antes de realizar cualquier desarrollo personalizado."
+      },
+      {
+        "id": "c",
+        "text": "Agentes de compilación y despliegue.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Agentes de correo electrónico y calendario.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "private-agent-factory",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-24",
+    "domain": "agents",
+    "question": "¿Cuál es el propósito del enrutamiento de herramientas en un agente de IA?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Almacenar puntos de control del modelo.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Comprimir el historial de conversación.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Entrenar el modelo de lenguaje.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Seleccionar y ejecutar herramientas.",
+        "explanation": "El enrutamiento de herramientas determina qué herramienta debe utilizar el agente, da formato a la solicitud y gestiona los resultados de la ejecución."
+      }
+    ],
+    "correctOption": "d",
+    "reference": {
+      "module": "agents",
+      "anchor": "componentes-y-estado",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-25",
+    "domain": "mcp",
+    "question": "¿Cuál es la función de los prompts en Model Context Protocol (MCP)?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Los prompts omiten por completo los modelos de lenguaje y se ejecutan únicamente en servidores de backend.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Los prompts son plantillas reutilizables que suelen invocarse directamente mediante interfaces de usuario.",
+        "explanation": "En MCP, los prompts se tratan como plantillas de interacción reutilizables que ayudan a guiar los flujos de trabajo de los usuarios y a estructurar las interacciones con sistemas de IA. Normalmente los invoca el usuario y están diseñados para ofrecer experiencias de conversación coherentes."
+      },
+      {
+        "id": "c",
+        "text": "Los prompts se limitan a devolver respuestas de texto plano sin salidas estructuradas.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Los prompts se cifran de forma distinta a los demás componentes e interfaces del protocolo.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "mcp",
+      "anchor": "tres-capacidades-del-servidor",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-26",
+    "domain": "oracle-database",
+    "question": "¿Qué tres categorías de herramientas puede combinar un Select AI Agent en un mismo flujo de trabajo?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Herramientas gratuitas, de pago y prémium.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Únicamente herramientas de Java, C y Python.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Herramientas integradas, procedimientos almacenados PL/SQL personalizados y servicios REST externos.",
+        "explanation": "Los agentes pueden invocar capacidades integradas (RAG sobre un índice vectorial y NL2SQL sobre esquemas aprobados), reutilizar procedimientos PL/SQL existentes y acceder a cualquier API REST encapsulada en una función PL/SQL, combinándolas libremente dentro de un mismo plan."
+      },
+      {
+        "id": "d",
+        "text": "Únicamente herramientas síncronas, asíncronas y por lotes.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "select-ai-agent",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-27",
+    "domain": "openai",
+    "question": "¿Cómo se implementa un mecanismo de protección (guardrail) en el OpenAI Agents SDK?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Como un mecanismo persistente de base de datos que valida automáticamente los registros después de cada solicitud de API completada.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Como un dispositivo dedicado de seguridad de red que filtra y valida las solicitudes entrantes de tráfico conversacional.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Como un servicio de monitorización distribuido que valida las solicitudes en múltiples despliegues regionales de infraestructura.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Como un agente auxiliar o una función de validación que comprueba las entradas o salidas y determina si debe activarse una condición de interrupción (tripwire).",
+        "explanation": "Los mecanismos de protección suelen implementarse como agentes auxiliares o funciones que inspeccionan la entrada o salida del agente y devuelven un GuardrailFunctionOutput que indica si la ejecución debe continuar."
+      }
+    ],
+    "correctOption": "d",
+    "reference": {
+      "module": "openai",
+      "anchor": "guardrails-y-trazas",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-28",
+    "domain": "langchain",
+    "question": "¿Cuál es la función de un analizador de salida (Output Parser) de LangChain?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Almacenar la memoria de la conversación de forma permanente.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Convertir las respuestas del modelo en formatos utilizables.",
+        "explanation": "Los analizadores de salida procesan las respuestas sin procesar del LLM y las convierten en formatos más depurados, como cadenas de texto, objetos JSON o datos estructurados que las aplicaciones pueden utilizar directamente."
+      },
+      {
+        "id": "c",
+        "text": "Seleccionar automáticamente el mejor proveedor de LLM.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Ejecutar API y herramientas externas.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "langchain",
+      "anchor": "bloques-reutilizables",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-29",
+    "domain": "openai",
+    "question": "¿Qué afirmación describe la compatibilidad con herramientas del OpenAI Agents SDK?",
+    "options": [
+      {
+        "id": "a",
+        "text": "El SDK solo admite herramientas basadas en funciones personalizadas de Python.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "El SDK no admite herramientas directamente.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "El SDK solo admite herramientas alojadas por OpenAI.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "El SDK admite varias categorías de herramientas.",
+        "explanation": "El Agents SDK admite varios patrones de herramientas, incluidas las herramientas alojadas por OpenAI, las herramientas basadas en funciones de Python y los agentes expuestos como herramientas invocables."
+      }
+    ],
+    "correctOption": "d",
+    "reference": {
+      "module": "openai",
+      "anchor": "agentes-runner-y-herramientas",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-30",
+    "domain": "oci-enterprise",
+    "question": "¿Cuál es la función principal de OCI Enterprise AI Models?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Gestionar las credenciales de autenticación de la tenencia para las cargas de trabajo de IA.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Proporcionar controladores de GPU de bajo nivel para las cargas de trabajo de IA.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Entrenar desde cero todos los modelos de IA de los clientes.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Proporcionar acceso administrado de inferencia a los modelos de IA compatibles.",
+        "explanation": "OCI Enterprise AI Models proporciona acceso administrado a modelos alojados, ajustados e importados compatibles, sin que los clientes tengan que gestionar directamente la infraestructura de GPU."
+      }
+    ],
+    "correctOption": "d",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "plataforma-y-bloques-de-construccion",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-31",
+    "domain": "oracle-database",
+    "question": "¿Qué conjunto de capacidades representa el soporte de Oracle AI Database para las cargas de trabajo de IA agéntica?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Procesamiento OLAP, servicios OLTP, gestión de copias de seguridad y operaciones de recuperación de bases de datos.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Servicios de almacenamiento, recursos de cómputo, gestión de redes y herramientas de administración de identidades.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Oracle AI Vector Search, Oracle AI Database Private Agent Factory, Select AI Agent y Oracle Autonomous AI Database MCP Server.",
+        "explanation": "Oracle AI Database incluye cuatro pilares para las cargas de trabajo agénticas: búsqueda vectorial nativa, una Agent Factory sin código, el framework Select AI Agent dentro de la base de datos y un MCP Server integrado, todos junto con los datos relacionales tradicionales."
+      },
+      {
+        "id": "d",
+        "text": "Herramientas de desarrollo de formularios, generación de informes, descubrimiento de datos y publicación de inteligencia empresarial.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "conceptos-clave",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-32",
+    "domain": "oracle-database",
+    "question": "¿Qué utilidades encadenables forman el flujo de texto a fragmentos y de fragmentos a embeddings?",
+    "options": [
+      {
+        "id": "a",
+        "text": "EXTRACT_TEXT → SLICE_TEXT → COMPUTE_VECTOR.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "UTL_TO_TEXT → UTL_TO_CHUNKS → UTL_TO_EMBEDDINGS.",
+        "explanation": "DBMS_VECTOR_CHAIN expone el trío UTL_TO_TEXT, UTL_TO_CHUNKS y UTL_TO_EMBEDDINGS. Pueden combinarse en una sola instrucción SQL INSERT para convertir un documento directamente en vectores de sus fragmentos."
+      },
+      {
+        "id": "c",
+        "text": "UTL_PDF → UTL_DOC → UTL_XML.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "INSERT → UPDATE → DELETE.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "workflow-de-busqueda-vectorial",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-33",
+    "domain": "mcp",
+    "question": "¿Qué hace mcp.run(transport=\"stdio\")?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Conecta el servidor MCP a un endpoint HTTPS remoto.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Desactiva la ejecución de herramientas y activa un modo que solo registra eventos.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Inicia el servidor MCP mediante el transporte STDIO.",
+        "explanation": "mcp.run(transport=\"stdio\") inicia el servidor MCP mediante el transporte STDIO para que una aplicación anfitriona pueda ejecutarlo como un subproceso e intercambiar mensajes JSON-RPC a través de stdin/stdout."
+      },
+      {
+        "id": "d",
+        "text": "Inicia un servidor HTTP local que escucha en un puerto de red.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "mcp",
+      "anchor": "conexion-mensajes-y-transporte",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-34",
+    "domain": "oracle-database",
+    "question": "¿Cuál es la función de la generación aumentada por recuperación (RAG) al fundamentar las respuestas de un agente con datos de una base de datos?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Omite las comprobaciones de seguridad de la base de datos.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Elimina automáticamente las tablas que no se utilizan.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Genera datos falsos para llenar tablas vacías.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Recupera fragmentos relevantes y se los proporciona a un LLM para elaborar su respuesta.",
+        "explanation": "RAG es el patrón estándar para fundamentar las respuestas: generar un embedding de la pregunta, ejecutar una búsqueda vectorial sobre el contenido empresarial indexado y pasar al LLM los fragmentos con mayor coincidencia como contexto para que su respuesta se base en datos reales."
+      }
+    ],
+    "correctOption": "d",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "workflow-de-busqueda-vectorial",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-35",
+    "domain": "openai",
+    "question": "Al utilizar el OpenAI Agents SDK, después de llamar a Runner.run_sync(agent, question), ¿cómo se accede a la respuesta de texto final del agente?",
+    "options": [
+      {
+        "id": "a",
+        "text": "result.choices[0].message.content",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "result.final_output",
+        "explanation": "El Agents SDK expone la respuesta final del agente mediante result.final_output, lo que evita tener que recorrer manualmente estructuras de respuesta de nivel inferior."
+      },
+      {
+        "id": "c",
+        "text": "result[\"messages\"][-1][\"text\"]",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "result.body.text",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "b",
+    "reference": {
+      "module": "openai",
+      "anchor": "agentes-runner-y-herramientas",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-36",
+    "domain": "oci-enterprise",
+    "question": "¿Qué capacidad de OCI Enterprise AI Agents permite a los modelos ejecutar código Python en un entorno aislado?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Function Calling",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "MCP Calling",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Code Interpreter",
+        "explanation": "Code Interpreter permite a un agente generar y ejecutar código Python dentro de un entorno de ejecución aislado para tareas como el análisis de datos, los cálculos y el procesamiento de archivos."
+      },
+      {
+        "id": "d",
+        "text": "File Search",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "oci-enterprise",
+      "anchor": "plataforma-y-bloques-de-construccion",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-37",
+    "domain": "agents",
+    "question": "¿Qué afirmación distingue a un chatbot, un flujo de trabajo y un agente de IA?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Los tres sistemas se basan en una lógica de ejecución y un comportamiento de respuesta idénticos.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Los agentes de IA se diferencian principalmente por admitir una mayor cantidad de integraciones externas.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Los flujos de trabajo seleccionan dinámicamente herramientas y acciones durante las interacciones en tiempo de ejecución.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Los chatbots responden a prompts, los flujos de trabajo siguen una lógica y los agentes se adaptan dinámicamente.",
+        "explanation": "Los chatbots generan principalmente respuestas a prompts, los flujos de trabajo siguen rutas de ejecución predefinidas y los agentes de IA eligen dinámicamente acciones o herramientas en función de sus objetivos y de las observaciones intermedias."
+      }
+    ],
+    "correctOption": "d",
+    "reference": {
+      "module": "agents",
+      "anchor": "conceptos-clave",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-38",
+    "domain": "oracle-database",
+    "question": "¿Qué formatos de elementos o de almacenamiento de vectores admite Oracle?",
+    "options": [
+      {
+        "id": "a",
+        "text": "FLOAT32, FLOAT64, INT8 y BINARY",
+        "explanation": "Oracle admite varios formatos de elementos para que puedas equilibrar la precisión y el almacenamiento. FLOAT32 es el formato predeterminado, FLOAT64 aporta mayor precisión, INT8 es compacto y BINARY (1 bit por dimensión) es el más compacto para algunos casos de uso."
+      },
+      {
+        "id": "b",
+        "text": "Solo BINARY de 1 bit por dimensión",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Solo INT64",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Solo FLOAT32",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "a",
+    "reference": {
+      "module": "oracle-database",
+      "anchor": "vectores-y-similitud",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-39",
+    "domain": "langchain",
+    "question": "¿Por qué son importantes las anotaciones de tipo en las herramientas de LangChain?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Permiten que las herramientas se ejecuten de forma asíncrona.",
+        "explanation": ""
+      },
+      {
+        "id": "b",
+        "text": "Mejoran el rendimiento de la inferencia en GPU.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Ayudan a generar los esquemas de parámetros de las herramientas.",
+        "explanation": "LangChain utiliza las anotaciones de tipo de Python para generar automáticamente esquemas estructurados que describen los parámetros de las herramientas. Estos esquemas ayudan al LLM a comprender qué argumentos espera cada herramienta."
+      },
+      {
+        "id": "d",
+        "text": "Cifran los argumentos enviados a las herramientas.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "c",
+    "reference": {
+      "module": "langchain",
+      "anchor": "ejemplo-paso-a-paso",
+      "label": "Repasar el concepto"
+    }
+  },
+  {
+    "id": "agentic-quiz-40",
+    "domain": "agents",
+    "question": "¿Por qué es importante la defensa en profundidad para los agentes de IA?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Varias capas reducen los riesgos de seguridad.",
+        "explanation": "La defensa en profundidad utiliza varias capas de seguridad para que las debilidades que una capa no detecte puedan ser detectadas por otra."
+      },
+      {
+        "id": "b",
+        "text": "Un modelo puede sustituir a todas las herramientas.",
+        "explanation": ""
+      },
+      {
+        "id": "c",
+        "text": "Varios prompts mejoran el razonamiento.",
+        "explanation": ""
+      },
+      {
+        "id": "d",
+        "text": "Una sola protección detiene todos los ataques.",
+        "explanation": ""
+      }
+    ],
+    "correctOption": "a",
+    "reference": {
+      "module": "agents",
+      "anchor": "seguridad-por-capas",
+      "label": "Repasar el concepto"
+    }
+  }
+]

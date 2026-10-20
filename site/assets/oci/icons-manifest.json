@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "collection": "Oracle Cloud Infrastructure icons",
+  "provider": "OCI Architecture Diagram local plugin",
+  "pluginVersion": "0.4.10",
+  "catalogFile": "assets/oci-icons/catalog.json",
+  "catalogSha256": "1bb38263e92a4a9f5c003c0a9c387ad4693b95291e8731546ce650e353a72401",
+  "iconSource": "local-svg",
+  "reviewedAt": "2026-10-19",
+  "license": {
+    "status": "No separate license or redistribution notice supplied in the reviewed local plugin bundle.",
+    "noticeFile": "assets/oci/NOTICE.md"
+  },
+  "usage": "Use as external SVG images; preserve artwork, viewBox and aspect ratio. Visible service labels provide product identity.",
+  "hashes": "sourceSha256 and sha256 hash exact bytes; normalizedSha256 normalizes CRLF to LF for Git checkout comparison.",
+  "validation": {
+    "xmlParsed": true,
+    "activeContent": false,
+    "externalReferences": false,
+    "lakehouseGeometryPreserved": true
+  },
+  "icons": [
+    {
+      "serviceId": "aidp",
+      "catalogServiceId": "oci-ai-data-platform-workbench",
+      "catalogName": "OCI AI Data Platform Workbench",
+      "localFile": "assets/oci/oci-ai-data-platform-workbench.svg",
+      "sourceFile": "assets/oci-icons/oci-ai-data-platform-workbench.svg",
+      "originalLibraryFile": "oci-ai-data-platform-workbench.svg",
+      "sourceStencil": "oci-ai-data-platform-workbench.svg",
+      "sourceSha256": "f39e3bd38d9257f17221a4b6bb7f506d4908a1b8c53c31c19c46144f88334687",
+      "sha256": "f39e3bd38d9257f17221a4b6bb7f506d4908a1b8c53c31c19c46144f88334687",
+      "normalizedSha256": "cad9e21dce00915653f9eafbbe0ce1370a90aae2d641b0fba7b5169adb4cd0c1",
+      "viewBox": "0 0 720 720",
+      "modifications": [],
+      "mappingNote": "The catalog identifies OCI AI Data Platform Workbench; the accompanying service label identifies the platform scope."
+    },
+    {
+      "serviceId": "lakehouse",
+      "catalogServiceId": "data-lakehouse",
+      "catalogName": "Data Lakehouse",
+      "localFile": "assets/oci/data-lakehouse.svg",
+      "sourceFile": "assets/oci-icons/data-lakehouse.svg",
+      "originalLibraryFile": "OCI_Icons_PNG_SVG (1)/OCI_Uploaded to OMM/Database/Data Lakehouse.svg",
+      "sourceStencil": "OCI_Database.vssx",
+      "sourceSha256": "fe5afa65d197c35e979eff3f74b52751f12706767826071affa0816240ef449d",
+      "sha256": "9bcf920a0d47cf1059dda58e8bd44a125e0c4ab4a1f326df8668041f666d63e8",
+      "normalizedSha256": "8f6b3ab79ee2203f19ac975a784396300470e50c3ed424e2ced0dcd227a13c2c",
+      "viewBox": "0 0 55.722802 44.231137",
+      "modifications": [
+        "Removed Inkscape/Sodipodi editor metadata with undeclared prefixes; no artwork changes."
+      ],
+      "mappingNote": "The catalog provides a Data Lakehouse pictogram, not an Autonomous AI Lakehouse-specific logo."
+    },
+    {
+      "serviceId": "oac",
+      "catalogServiceId": "analytics",
+      "catalogName": "Analytics",
+      "localFile": "assets/oci/analytics.svg",
+      "sourceFile": "assets/oci-icons/analytics.svg",
+      "originalLibraryFile": "Analytics.svg",
+      "sourceStencil": "OCI_Analytics_AI.vssx",
+      "sourceSha256": "76b488888af94bd1545148e428c6aae5d17c5633a4376df4e694f7b8f03b6da9",
+      "sha256": "76b488888af94bd1545148e428c6aae5d17c5633a4376df4e694f7b8f03b6da9",
+      "normalizedSha256": "570d57d9ed4df99de959a9f5e9de1699dd14f0e8f99817edd03a6ef316ce67fd",
+      "viewBox": "0 0 49.2 42",
+      "modifications": [],
+      "mappingNote": "The catalog provides the Analytics pictogram; the accompanying service label identifies Oracle Analytics Cloud."
+    },
+    {
+      "serviceId": "oke",
+      "catalogServiceId": "container-engine-for-kubernetes",
+      "catalogName": "Container Engine for Kubernetes",
+      "localFile": "assets/oci/container-engine-for-kubernetes.svg",
+      "sourceFile": "assets/oci-icons/container-engine-for-kubernetes.svg",
+      "originalLibraryFile": "Container Engine For Kubernetes.svg",
+      "sourceStencil": "OCI_Developer_Services.vssx",
+      "sourceSha256": "caf327135ba78ee28c7144de834d504426bbd4ec78efd4d127e9083e0fad8a6e",
+      "sha256": "caf327135ba78ee28c7144de834d504426bbd4ec78efd4d127e9083e0fad8a6e",
+      "normalizedSha256": "2e10cb35ad22adf1faaff2e854270d2384cee318cdd567d2fb3c9c985d276cbb",
+      "viewBox": "0 0 42 42",
+      "modifications": []
+    },
+    {
+      "serviceId": "api-gateway",
+      "catalogServiceId": "api-gateway",
+      "catalogName": "API Gateway",
+      "localFile": "assets/oci/api-gateway.svg",
+      "sourceFile": "assets/oci-icons/api-gateway.svg",
+      "originalLibraryFile": "API Gateway.svg",
+      "sourceStencil": "OCI_Developer_Services.vssx",
+      "sourceSha256": "0e394c9e47bb1ec1509d4772a75da41471f7bbc9fa32d41e138b6c930319fd51",
+      "sha256": "0e394c9e47bb1ec1509d4772a75da41471f7bbc9fa32d41e138b6c930319fd51",
+      "normalizedSha256": "2d1cb6bfc6cc456b4e2d0849ee30b5d21eb5c4e23eddc736804a3f4c8d0c5394",
+      "viewBox": "0 0 42 43.08",
+      "modifications": []
+    },
+    {
+      "serviceId": "generative-ai",
+      "catalogServiceId": "oci-generative-ai",
+      "catalogName": "OCI Generative AI",
+      "localFile": "assets/oci/oci-generative-ai.svg",
+      "sourceFile": "assets/oci-icons/oci-generative-ai.svg",
+      "originalLibraryFile": "oci-generative-ai.svg",
+      "sourceStencil": "OCI_Analytics_AI.vssx",
+      "sourceSha256": "d1b72d4385c1916c691c8113af18c616cf4e45ab61fc58d6601e2ef14c3c8619",
+      "sha256": "d1b72d4385c1916c691c8113af18c616cf4e45ab61fc58d6601e2ef14c3c8619",
+      "normalizedSha256": "93f10a1b78ec1cec3c6fde92514f7be3b2ff5162e2d5ccc132fa95b2d511d2e2",
+      "viewBox": "0 0 720 720",
+      "modifications": []
+    }
+  ]
+}

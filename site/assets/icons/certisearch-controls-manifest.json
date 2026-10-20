@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "icons": [
+    {
+      "library": "lucide",
+      "name": "trash",
+      "theme": "default",
+      "file": "lucide-trash.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/trash.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "27299f69ad7c6272be64b1b8e2d48cbd6dcf0ef0d4f92827a1affa945c91700e",
+      "sha256": "234c981c10fcc96acdbc590ba8f79e141a92293a69da1c045a83d6af006eb7c1",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "save",
+      "theme": "default",
+      "file": "lucide-save.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/save.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "ee9d56a7fec4b20dd6689546d41f68219ea8cbd67f99bd17a1bdaff5be6edb53",
+      "sha256": "cfe52715915502d6ba91044488bb2262d4241a5c5dad8822d03936ce7b33d80f",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "message-square",
+      "theme": "default",
+      "file": "lucide-message-square.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/message-square.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "5812a3be783fdcd73efd2b6026e03131e4b8c6649e7d52aa2dc7bf2e2023a59d",
+      "sha256": "3b5d542818d145a4a73c98f3c2ca148b85278af0bd87d7e56a99209813bbb6fb",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "square-dashed-mouse-pointer",
+      "theme": "default",
+      "file": "lucide-square-dashed-mouse-pointer.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/square-dashed-mouse-pointer.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "d8d8e5f243104d42d3a4b8e8928255a6da24c53cf2370d36676cd97cd6997ef9",
+      "sha256": "2e69d788f51dc5e4f90c51e933b036e4987ebd0c88e284ee899e3f84de9b82d7",
+      "license": "ISC and Feather MIT",
+      "color": null
+    }
+  ],
+  "licenseFile": "assets/icons/LICENSE-certisearch-controls.txt"
+}

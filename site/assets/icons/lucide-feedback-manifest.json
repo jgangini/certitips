@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "icons": [
+    {
+      "library": "lucide",
+      "name": "copy",
+      "theme": "default",
+      "file": "lucide-copy.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/copy.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "ea80e566c7a12628a447cb53179b19aea4f60b9143e2becd0d0f20bf260e5718",
+      "sha256": "a9333007a9f6b1e408e7e5ec9939a3f150388152b8a70971982d26b82c3db677",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "thumbs-up",
+      "theme": "default",
+      "file": "lucide-thumbs-up.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/thumbs-up.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "04cb4caea0872de431a04be01189054c9f5abb093ca8841cdde4b72cff4285b2",
+      "sha256": "f2303b31fe5550baa6b3827535d2a4b161564b5e7c9b18a7c1c964930614edb1",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "thumbs-down",
+      "theme": "default",
+      "file": "lucide-thumbs-down.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/thumbs-down.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "26464457ef4322c102808e5f046b5856ee449d0a24ec35f109cc8a2cca29ea0f",
+      "sha256": "8da4c292a7dc672d3bbfeceb23b424c0acb954845055c9c3891c17140c21cd00",
+      "license": "ISC and Feather MIT",
+      "color": null
+    }
+  ]
+}

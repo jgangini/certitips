@@ -1,0 +1,2933 @@
+{
+  "schemaVersion": 1,
+  "version": "2026-10-16.1",
+  "catalogBuild": {
+    "buildDate": "2026-10-08T14:01:56Z",
+    "buildNumber": "503",
+    "instance": "CCE-PUBLIC-PROD",
+    "realm": "public",
+    "serviceType": "paas"
+  },
+  "pricingPolicy": "public-list-without-free-tier",
+  "sources": [
+    "https://www.oracle.com/a/ocom/docs/cloudestimator2/data/products.json?ver=505",
+    "https://www.oracle.com/a/ocom/docs/cloudestimator2/data/catalog/catalogs.json?ver=505",
+    "https://docs.oracle.com/en/cloud/paas/ai-data-platform/aidug/pricing.html",
+    "https://docs.oracle.com/en-us/iaas/Content/generative-ai/pay-dedicated.htm"
+  ],
+  "profiles": [
+    {
+      "id": "aidp-cluster",
+      "serviceId": "aidp",
+      "name": "AIDP · catálogo y clúster Spark",
+      "parameters": [
+        {
+          "key": "cpuType",
+          "label": "Familia CPU",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "amd",
+              "label": "AMD"
+            },
+            {
+              "value": "arm",
+              "label": "ARM"
+            },
+            {
+              "value": "intel",
+              "label": "Intel"
+            }
+          ]
+        },
+        {
+          "key": "instances",
+          "label": "Instancias AIDP",
+          "type": "number",
+          "unit": "instancias",
+          "required": true,
+          "min": 1,
+          "max": 100
+        },
+        {
+          "key": "cpuQty",
+          "label": "OCPU por nodo Spark",
+          "type": "number",
+          "unit": "OCPU",
+          "required": true,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "key": "memoryGb",
+          "label": "RAM por nodo Spark",
+          "type": "number",
+          "unit": "GB",
+          "required": true,
+          "min": 1,
+          "max": 100000
+        },
+        {
+          "key": "workers",
+          "label": "Workers por clúster (más un driver)",
+          "type": "number",
+          "unit": "workers",
+          "required": true,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B111363"
+      ],
+      "notes": "Incluye catálogo maestro 2 OCPU AMD/32 GB por instancia a 744 h. Driver y workers comparten el tamaño indicado. Añadir Object Storage y otros consumos por separado."
+    },
+    {
+      "id": "aidp-units",
+      "serviceId": "aidp",
+      "name": "AIDP · unidades mensuales verificadas",
+      "parameters": [
+        {
+          "key": "units",
+          "label": "Unidades AIDP totales al mes",
+          "type": "number",
+          "unit": "AIDP units/mes",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        }
+      ],
+      "skus": [
+        "B111363"
+      ],
+      "notes": "Para topologías heterogéneas: total calculado incluyendo catálogo, Spark y AI Compute. No volver a multiplicar por horas."
+    },
+    {
+      "id": "lakehouse",
+      "serviceId": "lakehouse",
+      "name": "AI Lakehouse · Autonomous Serverless",
+      "parameters": [
+        {
+          "key": "license",
+          "label": "Licencia",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "included",
+              "label": "Incluida"
+            },
+            {
+              "value": "byol",
+              "label": "BYOL verificado"
+            }
+          ]
+        },
+        {
+          "key": "ecpu",
+          "label": "ECPU facturables (incluido autoescalado previsto)",
+          "type": "number",
+          "unit": "ECPU",
+          "required": true,
+          "min": 2,
+          "max": 100000
+        },
+        {
+          "key": "storageGb",
+          "label": "Almacenamiento",
+          "type": "number",
+          "unit": "GB/mes",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B95701",
+        "B95703",
+        "B95754"
+      ],
+      "notes": "Perfil ECPU Serverless. Backup, replicación, transferencia y servicios externos se dimensionan por separado. BYOL requiere elegibilidad."
+    },
+    {
+      "id": "oac-ocpu",
+      "serviceId": "oac",
+      "name": "OAC · OCPU",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B89630",
+              "label": "Oracle Analytics Cloud - Professional - OCPU · B89630"
+            },
+            {
+              "value": "B89631",
+              "label": "Oracle Analytics Cloud - Enterprise - OCPU · B89631"
+            },
+            {
+              "value": "B89636",
+              "label": "Oracle Analytics Cloud - Professional - BYOL - OCPU · B89636"
+            },
+            {
+              "value": "B89637",
+              "label": "Oracle Analytics Cloud - Enterprise - BYOL - OCPU · B89637"
+            }
+          ]
+        },
+        {
+          "key": "ocpu",
+          "label": "OCPU",
+          "type": "number",
+          "unit": "OCPU",
+          "required": true,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B89630",
+        "B89631",
+        "B89636",
+        "B89637"
+      ],
+      "notes": "Incluye 15 % de tarifa OCPU durante horas pausadas sobre un mes Oracle de 744 h. No sumar modalidad por usuario para la misma instancia."
+    },
+    {
+      "id": "oac-users",
+      "serviceId": "oac",
+      "name": "OAC · usuarios",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B92682",
+              "label": "Oracle Analytics Cloud - Professional - Users · B92682"
+            },
+            {
+              "value": "B92683",
+              "label": "Oracle Analytics Cloud - Enterprise - Users · B92683"
+            }
+          ]
+        },
+        {
+          "key": "users",
+          "label": "Usuarios",
+          "type": "number",
+          "unit": "usuarios",
+          "required": true,
+          "min": 10,
+          "max": 1000000
+        }
+      ],
+      "skus": [
+        "B92682",
+        "B92683"
+      ],
+      "notes": "Mínimo 10 usuarios; modalidad independiente de OCPU."
+    },
+    {
+      "id": "oke-managed",
+      "serviceId": "oke",
+      "name": "OKE · clúster y workers E5 Flex",
+      "parameters": [
+        {
+          "key": "clusterType",
+          "label": "Control plane",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "basic",
+              "label": "Basic"
+            },
+            {
+              "value": "enhanced",
+              "label": "Enhanced"
+            }
+          ]
+        },
+        {
+          "key": "clusters",
+          "label": "Clústeres",
+          "type": "number",
+          "unit": "clústeres",
+          "required": true,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "key": "nodes",
+          "label": "Workers por clúster",
+          "type": "number",
+          "unit": "nodos",
+          "required": true,
+          "min": 1,
+          "max": 10000
+        },
+        {
+          "key": "ocpu",
+          "label": "OCPU por worker",
+          "type": "number",
+          "unit": "OCPU",
+          "required": true,
+          "min": 1,
+          "max": 126
+        },
+        {
+          "key": "memoryGb",
+          "label": "RAM por worker",
+          "type": "number",
+          "unit": "GB",
+          "required": true,
+          "min": 1,
+          "max": 1049
+        },
+        {
+          "key": "bootVolumeGb",
+          "label": "Volumen de arranque por worker",
+          "type": "number",
+          "unit": "GB",
+          "required": true,
+          "min": 50,
+          "max": 32768
+        },
+        {
+          "key": "vpu",
+          "label": "VPU por GB de volumen",
+          "type": "number",
+          "unit": "VPU/GB",
+          "required": true,
+          "min": 0,
+          "max": 120
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "FR00012",
+        "B96545",
+        "B97384",
+        "B97385",
+        "B91961",
+        "B91962"
+      ],
+      "notes": "Incluye control plane, CPU, RAM, boot y rendimiento. Revisar además balanceadores, volúmenes persistentes, logs y red. Virtual nodes requieren perfil de control y recursos pods adicionales."
+    },
+    {
+      "id": "oke-virtual",
+      "serviceId": "oke",
+      "name": "OKE · control de Virtual Nodes",
+      "parameters": [
+        {
+          "key": "nodes",
+          "label": "Virtual nodes",
+          "type": "number",
+          "unit": "nodos",
+          "required": true,
+          "min": 1,
+          "max": 100000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B96109"
+      ],
+      "notes": "Cargo adicional al Enhanced Cluster y recursos Compute de pods; no es el coste completo de OKE."
+    },
+    {
+      "id": "api-gateway",
+      "serviceId": "api-gateway",
+      "name": "API Gateway · llamadas",
+      "parameters": [
+        {
+          "key": "requestsPerMonth",
+          "label": "Llamadas al mes",
+          "type": "number",
+          "unit": "llamadas",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        }
+      ],
+      "skus": [
+        "B92072"
+      ],
+      "notes": "Conversión a millones de llamadas una sola vez. Backend, logs y red adicionales."
+    },
+    {
+      "id": "genai-tokens",
+      "serviceId": "generative-ai",
+      "name": "Generative AI · tokens por tipo",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B111847",
+              "label": "OCI Generative AI - Google - Gemini 2.5 Pro - Input Tokens - Text, Image, Audio, and Video less than 200K input tokens · B111847"
+            },
+            {
+              "value": "B111848",
+              "label": "OCI Generative AI - Google -Gemini 2.5 Pro - Input Tokens - Text, Image, Audio, and Video greater than 200K input tokens · B111848"
+            },
+            {
+              "value": "B111849",
+              "label": "OCI Generative AI - Google - Gemini 2.5 Pro - Output Tokens - Text Output less than 200K input tokens · B111849"
+            },
+            {
+              "value": "B111850",
+              "label": "OCI Generative AI - Google - Gemini 2.5 Pro - Output Tokens - Text Output greater than 200K input tokens · B111850"
+            },
+            {
+              "value": "B111851",
+              "label": "OCI Generative AI - Google - Gemini 2.5 Flash GA - Input Tokens - Text, Image, and Video · B111851"
+            },
+            {
+              "value": "B111852",
+              "label": "OCI Generative AI - Google - Gemini 2.5 Flash GA - Input Tokens - Audio · B111852"
+            },
+            {
+              "value": "B111853",
+              "label": "OCI Generative AI - Google - Gemini 2.5 Flash GA - Output Tokens - Text · B111853"
+            },
+            {
+              "value": "B111854",
+              "label": "OCI Generative AI - Google - Gemini 2.5 Flash Lite - Input Tokens - Text, Image, and Video · B111854"
+            },
+            {
+              "value": "B111855",
+              "label": "OCI Generative AI - Google - Gemini 2.5 Flash Lite - Input Tokens - Audio · B111855"
+            },
+            {
+              "value": "B111856",
+              "label": "OCI Generative AI - Google - Gemini 2.5 Flash Lite - Output Tokens - Text · B111856"
+            },
+            {
+              "value": "B111910",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Input Tokens less than 200K Tokens · B111910"
+            },
+            {
+              "value": "B111911",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Cached Input Tokens less than 200K Tokens · B111911"
+            },
+            {
+              "value": "B112004",
+              "label": "OCI Generative AI - OpenAI - gpt-oss-120b - Input Tokens · B112004"
+            },
+            {
+              "value": "B112005",
+              "label": "OCI Generative AI - OpenAI - gpt-oss-120b - Output Tokens · B112005"
+            },
+            {
+              "value": "B112006",
+              "label": "OCI Generative AI - OpenAI - gpt-oss-20b - Input Tokens · B112006"
+            },
+            {
+              "value": "B112007",
+              "label": "OCI Generative AI - OpenAI - gpt-oss-20b - Output Tokens · B112007"
+            },
+            {
+              "value": "B112076",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Output Tokens less than 200K Tokens · B112076"
+            },
+            {
+              "value": "B112077",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Input Tokens greater than 200K Tokens · B112077"
+            },
+            {
+              "value": "B112078",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Cached Input Tokens greater than 200K Tokens · B112078"
+            },
+            {
+              "value": "B112079",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Output Tokens greater than 200K Tokens · B112079"
+            },
+            {
+              "value": "B112080",
+              "label": "OCI Generative AI - xAI - Grok 4.3 - Input Tokens less than 200K Tokens · B112080"
+            },
+            {
+              "value": "B112081",
+              "label": "OCI Generative AI - xAI - Grok 4.3 - Cached Input Tokens less than 200K Tokens · B112081"
+            },
+            {
+              "value": "B112082",
+              "label": "OCI Generative AI - xAI - Grok 4.3 - Output Tokens less than 200K Tokens · B112082"
+            },
+            {
+              "value": "B112083",
+              "label": "OCI  Generative AI - xAI - Grok 4.3 - Input Tokens greater than 200K Tokens · B112083"
+            },
+            {
+              "value": "B112084",
+              "label": "OCI Generative AI - xAI - Grok 4.3 - Cached Input Tokens greater than 200K Tokens · B112084"
+            },
+            {
+              "value": "B112085",
+              "label": "OCI Generative AI - xAI - Grok 4.3 - Output Tokens greater than 200K Tokens · B112085"
+            },
+            {
+              "value": "B112086",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 - Input Tokens Short Context · B112086"
+            },
+            {
+              "value": "B112087",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 - Cached Input Tokens Short Context · B112087"
+            },
+            {
+              "value": "B112589",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 - Output Tokens Short Context · B112589"
+            },
+            {
+              "value": "B112590",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 - Input Tokens Long Context · B112590"
+            },
+            {
+              "value": "B112591",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 - Cached Input Tokens Long Context · B112591"
+            },
+            {
+              "value": "B112592",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 - Output Tokens Long Context · B112592"
+            },
+            {
+              "value": "B112593",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 Priority - Input Tokens Short Context · B112593"
+            },
+            {
+              "value": "B112594",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 Priority - Cached Input Tokens Short Context · B112594"
+            },
+            {
+              "value": "B112595",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 Priority - Output Tokens Short Context · B112595"
+            },
+            {
+              "value": "B112596",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 Priority - Input Tokens Long Context · B112596"
+            },
+            {
+              "value": "B112597",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 Priority - Cached Input Tokens Long Context · B112597"
+            },
+            {
+              "value": "B112598",
+              "label": "OCI - Generative AI - xAI - Grok 4.6 Priority - Output Tokens Long Context · B112598"
+            },
+            {
+              "value": "B112599",
+              "label": "OCI - Generative AI - xAI - Grok 4.3 Priority - Input Tokens less than 200K Tokens · B112599"
+            },
+            {
+              "value": "B112600",
+              "label": "OCI - Generative AI - xAI - Grok 4.3 Priority - Cached Input Tokens less than 200K Tokens · B112600"
+            },
+            {
+              "value": "B112601",
+              "label": "OCI - Generative AI - xAI - Grok 4.3 Priority - Output Tokens less than 200K Tokens · B112601"
+            },
+            {
+              "value": "B112739",
+              "label": "OCI - Generative AI - xAI - Grok 4.3 Priority - Input Tokens greater than 200K Tokens · B112739"
+            },
+            {
+              "value": "B112740",
+              "label": "OCI - Generative AI - xAI - Grok 4.3 Priority - Cached Input Tokens greater than 200K Tokens · B112740"
+            },
+            {
+              "value": "B112741",
+              "label": "OCI - Generative AI - xAI - Grok 4.3 Priority - Output Tokens greater than 200K Tokens · B112741"
+            },
+            {
+              "value": "B112742",
+              "label": "OCI - Generative AI - xAI - Grok 4.2 Priority - Input Tokens less than 200K Tokens · B112742"
+            },
+            {
+              "value": "B112743",
+              "label": "OCI - Generative AI - xAI - Grok 4.2 Priority - Cached Input Tokens less than 200K Tokens · B112743"
+            },
+            {
+              "value": "B113299",
+              "label": "OCI - Generative AI - xAI - Grok 4.2 Priority - Output Tokens less than 200K Tokens · B113299"
+            },
+            {
+              "value": "B113300",
+              "label": "OCI - Generative AI - xAI - Grok 4.2 Priority - Input Tokens greater than 200K Tokens · B113300"
+            },
+            {
+              "value": "B113301",
+              "label": "OCI - Generative AI - xAI - Grok 4.2 Priority - Cached Input Tokens greater than 200K Tokens · B113301"
+            },
+            {
+              "value": "B113302",
+              "label": "OCI - Generative AI - xAI - Grok 4.2 Priority - Output Tokens greater than 200K Tokens · B113302"
+            },
+            {
+              "value": "B113303",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Input Tokens Short Context · B113303"
+            },
+            {
+              "value": "B113304",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Cached Input Tokens Short Context · B113304"
+            },
+            {
+              "value": "B113305",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Output Tokens Short Context · B113305"
+            },
+            {
+              "value": "B113306",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Input Tokens long context · B113306"
+            },
+            {
+              "value": "B113307",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Cached Input Tokens Long Context · B113307"
+            },
+            {
+              "value": "B113308",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Output Tokens Long Context · B113308"
+            },
+            {
+              "value": "B113309",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Input Tokens Short Context · B113309"
+            },
+            {
+              "value": "B113310",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Cached Input Tokens Short Context · B113310"
+            },
+            {
+              "value": "B113311",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Output Tokens Short Context · B113311"
+            },
+            {
+              "value": "B113312",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Input Tokens Long Context · B113312"
+            },
+            {
+              "value": "B113313",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Cached Input Tokens Long Context · B113313"
+            },
+            {
+              "value": "B113314",
+              "label": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Output Tokens Long Context · B113314"
+            }
+          ]
+        },
+        {
+          "key": "tokens",
+          "label": "Tokens del tipo elegido al mes",
+          "type": "number",
+          "unit": "tokens",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        }
+      ],
+      "skus": [
+        "B111847",
+        "B111848",
+        "B111849",
+        "B111850",
+        "B111851",
+        "B111852",
+        "B111853",
+        "B111854",
+        "B111855",
+        "B111856",
+        "B111910",
+        "B111911",
+        "B112004",
+        "B112005",
+        "B112006",
+        "B112007",
+        "B112076",
+        "B112077",
+        "B112078",
+        "B112079",
+        "B112080",
+        "B112081",
+        "B112082",
+        "B112083",
+        "B112084",
+        "B112085",
+        "B112086",
+        "B112087",
+        "B112589",
+        "B112590",
+        "B112591",
+        "B112592",
+        "B112593",
+        "B112594",
+        "B112595",
+        "B112596",
+        "B112597",
+        "B112598",
+        "B112599",
+        "B112600",
+        "B112601",
+        "B112739",
+        "B112740",
+        "B112741",
+        "B112742",
+        "B112743",
+        "B113299",
+        "B113300",
+        "B113301",
+        "B113302",
+        "B113303",
+        "B113304",
+        "B113305",
+        "B113306",
+        "B113307",
+        "B113308",
+        "B113309",
+        "B113310",
+        "B113311",
+        "B113312",
+        "B113313",
+        "B113314"
+      ],
+      "notes": "Crear una línea para cada tipo: entrada, salida, caché, audio o contexto. El SKU determina el modelo y tipo; no mezclar ni duplicar tokens."
+    },
+    {
+      "id": "genai-transactions",
+      "serviceId": "generative-ai",
+      "name": "Generative AI · transacciones",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B108077",
+              "label": "OCI Generative AI - Large Cohere · B108077"
+            },
+            {
+              "value": "B108078",
+              "label": "OCI Generative AI - Small Cohere · B108078"
+            },
+            {
+              "value": "B108079",
+              "label": "OCI Generative AI - Embed Cohere · B108079"
+            },
+            {
+              "value": "B108080",
+              "label": "OCI Generative AI - Large Meta · B108080"
+            },
+            {
+              "value": "B110517",
+              "label": "OCI Generative AI - Meta Llama 3.1 405B · B110517"
+            },
+            {
+              "value": "B110679",
+              "label": "OCI Generative AI - Meta Llama 3.2 90B Vision · B110679"
+            },
+            {
+              "value": "B111035",
+              "label": "OCI Generative AI - Meta Llama 4 Scout · B111035"
+            },
+            {
+              "value": "B111036",
+              "label": "OCI Generative AI - Meta Llama 4 Maverick · B111036"
+            }
+          ]
+        },
+        {
+          "key": "transactions",
+          "label": "Transacciones facturables al mes",
+          "type": "number",
+          "unit": "transacciones",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        }
+      ],
+      "skus": [
+        "B108077",
+        "B108078",
+        "B108079",
+        "B108080",
+        "B110517",
+        "B110679",
+        "B111035",
+        "B111036"
+      ],
+      "notes": "Una transacción no equivale universalmente a un token ni a una llamada. Confirmar la definición Oracle del modelo."
+    },
+    {
+      "id": "dedicated-clusters",
+      "serviceId": "generative-ai",
+      "name": "Generative AI · Dedicated AI Clusters",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B108082",
+              "label": "OCI Generative AI - Large Cohere - Dedicated · B108082"
+            },
+            {
+              "value": "B108083",
+              "label": "OCI Generative AI - Small Cohere - Dedicated · B108083"
+            },
+            {
+              "value": "B108084",
+              "label": "OCI Generative AI - Embed Cohere - Dedicated · B108084"
+            },
+            {
+              "value": "B108085",
+              "label": "OCI Generative AI - Large Meta - Dedicated · B108085"
+            },
+            {
+              "value": "B111882",
+              "label": "OCI Generative AI - Meta - Dedicated · B111882"
+            },
+            {
+              "value": "B112008",
+              "label": "OCI Generative AI - OpenAI - Dedicated · B112008"
+            },
+            {
+              "value": "B112425",
+              "label": "OCI Generative AI - Cohere - Dedicated · B112425"
+            }
+          ]
+        },
+        {
+          "key": "units",
+          "label": "AI Units por clúster verificadas para modelo/shape",
+          "type": "number",
+          "unit": "AI Units",
+          "required": true,
+          "min": 1,
+          "max": 100000
+        },
+        {
+          "key": "clusters",
+          "label": "Clústeres",
+          "type": "number",
+          "unit": "clústeres",
+          "required": true,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B108082",
+        "B108083",
+        "B108084",
+        "B108085",
+        "B111882",
+        "B112008",
+        "B112425"
+      ],
+      "notes": "Hosting: mínimo 744 AI unit-hours por clúster, aplicado sobre units × horas. Confirmar modelo, unidades, réplicas y disponibilidad regional. Sin cobro adicional de tokens de inferencia."
+    },
+    {
+      "id": "model-import",
+      "serviceId": "generative-ai",
+      "name": "Generative AI · Dedicated Model Import",
+      "parameters": [
+        {
+          "key": "gpuShape",
+          "label": "Shape GPU",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "a10",
+              "label": "VM.GPU.A10"
+            },
+            {
+              "value": "a100-40g",
+              "label": "BM.GPU.A100.40G"
+            },
+            {
+              "value": "a100-80g",
+              "label": "BM.GPU.A100.80G"
+            },
+            {
+              "value": "h100",
+              "label": "BM.GPU.H100"
+            },
+            {
+              "value": "h200",
+              "label": "BM.GPU.H200"
+            },
+            {
+              "value": "b200",
+              "label": "BM.GPU.B200.8"
+            }
+          ]
+        },
+        {
+          "key": "gpus",
+          "label": "GPU por réplica",
+          "type": "number",
+          "unit": "GPU",
+          "required": true,
+          "min": 1,
+          "max": 8
+        },
+        {
+          "key": "replicas",
+          "label": "Réplicas",
+          "type": "number",
+          "unit": "réplicas",
+          "required": true,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B111959"
+      ],
+      "notes": "Sin mínimo 744 AI unit-hours: mínimo 1 hora y conversión AI Units de GPU según catálogo. Confirmar compatibilidad modelo/shape/región. No sumar Compute GPU ni fee BYOR."
+    },
+    {
+      "id": "genai-rerank",
+      "serviceId": "generative-ai",
+      "name": "Generative AI · Rerank dedicado",
+      "parameters": [
+        {
+          "key": "clusters",
+          "label": "Clústeres",
+          "type": "number",
+          "unit": "clústeres",
+          "required": true,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B111015"
+      ],
+      "notes": "Unidad de facturación Cluster Hour, no AI Unit. Confirmar mínimo de compromiso del modelo."
+    },
+    {
+      "id": "genai-byor",
+      "serviceId": "generative-ai",
+      "name": "Generative AI · fee BYOR",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B113284",
+              "label": "OCI - Generative AI - Dedicated Model Hosting Fee - Model Import · B113284"
+            },
+            {
+              "value": "B113285",
+              "label": "OCI - Generative AI - Dedicated Model Hosting Fee - Meta · B113285"
+            },
+            {
+              "value": "B113286",
+              "label": "OCI - Generative AI - Dedicated Model Hosting Fee - OpenAI Open-Source · B113286"
+            }
+          ]
+        },
+        {
+          "key": "clusters",
+          "label": "Clústeres de hosting",
+          "type": "number",
+          "unit": "clústeres",
+          "required": true,
+          "min": 1,
+          "max": 1000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B113284",
+        "B113285",
+        "B113286"
+      ],
+      "notes": "Solo Bring Your Own Reservation: fee de 2 DAC por clúster. Añadir reserva GPU por separado; no sumar a Model Import normal."
+    },
+    {
+      "id": "aidp-complement",
+      "serviceId": "aidp",
+      "name": "Consumos complementarios · aidp",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B91628",
+              "label": "Object Storage - Storage · B91628"
+            },
+            {
+              "value": "B91627",
+              "label": "Object Storage - Requests · B91627"
+            },
+            {
+              "value": "B91961",
+              "label": "Storage - Block Volume - Storage · B91961"
+            },
+            {
+              "value": "B91962",
+              "label": "Storage - Block Volume - Performance Units · B91962"
+            },
+            {
+              "value": "B92593",
+              "label": "OCI - Logging - Storage · B92593"
+            },
+            {
+              "value": "B88327",
+              "label": "Outbound Data Transfer - Originating in North America, Europe, and UK · B88327"
+            },
+            {
+              "value": "B93455",
+              "label": "Outbound Data Transfer - Originating in APAC, Japan, and South America · B93455"
+            },
+            {
+              "value": "B93456",
+              "label": "Outbound Data Transfer - Originating in Middle East and Africa · B93456"
+            },
+            {
+              "value": "B93030",
+              "label": "Load Balancer Base · B93030"
+            },
+            {
+              "value": "B93031",
+              "label": "Load Balancer Bandwidth · B93031"
+            },
+            {
+              "value": "B97384",
+              "label": "Compute - Standard - E5 - OCPU · B97384"
+            },
+            {
+              "value": "B97385",
+              "label": "Compute - Standard - E5 - Memory · B97385"
+            }
+          ]
+        },
+        {
+          "key": "quantity",
+          "label": "Cantidad en la unidad Oracle del SKU",
+          "type": "number",
+          "unit": "unidad Oracle",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B91628",
+        "B91627",
+        "B91961",
+        "B91962",
+        "B92593",
+        "B88327",
+        "B93455",
+        "B93456",
+        "B93030",
+        "B93031",
+        "B97384",
+        "B97385"
+      ],
+      "notes": "Cantidad es GB, VPU×GB, OCPU, RAM GB, instancias, Mbps o lotes de 10000 requests según SKU; horas solo se aplican a métricas horarias. Sin franquicias gratuitas. No duplicar recursos ya incluidos."
+    },
+    {
+      "id": "lakehouse-complement",
+      "serviceId": "lakehouse",
+      "name": "Consumos complementarios · lakehouse",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B91628",
+              "label": "Object Storage - Storage · B91628"
+            },
+            {
+              "value": "B91627",
+              "label": "Object Storage - Requests · B91627"
+            },
+            {
+              "value": "B91961",
+              "label": "Storage - Block Volume - Storage · B91961"
+            },
+            {
+              "value": "B91962",
+              "label": "Storage - Block Volume - Performance Units · B91962"
+            },
+            {
+              "value": "B92593",
+              "label": "OCI - Logging - Storage · B92593"
+            },
+            {
+              "value": "B88327",
+              "label": "Outbound Data Transfer - Originating in North America, Europe, and UK · B88327"
+            },
+            {
+              "value": "B93455",
+              "label": "Outbound Data Transfer - Originating in APAC, Japan, and South America · B93455"
+            },
+            {
+              "value": "B93456",
+              "label": "Outbound Data Transfer - Originating in Middle East and Africa · B93456"
+            },
+            {
+              "value": "B93030",
+              "label": "Load Balancer Base · B93030"
+            },
+            {
+              "value": "B93031",
+              "label": "Load Balancer Bandwidth · B93031"
+            },
+            {
+              "value": "B97384",
+              "label": "Compute - Standard - E5 - OCPU · B97384"
+            },
+            {
+              "value": "B97385",
+              "label": "Compute - Standard - E5 - Memory · B97385"
+            }
+          ]
+        },
+        {
+          "key": "quantity",
+          "label": "Cantidad en la unidad Oracle del SKU",
+          "type": "number",
+          "unit": "unidad Oracle",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B91628",
+        "B91627",
+        "B91961",
+        "B91962",
+        "B92593",
+        "B88327",
+        "B93455",
+        "B93456",
+        "B93030",
+        "B93031",
+        "B97384",
+        "B97385"
+      ],
+      "notes": "Cantidad es GB, VPU×GB, OCPU, RAM GB, instancias, Mbps o lotes de 10000 requests según SKU; horas solo se aplican a métricas horarias. Sin franquicias gratuitas. No duplicar recursos ya incluidos."
+    },
+    {
+      "id": "oac-complement",
+      "serviceId": "oac",
+      "name": "Consumos complementarios · oac",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B91628",
+              "label": "Object Storage - Storage · B91628"
+            },
+            {
+              "value": "B91627",
+              "label": "Object Storage - Requests · B91627"
+            },
+            {
+              "value": "B91961",
+              "label": "Storage - Block Volume - Storage · B91961"
+            },
+            {
+              "value": "B91962",
+              "label": "Storage - Block Volume - Performance Units · B91962"
+            },
+            {
+              "value": "B92593",
+              "label": "OCI - Logging - Storage · B92593"
+            },
+            {
+              "value": "B88327",
+              "label": "Outbound Data Transfer - Originating in North America, Europe, and UK · B88327"
+            },
+            {
+              "value": "B93455",
+              "label": "Outbound Data Transfer - Originating in APAC, Japan, and South America · B93455"
+            },
+            {
+              "value": "B93456",
+              "label": "Outbound Data Transfer - Originating in Middle East and Africa · B93456"
+            },
+            {
+              "value": "B93030",
+              "label": "Load Balancer Base · B93030"
+            },
+            {
+              "value": "B93031",
+              "label": "Load Balancer Bandwidth · B93031"
+            },
+            {
+              "value": "B97384",
+              "label": "Compute - Standard - E5 - OCPU · B97384"
+            },
+            {
+              "value": "B97385",
+              "label": "Compute - Standard - E5 - Memory · B97385"
+            }
+          ]
+        },
+        {
+          "key": "quantity",
+          "label": "Cantidad en la unidad Oracle del SKU",
+          "type": "number",
+          "unit": "unidad Oracle",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B91628",
+        "B91627",
+        "B91961",
+        "B91962",
+        "B92593",
+        "B88327",
+        "B93455",
+        "B93456",
+        "B93030",
+        "B93031",
+        "B97384",
+        "B97385"
+      ],
+      "notes": "Cantidad es GB, VPU×GB, OCPU, RAM GB, instancias, Mbps o lotes de 10000 requests según SKU; horas solo se aplican a métricas horarias. Sin franquicias gratuitas. No duplicar recursos ya incluidos."
+    },
+    {
+      "id": "oke-complement",
+      "serviceId": "oke",
+      "name": "Consumos complementarios · oke",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B91628",
+              "label": "Object Storage - Storage · B91628"
+            },
+            {
+              "value": "B91627",
+              "label": "Object Storage - Requests · B91627"
+            },
+            {
+              "value": "B91961",
+              "label": "Storage - Block Volume - Storage · B91961"
+            },
+            {
+              "value": "B91962",
+              "label": "Storage - Block Volume - Performance Units · B91962"
+            },
+            {
+              "value": "B92593",
+              "label": "OCI - Logging - Storage · B92593"
+            },
+            {
+              "value": "B88327",
+              "label": "Outbound Data Transfer - Originating in North America, Europe, and UK · B88327"
+            },
+            {
+              "value": "B93455",
+              "label": "Outbound Data Transfer - Originating in APAC, Japan, and South America · B93455"
+            },
+            {
+              "value": "B93456",
+              "label": "Outbound Data Transfer - Originating in Middle East and Africa · B93456"
+            },
+            {
+              "value": "B93030",
+              "label": "Load Balancer Base · B93030"
+            },
+            {
+              "value": "B93031",
+              "label": "Load Balancer Bandwidth · B93031"
+            },
+            {
+              "value": "B97384",
+              "label": "Compute - Standard - E5 - OCPU · B97384"
+            },
+            {
+              "value": "B97385",
+              "label": "Compute - Standard - E5 - Memory · B97385"
+            }
+          ]
+        },
+        {
+          "key": "quantity",
+          "label": "Cantidad en la unidad Oracle del SKU",
+          "type": "number",
+          "unit": "unidad Oracle",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B91628",
+        "B91627",
+        "B91961",
+        "B91962",
+        "B92593",
+        "B88327",
+        "B93455",
+        "B93456",
+        "B93030",
+        "B93031",
+        "B97384",
+        "B97385"
+      ],
+      "notes": "Cantidad es GB, VPU×GB, OCPU, RAM GB, instancias, Mbps o lotes de 10000 requests según SKU; horas solo se aplican a métricas horarias. Sin franquicias gratuitas. No duplicar recursos ya incluidos."
+    },
+    {
+      "id": "api-gateway-complement",
+      "serviceId": "api-gateway",
+      "name": "Consumos complementarios · api-gateway",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B91628",
+              "label": "Object Storage - Storage · B91628"
+            },
+            {
+              "value": "B91627",
+              "label": "Object Storage - Requests · B91627"
+            },
+            {
+              "value": "B91961",
+              "label": "Storage - Block Volume - Storage · B91961"
+            },
+            {
+              "value": "B91962",
+              "label": "Storage - Block Volume - Performance Units · B91962"
+            },
+            {
+              "value": "B92593",
+              "label": "OCI - Logging - Storage · B92593"
+            },
+            {
+              "value": "B88327",
+              "label": "Outbound Data Transfer - Originating in North America, Europe, and UK · B88327"
+            },
+            {
+              "value": "B93455",
+              "label": "Outbound Data Transfer - Originating in APAC, Japan, and South America · B93455"
+            },
+            {
+              "value": "B93456",
+              "label": "Outbound Data Transfer - Originating in Middle East and Africa · B93456"
+            },
+            {
+              "value": "B93030",
+              "label": "Load Balancer Base · B93030"
+            },
+            {
+              "value": "B93031",
+              "label": "Load Balancer Bandwidth · B93031"
+            },
+            {
+              "value": "B97384",
+              "label": "Compute - Standard - E5 - OCPU · B97384"
+            },
+            {
+              "value": "B97385",
+              "label": "Compute - Standard - E5 - Memory · B97385"
+            }
+          ]
+        },
+        {
+          "key": "quantity",
+          "label": "Cantidad en la unidad Oracle del SKU",
+          "type": "number",
+          "unit": "unidad Oracle",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B91628",
+        "B91627",
+        "B91961",
+        "B91962",
+        "B92593",
+        "B88327",
+        "B93455",
+        "B93456",
+        "B93030",
+        "B93031",
+        "B97384",
+        "B97385"
+      ],
+      "notes": "Cantidad es GB, VPU×GB, OCPU, RAM GB, instancias, Mbps o lotes de 10000 requests según SKU; horas solo se aplican a métricas horarias. Sin franquicias gratuitas. No duplicar recursos ya incluidos."
+    },
+    {
+      "id": "generative-ai-complement",
+      "serviceId": "generative-ai",
+      "name": "Consumos complementarios · generative-ai",
+      "parameters": [
+        {
+          "key": "sku",
+          "label": "Producto Oracle",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "B91628",
+              "label": "Object Storage - Storage · B91628"
+            },
+            {
+              "value": "B91627",
+              "label": "Object Storage - Requests · B91627"
+            },
+            {
+              "value": "B91961",
+              "label": "Storage - Block Volume - Storage · B91961"
+            },
+            {
+              "value": "B91962",
+              "label": "Storage - Block Volume - Performance Units · B91962"
+            },
+            {
+              "value": "B92593",
+              "label": "OCI - Logging - Storage · B92593"
+            },
+            {
+              "value": "B88327",
+              "label": "Outbound Data Transfer - Originating in North America, Europe, and UK · B88327"
+            },
+            {
+              "value": "B93455",
+              "label": "Outbound Data Transfer - Originating in APAC, Japan, and South America · B93455"
+            },
+            {
+              "value": "B93456",
+              "label": "Outbound Data Transfer - Originating in Middle East and Africa · B93456"
+            },
+            {
+              "value": "B93030",
+              "label": "Load Balancer Base · B93030"
+            },
+            {
+              "value": "B93031",
+              "label": "Load Balancer Bandwidth · B93031"
+            },
+            {
+              "value": "B97384",
+              "label": "Compute - Standard - E5 - OCPU · B97384"
+            },
+            {
+              "value": "B97385",
+              "label": "Compute - Standard - E5 - Memory · B97385"
+            }
+          ]
+        },
+        {
+          "key": "quantity",
+          "label": "Cantidad en la unidad Oracle del SKU",
+          "type": "number",
+          "unit": "unidad Oracle",
+          "required": true,
+          "min": 0,
+          "max": 1000000000000
+        },
+        {
+          "key": "hoursPerMonth",
+          "label": "Horas activas al mes",
+          "type": "number",
+          "unit": "horas",
+          "required": true,
+          "min": 1,
+          "max": 744
+        }
+      ],
+      "skus": [
+        "B91628",
+        "B91627",
+        "B91961",
+        "B91962",
+        "B92593",
+        "B88327",
+        "B93455",
+        "B93456",
+        "B93030",
+        "B93031",
+        "B97384",
+        "B97385"
+      ],
+      "notes": "Cantidad es GB, VPU×GB, OCPU, RAM GB, instancias, Mbps o lotes de 10000 requests según SKU; horas solo se aplican a métricas horarias. Sin franquicias gratuitas. No duplicar recursos ya incluidos."
+    }
+  ],
+  "gpuShapes": [
+    {
+      "shapeKey": "a10",
+      "value": "a10",
+      "label": "VM.GPU.A10",
+      "pricing": 1.77,
+      "modelCompatibility": [
+        {
+          "value": "",
+          "gpuQty": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "value": "gpt-oss-20b",
+          "gpuQty": [
+            2
+          ]
+        },
+        {
+          "value": "Rerank 4 Pro",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Rerank 4 Fast",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Embed v4",
+          "gpuQty": [
+            1
+          ],
+          "label": "A10",
+          "sortOrder": 2
+        }
+      ]
+    },
+    {
+      "shapeKey": "a100-40g",
+      "value": "a100.40g",
+      "label": "BM.GPU.A100.40G",
+      "pricing": 2.7,
+      "modelCompatibility": [
+        {
+          "value": "",
+          "gpuQty": [
+            1,
+            2,
+            4,
+            8
+          ]
+        },
+        {
+          "value": "gpt-oss-20b",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "gpt-oss-120b",
+          "gpuQty": [
+            4
+          ]
+        },
+        {
+          "value": "Rerank 4 Pro",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Rerank 4 Fast",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Command A",
+          "gpuQty": [
+            4
+          ],
+          "label": "A100-40G",
+          "sortOrder": 3
+        },
+        {
+          "value": "Command A Vision",
+          "gpuQty": [
+            2
+          ],
+          "label": "A100-40G",
+          "sortOrder": 3
+        },
+        {
+          "value": "Command A Reasoning",
+          "gpuQty": [
+            4
+          ],
+          "label": "A100-40G",
+          "sortOrder": 3
+        },
+        {
+          "value": "Embed v4",
+          "gpuQty": [
+            1
+          ],
+          "label": "A100-40G",
+          "sortOrder": 4
+        }
+      ]
+    },
+    {
+      "shapeKey": "a100-80g",
+      "value": "a100.80g",
+      "label": "BM.GPU.A100.80G",
+      "pricing": 3.24,
+      "modelCompatibility": [
+        {
+          "value": "",
+          "gpuQty": [
+            1,
+            2,
+            4,
+            8
+          ]
+        },
+        {
+          "value": "gpt-oss-20b",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "gpt-oss-120b",
+          "gpuQty": [
+            2
+          ]
+        },
+        {
+          "value": "Rerank 4 Pro",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Rerank 4 Fast",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Command A",
+          "gpuQty": [
+            2
+          ],
+          "label": "A100-80G",
+          "sortOrder": 1
+        },
+        {
+          "value": "Command A Vision",
+          "gpuQty": [
+            2
+          ],
+          "label": "A100-80G",
+          "sortOrder": 2
+        },
+        {
+          "value": "Command A Reasoning",
+          "gpuQty": [
+            4
+          ],
+          "label": "A100-80G",
+          "sortOrder": 2
+        },
+        {
+          "value": "Embed v4",
+          "gpuQty": [
+            1
+          ],
+          "label": "A100-80G",
+          "sortOrder": 3
+        },
+        {
+          "value": "Meta Llama 3.3 70B",
+          "gpuQty": [
+            4
+          ],
+          "label": "A100-80G",
+          "sortOrder": 1
+        },
+        {
+          "value": "Scout",
+          "gpuQty": [
+            4
+          ],
+          "label": "A100-80G",
+          "sortOrder": 1
+        }
+      ]
+    },
+    {
+      "shapeKey": "h100",
+      "value": "h100",
+      "label": "BM.GPU.H100",
+      "pricing": 6.01,
+      "modelCompatibility": [
+        {
+          "value": "",
+          "gpuQty": [
+            1,
+            2,
+            4,
+            8
+          ]
+        },
+        {
+          "value": "gpt-oss-20b",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "gpt-oss-120b",
+          "gpuQty": [
+            2
+          ]
+        },
+        {
+          "value": "Rerank 4 Pro",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Rerank 4 Fast",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Command A",
+          "gpuQty": [
+            2
+          ],
+          "label": "H100",
+          "sortOrder": 2
+        },
+        {
+          "value": "Command A Vision",
+          "gpuQty": [
+            2
+          ],
+          "label": "H100",
+          "sortOrder": 1
+        },
+        {
+          "value": "Command A Reasoning",
+          "gpuQty": [
+            4
+          ],
+          "label": "H100",
+          "sortOrder": 1
+        },
+        {
+          "value": "Embed v4",
+          "gpuQty": [
+            1
+          ],
+          "label": "H100",
+          "sortOrder": 1
+        },
+        {
+          "value": "Meta Llama 3.3 70B",
+          "gpuQty": [
+            4
+          ],
+          "label": "H100",
+          "sortOrder": 2
+        },
+        {
+          "value": "Scout",
+          "gpuQty": [
+            4
+          ],
+          "label": "H100",
+          "sortOrder": 2
+        },
+        {
+          "value": "Maverick",
+          "gpuQty": [
+            8
+          ],
+          "label": "H100",
+          "sortOrder": 1
+        }
+      ]
+    },
+    {
+      "shapeKey": "h200",
+      "value": "h200",
+      "label": "BM.GPU.H200",
+      "pricing": 6.22,
+      "modelCompatibility": [
+        {
+          "value": "",
+          "gpuQty": [
+            1,
+            2,
+            4,
+            8
+          ]
+        },
+        {
+          "value": "gpt-oss-20b",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "gpt-oss-120b",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Command A",
+          "gpuQty": [
+            2
+          ],
+          "label": "H200",
+          "sortOrder": 4
+        },
+        {
+          "value": "Command A Vision",
+          "gpuQty": [
+            2
+          ],
+          "label": "H200",
+          "sortOrder": 4
+        },
+        {
+          "value": "Command A Reasoning",
+          "gpuQty": [
+            4
+          ],
+          "label": "H200",
+          "sortOrder": 4
+        },
+        {
+          "value": "Embed v4",
+          "gpuQty": [
+            1
+          ],
+          "label": "H200",
+          "sortOrder": 5
+        },
+        {
+          "value": "Meta Llama 3.3 70B",
+          "gpuQty": [
+            4
+          ],
+          "label": "H200",
+          "sortOrder": 3
+        },
+        {
+          "value": "Scout",
+          "gpuQty": [
+            4
+          ],
+          "label": "H200",
+          "sortOrder": 3
+        },
+        {
+          "value": "Maverick",
+          "gpuQty": [
+            8
+          ],
+          "label": "H200",
+          "sortOrder": 2
+        }
+      ]
+    },
+    {
+      "shapeKey": "b200",
+      "value": "b200",
+      "label": "BM.GPU.B200.8",
+      "pricing": 8.02,
+      "modelCompatibility": [
+        {
+          "value": "",
+          "gpuQty": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "value": "gpt-oss-20b",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "gpt-oss-120b",
+          "gpuQty": [
+            1
+          ]
+        },
+        {
+          "value": "Command A Vision",
+          "gpuQty": [
+            2
+          ],
+          "label": "B200",
+          "sortOrder": 5
+        },
+        {
+          "value": "Embed v4",
+          "gpuQty": [
+            1
+          ],
+          "label": "B200",
+          "sortOrder": 6
+        },
+        {
+          "value": "Scout",
+          "gpuQty": [
+            2
+          ],
+          "label": "B200",
+          "sortOrder": 4
+        },
+        {
+          "value": "Maverick",
+          "gpuQty": [
+            4
+          ],
+          "label": "B200",
+          "sortOrder": 3
+        }
+      ]
+    }
+  ],
+  "skuMetadata": {
+    "B108077": {
+      "name": "OCI Generative AI - Large Cohere",
+      "metricId": 1941,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "10,000 Transactions",
+      "oraclePresetId": 2082
+    },
+    "B108078": {
+      "name": "OCI Generative AI - Small Cohere",
+      "metricId": 1941,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "10,000 Transactions",
+      "oraclePresetId": 2082
+    },
+    "B108079": {
+      "name": "OCI Generative AI - Embed Cohere",
+      "metricId": 1941,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "10,000 Transactions",
+      "oraclePresetId": 2082
+    },
+    "B108080": {
+      "name": "OCI Generative AI - Large Meta",
+      "metricId": 1941,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "10,000 Transactions",
+      "oraclePresetId": 2082
+    },
+    "B108082": {
+      "name": "OCI Generative AI - Large Cohere - Dedicated",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B108083": {
+      "name": "OCI Generative AI - Small Cohere - Dedicated",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B108084": {
+      "name": "OCI Generative AI - Embed Cohere - Dedicated",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B108085": {
+      "name": "OCI Generative AI - Large Meta - Dedicated",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B110517": {
+      "name": "OCI Generative AI - Meta Llama 3.1 405B",
+      "metricId": 1941,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "10,000 Transactions",
+      "oraclePresetId": 2082
+    },
+    "B110679": {
+      "name": "OCI Generative AI - Meta Llama 3.2 90B Vision",
+      "metricId": 1941,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "10,000 Transactions",
+      "oraclePresetId": 2082
+    },
+    "B111015": {
+      "name": "OCI Generative AI - Cohere Rerank - Dedicated",
+      "metricId": 2361,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "Cluster Hour",
+      "oraclePresetId": 2082
+    },
+    "B111035": {
+      "name": "OCI Generative AI - Meta Llama 4 Scout",
+      "metricId": 1941,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "10,000 Transactions",
+      "oraclePresetId": 2082
+    },
+    "B111036": {
+      "name": "OCI Generative AI - Meta Llama 4 Maverick",
+      "metricId": 1941,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "10,000 Transactions",
+      "oraclePresetId": 2082
+    },
+    "B111363": {
+      "name": "Oracle AI Data Platform",
+      "metricId": 2464,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 3381,
+      "unit": "AI Data Platform Unit",
+      "oraclePresetId": 2642
+    },
+    "B111847": {
+      "name": "OCI Generative AI - Google - Gemini 2.5 Pro - Input Tokens - Text, Image, Audio, and Video less than 200K input tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111848": {
+      "name": "OCI Generative AI - Google -Gemini 2.5 Pro - Input Tokens - Text, Image, Audio, and Video greater than 200K input tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111849": {
+      "name": "OCI Generative AI - Google - Gemini 2.5 Pro - Output Tokens - Text Output less than 200K input tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111850": {
+      "name": "OCI Generative AI - Google - Gemini 2.5 Pro - Output Tokens - Text Output greater than 200K input tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111851": {
+      "name": "OCI Generative AI - Google - Gemini 2.5 Flash GA - Input Tokens - Text, Image, and Video",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111852": {
+      "name": "OCI Generative AI - Google - Gemini 2.5 Flash GA - Input Tokens - Audio",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111853": {
+      "name": "OCI Generative AI - Google - Gemini 2.5 Flash GA - Output Tokens - Text",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111854": {
+      "name": "OCI Generative AI - Google - Gemini 2.5 Flash Lite - Input Tokens - Text, Image, and Video",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111855": {
+      "name": "OCI Generative AI - Google - Gemini 2.5 Flash Lite - Input Tokens - Audio",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111856": {
+      "name": "OCI Generative AI - Google - Gemini 2.5 Flash Lite - Output Tokens - Text",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111882": {
+      "name": "OCI Generative AI - Meta - Dedicated",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B111910": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Input Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111911": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Cached Input Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B111959": {
+      "name": "OCI Generative AI - Model Import",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B112004": {
+      "name": "OCI Generative AI - OpenAI - gpt-oss-120b - Input Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112005": {
+      "name": "OCI Generative AI - OpenAI - gpt-oss-120b - Output Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112006": {
+      "name": "OCI Generative AI - OpenAI - gpt-oss-20b - Input Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112007": {
+      "name": "OCI Generative AI - OpenAI - gpt-oss-20b - Output Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112008": {
+      "name": "OCI Generative AI - OpenAI - Dedicated",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B112076": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Output Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112077": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Input Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112078": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Cached Input Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112079": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.2 - Output Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112080": {
+      "name": "OCI Generative AI - xAI - Grok 4.3 - Input Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112081": {
+      "name": "OCI Generative AI - xAI - Grok 4.3 - Cached Input Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112082": {
+      "name": "OCI Generative AI - xAI - Grok 4.3 - Output Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112083": {
+      "name": "OCI  Generative AI - xAI - Grok 4.3 - Input Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112084": {
+      "name": "OCI Generative AI - xAI - Grok 4.3 - Cached Input Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112085": {
+      "name": "OCI Generative AI - xAI - Grok 4.3 - Output Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112086": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 - Input Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112087": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 - Cached Input Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112425": {
+      "name": "OCI Generative AI - Cohere - Dedicated",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B112589": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 - Output Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112590": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 - Input Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112591": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 - Cached Input Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112592": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 - Output Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112593": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 Priority - Input Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112594": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 Priority - Cached Input Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112595": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 Priority - Output Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112596": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 Priority - Input Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112597": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 Priority - Cached Input Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112598": {
+      "name": "OCI - Generative AI - xAI - Grok 4.6 Priority - Output Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112599": {
+      "name": "OCI - Generative AI - xAI - Grok 4.3 Priority - Input Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112600": {
+      "name": "OCI - Generative AI - xAI - Grok 4.3 Priority - Cached Input Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112601": {
+      "name": "OCI - Generative AI - xAI - Grok 4.3 Priority - Output Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112739": {
+      "name": "OCI - Generative AI - xAI - Grok 4.3 Priority - Input Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112740": {
+      "name": "OCI - Generative AI - xAI - Grok 4.3 Priority - Cached Input Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112741": {
+      "name": "OCI - Generative AI - xAI - Grok 4.3 Priority - Output Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112742": {
+      "name": "OCI - Generative AI - xAI - Grok 4.2 Priority - Input Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B112743": {
+      "name": "OCI - Generative AI - xAI - Grok 4.2 Priority - Cached Input Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113284": {
+      "name": "OCI - Generative AI - Dedicated Model Hosting Fee - Model Import",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B113285": {
+      "name": "OCI - Generative AI - Dedicated Model Hosting Fee - Meta",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B113286": {
+      "name": "OCI - Generative AI - Dedicated Model Hosting Fee - OpenAI Open-Source",
+      "metricId": 1961,
+      "priceType": "HOUR",
+      "oracleServiceId": 2741,
+      "unit": "AI Unit Per Hour",
+      "oraclePresetId": 2082
+    },
+    "B113299": {
+      "name": "OCI - Generative AI - xAI - Grok 4.2 Priority - Output Tokens less than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113300": {
+      "name": "OCI - Generative AI - xAI - Grok 4.2 Priority - Input Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113301": {
+      "name": "OCI - Generative AI - xAI - Grok 4.2 Priority - Cached Input Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113302": {
+      "name": "OCI - Generative AI - xAI - Grok 4.2 Priority - Output Tokens greater than 200K Tokens",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113303": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Input Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113304": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Cached Input Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113305": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Output Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113306": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Input Tokens long context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113307": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Cached Input Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113308": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 - Output Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113309": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Input Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113310": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Cached Input Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113311": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Output Tokens Short Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113312": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Input Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113313": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Cached Input Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B113314": {
+      "name": "Oracle Cloud Infrastructure Generative AI - xAI - Grok 4.7 Priority - Output Tokens Long Context",
+      "metricId": 2381,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2741,
+      "unit": "1,000,000 Tokens",
+      "oraclePresetId": 2082
+    },
+    "B88327": {
+      "name": "Outbound Data Transfer - Originating in North America, Europe, and UK",
+      "metricId": 165,
+      "priceType": "MONTH",
+      "oracleServiceId": 884,
+      "unit": "Gigabyte Outbound Data Transfer Per Month",
+      "oraclePresetId": 1902
+    },
+    "B89630": {
+      "name": "Oracle Analytics Cloud - Professional - OCPU",
+      "metricId": 1421,
+      "priceType": "HOUR",
+      "oracleServiceId": 189,
+      "unit": "OCPU Per Hour",
+      "oraclePresetId": 90
+    },
+    "B89631": {
+      "name": "Oracle Analytics Cloud - Enterprise - OCPU",
+      "metricId": 1421,
+      "priceType": "HOUR",
+      "oracleServiceId": 189,
+      "unit": "OCPU Per Hour",
+      "oraclePresetId": 91
+    },
+    "B89636": {
+      "name": "Oracle Analytics Cloud - Professional - BYOL - OCPU",
+      "metricId": 1421,
+      "priceType": "HOUR",
+      "oracleServiceId": 189,
+      "unit": "OCPU Per Hour",
+      "oraclePresetId": 90
+    },
+    "B89637": {
+      "name": "Oracle Analytics Cloud - Enterprise - BYOL - OCPU",
+      "metricId": 1421,
+      "priceType": "HOUR",
+      "oracleServiceId": 189,
+      "unit": "OCPU Per Hour",
+      "oraclePresetId": 91
+    },
+    "B91627": {
+      "name": "Object Storage - Requests",
+      "metricId": 148,
+      "priceType": "MONTH",
+      "oracleServiceId": 882,
+      "unit": "10,000 Requests per Month (first 50,000 free)",
+      "oraclePresetId": 61
+    },
+    "B91628": {
+      "name": "Object Storage - Storage",
+      "metricId": 166,
+      "priceType": "MONTH",
+      "oracleServiceId": 882,
+      "unit": "Gigabyte Storage Capacity Per Month",
+      "oraclePresetId": 61
+    },
+    "B91961": {
+      "name": "Storage - Block Volume - Storage",
+      "metricId": 166,
+      "priceType": "MONTH",
+      "oracleServiceId": 881,
+      "unit": "Gigabyte Storage Capacity Per Month",
+      "oraclePresetId": 1221
+    },
+    "B91962": {
+      "name": "Storage - Block Volume - Performance Units",
+      "metricId": 184,
+      "priceType": "MONTH",
+      "oracleServiceId": 881,
+      "unit": "Performance Units Per Gigabyte Per Month",
+      "oraclePresetId": 1221
+    },
+    "B92072": {
+      "name": "API Gateway  - 1,000,000 API Calls",
+      "metricId": 142,
+      "priceType": "MONTH",
+      "oracleServiceId": 1201,
+      "unit": "1,000,000 API Calls Per Month",
+      "oraclePresetId": 581
+    },
+    "B92593": {
+      "name": "OCI - Logging - Storage",
+      "metricId": 362,
+      "priceType": "MONTH",
+      "oracleServiceId": 2421,
+      "unit": "Gigabyte Log Storage Per Month",
+      "oraclePresetId": 1842
+    },
+    "B92682": {
+      "name": "Oracle Analytics Cloud - Professional - Users",
+      "metricId": 190,
+      "priceType": "MONTH",
+      "oracleServiceId": 189,
+      "unit": "User Per Month",
+      "oraclePresetId": 90
+    },
+    "B92683": {
+      "name": "Oracle Analytics Cloud - Enterprise - Users",
+      "metricId": 190,
+      "priceType": "MONTH",
+      "oracleServiceId": 189,
+      "unit": "User Per Month",
+      "oraclePresetId": 91
+    },
+    "B93030": {
+      "name": "Load Balancer Base",
+      "metricId": 701,
+      "priceType": "HOUR_UTILIZED",
+      "oracleServiceId": 885,
+      "unit": "Load Balancer",
+      "oraclePresetId": 1903
+    },
+    "B93031": {
+      "name": "Load Balancer Bandwidth",
+      "metricId": 702,
+      "priceType": "HOUR_UTILIZED",
+      "oracleServiceId": 885,
+      "unit": "Mbps Per Hour",
+      "oraclePresetId": 1903
+    },
+    "B93455": {
+      "name": "Outbound Data Transfer - Originating in APAC, Japan, and South America",
+      "metricId": 165,
+      "priceType": "MONTH",
+      "oracleServiceId": 884,
+      "unit": "Gigabyte Outbound Data Transfer Per Month",
+      "oraclePresetId": 1902
+    },
+    "B93456": {
+      "name": "Outbound Data Transfer - Originating in Middle East and Africa",
+      "metricId": 165,
+      "priceType": "MONTH",
+      "oracleServiceId": 884,
+      "unit": "Gigabyte Outbound Data Transfer Per Month",
+      "oraclePresetId": 1902
+    },
+    "B95701": {
+      "name": "Oracle Autonomous AI Lakehouse - ECPU",
+      "metricId": 1281,
+      "priceType": "HOUR",
+      "oracleServiceId": 1661,
+      "unit": "ECPU Per Hour",
+      "oraclePresetId": 1061
+    },
+    "B95703": {
+      "name": "Oracle Autonomous AI Lakehouse - ECPU -BYOL",
+      "metricId": 1281,
+      "priceType": "HOUR",
+      "oracleServiceId": 1661,
+      "unit": "ECPU Per Hour",
+      "oraclePresetId": 1061
+    },
+    "B95754": {
+      "name": "Oracle Autonomous AI Database Storage",
+      "metricId": 166,
+      "priceType": "MONTH",
+      "oracleServiceId": 1661,
+      "unit": "Gigabyte Storage Capacity Per Month",
+      "oraclePresetId": 223
+    },
+    "B96109": {
+      "name": "OCI Kubernetes Engine - Virtual Node",
+      "metricId": 1501,
+      "priceType": "HOUR",
+      "oracleServiceId": 2301,
+      "unit": "Virtual Node Per Hour",
+      "oraclePresetId": 1702
+    },
+    "B96545": {
+      "name": "OCI Kubernetes Engine - Enhanced Cluster",
+      "metricId": 1561,
+      "priceType": "HOUR",
+      "oracleServiceId": 2301,
+      "unit": "Cluster Per Hour",
+      "oraclePresetId": 1702
+    },
+    "B97384": {
+      "name": "Compute - Standard - E5 - OCPU",
+      "metricId": 182,
+      "priceType": "HOUR",
+      "oracleServiceId": 822,
+      "unit": "OCPU Per Hour",
+      "oraclePresetId": 74
+    },
+    "B97385": {
+      "name": "Compute - Standard - E5 - Memory",
+      "metricId": 557,
+      "priceType": "HOUR",
+      "oracleServiceId": 822,
+      "unit": "Gigabytes Per Hour",
+      "oraclePresetId": 74
+    },
+    "FR00012": {
+      "name": "OCI Kubernetes Engine - Basic Cluster",
+      "metricId": 1301,
+      "priceType": "PER-ITEM",
+      "oracleServiceId": 2301,
+      "unit": "N/A",
+      "oraclePresetId": 1702
+    }
+  }
+}

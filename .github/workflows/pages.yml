@@ -1,0 +1,61 @@
+name: Publish verified CertiTips snapshot
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: certitips-pages
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify exact public file inventory and bytes
+        shell: python
+        run: |
+          import hashlib, json, pathlib, re
+          root = pathlib.Path('.')
+          metadata = json.loads((root / 'release.json').read_text(encoding='utf-8'))
+          assert metadata['schemaVersion'] == 1
+          assert re.fullmatch(r'[a-z0-9][a-z0-9._-]{0,119}', metadata['releaseId'])
+          allowed = {'.gitattributes', 'release.json', '.github/workflows/pages.yml'}
+          files = []
+          for file in sorted(root.rglob('*'), key=lambda item: item.as_posix()):
+              parts = file.parts
+              if '.git' in parts:
+                  continue
+              assert not file.is_symlink(), f'Symlink refused: {file}'
+              if not file.is_file():
+                  continue
+              name = file.as_posix()
+              assert name.startswith('site/') or name in allowed, f'Unexpected public file: {name}'
+              if name in allowed:
+                  continue
+              relative = file.relative_to('site').as_posix()
+              permitted = relative in ('.nojekyll', 'assets/oci/NOTICE.md') or (not any(part.startswith('.') for part in pathlib.PurePosixPath(relative).parts) and re.search(r'\.(html|css|js|json|svg|png|jpe?g|webp|ico|woff2?|mp4|txt)$', relative))
+              assert permitted, f'Non-public payload: {relative}'
+              files.append({'path': relative, 'size': file.stat().st_size, 'sha256': hashlib.sha256(file.read_bytes()).hexdigest()})
+          assert files and any(item['path'] == 'index.html' for item in files)
+          assert files == metadata['site']['files'], 'Missing, extra, or altered site files'
+          digest = hashlib.sha256(json.dumps(files, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
+          assert digest == metadata['site']['sha256'], 'Site digest differs'
+          print(f"Verified {metadata['releaseId']}: {digest}, {len(files)} files")
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

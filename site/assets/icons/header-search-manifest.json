@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "icons": [
+    {
+      "library": "lucide",
+      "name": "binoculars",
+      "theme": "default",
+      "file": "lucide-binoculars.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/binoculars.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "f438d79e735a710d494cb9098548096e954e38b8f4d6c07fe8061f159f993525",
+      "sha256": "beb689ebc56a014dfe3ef9e6ad54f39309a7fab84aaef40495916043256628f4",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "search",
+      "theme": "default",
+      "file": "lucide-search.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/search.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "283d371c2e433817bb9c0c8310caa6c77fa4177c0f4f1168d9c83b97af7389dc",
+      "sha256": "a220af12c4bb81e04913e6f572e07c923c1bca2e2edf3597610f008ac8adf01c",
+      "license": "ISC and Feather MIT",
+      "color": null
+    }
+  ]
+}

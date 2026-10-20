@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "icons": [
+    {
+      "library": "lucide",
+      "name": "play",
+      "theme": "default",
+      "file": "lucide-play.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/play.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "d7c34786135922a92b6896f6c2384ceeb0346afbf6041dc79982011411409833",
+      "sha256": "e89efeb95d1cfd6b0ad930b71aaf35f20bf576a87fcc34a3217f040979310896",
+      "license": "ISC and Feather MIT",
+      "color": null
+    }
+  ]
+}

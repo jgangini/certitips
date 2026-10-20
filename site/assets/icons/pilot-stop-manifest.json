@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "icons": [
+    {
+      "library": "lucide",
+      "name": "square",
+      "theme": "default",
+      "file": "lucide-square.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/square.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "bd979354f0ab184b95cecf03eedefe40c2dc65830ac6d7e60017b2b25a354acb",
+      "sha256": "b41075d665a5a989f56530ab5544030a2a5670b7725ede4afe8ee4085355aa59",
+      "license": "ISC and Feather MIT",
+      "color": null,
+      "transformation": "Filled rect with currentColor for the Stop action; original Lucide geometry retained."
+    }
+  ]
+}

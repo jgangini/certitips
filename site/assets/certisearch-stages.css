@@ -1,0 +1,28 @@
+/* Diagram Design 2.6, type-gantt and example-gantt-full: compact labels,
+   subtle phase bands and a continuous grid. Sequence does not imply duration. */
+.search-deck .search-gantt{--gantt-label-width:240px;height:100%;display:flex;flex-direction:column;color:var(--deck-ink);background:radial-gradient(circle,color-mix(in srgb,var(--deck-muted) 13%,transparent) .7px,transparent .9px) 0 0/24px 24px}
+.search-deck .gantt-axis,.search-deck .stage-gantt-row{display:grid;grid-template-columns:var(--gantt-label-width) minmax(0,1fr)}
+.search-deck .gantt-axis{align-items:center;height:40px;flex:none;font-size:14px;color:var(--deck-muted)}
+.search-deck .gantt-axis>div{height:100%;align-items:center;border-bottom:1px solid var(--deck-line)}
+.search-deck .gantt-axis>div,.search-deck .gantt-track{display:grid;grid-template-columns:repeat(var(--stage-count),minmax(0,1fr))}
+.search-deck .gantt-axis>div>span{text-align:center;font-variant-numeric:tabular-nums}
+.search-deck .search-gantt ol{position:relative;display:grid;flex:1;min-height:0;grid-template-rows:repeat(var(--stage-count),minmax(0,1fr));gap:12px;margin:10px 0 0;padding:0;list-style:none}
+.search-deck .search-gantt ol::before{content:'';position:absolute;left:var(--gantt-label-width);right:0;top:-50px;bottom:-4px;pointer-events:none;border-left:1px solid var(--deck-line);background:linear-gradient(90deg,color-mix(in srgb,var(--deck-line) 50%,transparent) 1px,transparent 1px) 0 0/calc(100% / var(--stage-count) / 2) 100%}
+.search-deck .stage-gantt-row{position:relative;margin:0!important;min-height:0;border:1px solid color-mix(in srgb,var(--deck-line) 60%,transparent);border-radius:9px;background:color-mix(in srgb,var(--deck-ink) 2%,transparent)}
+.search-deck .gantt-label{padding:7px 12px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:5px;min-width:0}
+.search-deck .stage-heading{border:0;padding:0;background:none;color:var(--deck-ink);font:inherit;text-align:left;cursor:pointer}
+.search-deck .stage-heading strong{font-size:18px;line-height:1.2;font-weight:600}
+.search-deck .gantt-label small{font-size:13px;line-height:1.35;color:var(--deck-muted)}
+.search-deck .gantt-track{align-items:center;gap:0;min-width:0}
+.search-deck .gantt-bar{margin:0 6px;height:34px;border:1.5px solid var(--deck-muted);border-radius:7px;background:color-mix(in srgb,var(--deck-muted) 15%,var(--deck-paper));color:var(--deck-ink);font:14px Arial,Helvetica,sans-serif;cursor:pointer;overflow-wrap:anywhere}
+.search-deck .stage-gantt-row[data-current] .gantt-bar{border-color:var(--deck-oci);background:var(--deck-highlight);color:var(--deck-oci)}
+.search-deck .stage-gantt-row[data-state=reviewed] .gantt-bar{background:var(--deck-teal);border-color:var(--deck-teal);color:var(--deck-paper)}
+.search-deck .stage-gantt-row[data-state=needs-review] .gantt-bar{border-style:dashed}
+.search-deck .stage-heading:is(:hover,:focus-visible,.search-selected),.search-deck .gantt-bar:is(:hover,:focus-visible,.search-selected){outline:2px solid var(--deck-oci);outline-offset:2px}
+.search-deck .gantt-legend{display:flex;align-items:center;gap:24px;margin-top:16px;padding-top:10px;border-top:1px solid var(--deck-line);color:var(--deck-muted);font-size:13px;flex:none}
+.search-deck .gantt-legend span{display:inline-flex;align-items:center;gap:8px}
+.search-deck .gantt-legend i{width:25px;height:14px;border:1px solid var(--deck-muted);border-radius:4px;background:color-mix(in srgb,var(--deck-muted) 15%,var(--deck-paper))}
+.search-deck .gantt-legend [data-legend=current]{border-color:var(--deck-oci);background:var(--deck-highlight)}
+.search-deck .gantt-legend [data-legend=reviewed]{border-color:var(--deck-teal);background:var(--deck-teal)}
+.search-deck .stage-method-note{margin:8px 0 0;color:var(--deck-muted);font-size:13px;line-height:1.4;flex:none}
+@media print{.search-deck .search-gantt{height:150mm;break-inside:avoid;margin-block:24px}}

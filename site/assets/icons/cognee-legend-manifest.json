@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "icons": [
+    {
+      "library": "lucide",
+      "name": "waypoints",
+      "theme": "default",
+      "file": "lucide-waypoints.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/waypoints.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "97f4eefc2548f3886749778befcdfb0620c8d9619799cbe3f1d2bb566b67dea9",
+      "sha256": "7a9aeee242c421468126bb3dc18eb3b4723d931103d16c94c892dbd664fdfb29",
+      "license": "ISC and Feather MIT",
+      "color": null
+    }
+  ]
+}
