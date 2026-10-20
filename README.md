@@ -1,8 +1,10 @@
 # CertiTips
 
-Multilingual learning for Oracle Cloud, AI, and data management, with visual study guides, practice questions, collaborative quizzes, and practical examples.
+A multilingual knowledge hub that brings information from different topics and collections together. Explore visual guides, connect ideas, practice, and learn with others through quizzes, videos, and AI assistance.
 
-**[Visit CertiTips](https://jgangini.github.io/certitips/)** · **[Start in English](https://jgangini.github.io/certitips/en/)**
+Current collections cover Oracle Cloud, AI, and data management, including certification preparation and practical use cases. CertiTips is designed to organize knowledge beyond a single subject or certification.
+
+**[Visit CertiTips](https://jgangini.github.io/certitips/)** | **[Start in English](https://jgangini.github.io/certitips/en/)**
 
 ## Choose your language
 
@@ -12,7 +14,7 @@ The website is available in [English](https://jgangini.github.io/certitips/en/),
 
 | Feature | How it helps |
 | --- | --- |
-| [CertiTips study guides](https://jgangini.github.io/certitips/en/courses/) | Explore illustrated lessons and diagrams, then practice individually with explanations for your answers. |
+| [CertiTips](https://jgangini.github.io/certitips/en/courses/) | Explore knowledge organized by topic and collection, with illustrated guides, diagrams, practical examples, and individual practice with explanations. |
 | [CertiQuiz](https://jgangini.github.io/certitips/en/certiquiz/) | Host a timed group quiz or join with a room code or invitation. Answer questions together, review explanations, and follow the leaderboard. |
 | [CertiChat](https://jgangini.github.io/certitips/en/certichat/) | Ask questions about your study material, follow source references, and explore connected concepts. Voice interaction is available when enabled and supported by your browser. |
 | [CertiSearch](https://jgangini.github.io/certitips/en/certisearch/) | Capture requirements, compare OCI services, and develop an architecture and sizing estimate. Review proposed changes and export your case for later use. |
@@ -20,7 +22,7 @@ The website is available in [English](https://jgangini.github.io/certitips/en/),
 
 ## Get started
 
-1. **Choose a language and a course.** Open an available study guide from the course catalog; courses marked “Coming soon” are still being prepared.
+1. **Choose a language and a topic.** Browse the content groups and open an available guide. Courses marked “Coming soon” are still being prepared.
 2. **Read, explore, and practice.** Use the lessons and visual explanations, answer practice questions, and review the reasoning behind each answer.
 3. **Go further.** Ask CertiChat about the material, watch a related CertiTube video, or host a CertiQuiz session with your team. Use CertiSearch when working through an OCI architecture case.
 
