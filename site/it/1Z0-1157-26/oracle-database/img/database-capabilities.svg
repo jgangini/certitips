@@ -28,7 +28,7 @@
   <g class="icon-badge" data-icon="bot" transform="translate(870 265)"><circle r="55" fill="#dff1eb"/><g transform="translate(-30 -30) scale(2.5)" fill="none" stroke="#087f7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></g></g>
   <text x="946" y="215" class="meta teal" font-weight="700">ORQUEStar</text>
   <text x="946" y="250" class="label">Select AI</text><text x="946" y="288" class="label">Agente</text>
-  <text x="946" y="327" class="body">Coordina i compiti,</text><text x="946" y="355" class="body">strumenti e attrezzature.</text>
+  <text x="946" y="327" class="body">Coordinare i compiti,</text><text x="946" y="355" class="body">strumenti e attrezzature.</text>
   <!-- This cylinder anchors the map; it does not imply LLM weights execute inside the database. -->
   <ellipse cx="600" cy="508" rx="134" ry="22" fill="#e1e2f0"/>
   <path d="M465 326v139c0 24 60 43 135 43s135-19 135-43V326Z" fill="url(#database-body)"/>

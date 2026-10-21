@@ -1,13 +1,14 @@
-import * as THREE from '../../vendor/three/three.module.js?v=a037a30fedef';
+import * as THREE from '../../vendor/three/three.module.js?v=06c036a5fa01';
 
 const MINIMUM_HOLD_MS = 1500;
 
-/** Sample and project the supplied Oracle contour; moving particles stay inside its fill. */
+/** Extrude the approved Oracle contour into a gently turning volume, preserving its authored outline. */
 function createOracleMark(camera, target, pathData) {
   const path = new Path2D(pathData), probe = document.createElement('canvas').getContext('2d');
   const samples = [];
-  let cursor = 1, movingSamples = [];
-  const position = new THREE.Vector3(), right = new THREE.Vector3(), up = new THREE.Vector3();
+  let cursor = 1, movingSamples = [], volumeSamples = [];
+  const position = new THREE.Vector3(), local = new THREE.Vector3(), right = new THREE.Vector3(), up = new THREE.Vector3(), normal = new THREE.Vector3();
+  const rotation = new THREE.Euler();
   const radical = (value, base) => { let fraction = 1, result = 0; while (value) { fraction /= base; result += value % base * fraction; value = Math.floor(value / base); } return result; };
   function sample(count) {
     while (samples.length < count && cursor < count * 32 + 1024) {
@@ -20,18 +21,21 @@ function createOracleMark(camera, target, pathData) {
   function mark(count, width, height, now) {
     const scale = .7 * Math.min(width * .55, height * .6, 340) / 256;
     const worldPixel = 2 * camera.position.distanceTo(target) * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) / height;
-    right.setFromMatrixColumn(camera.matrixWorld, 0); up.setFromMatrixColumn(camera.matrixWorld, 1);
+    right.setFromMatrixColumn(camera.matrixWorld, 0); up.setFromMatrixColumn(camera.matrixWorld, 1); normal.setFromMatrixColumn(camera.matrixWorld, 2);
+    rotation.set(-.18 + Math.sin(now / 2400) * .06, .32 + Math.sin(now / 2100) * .16, 0);
     const values = new Float32Array(count * 3);
-    movingSamples = [];
+    movingSamples = []; volumeSamples = [];
     sample(count).slice(0, count).forEach(([x, y], index) => {
       const dx = Math.sin(now / 650 + index * 1.7) * 2.4, dy = Math.cos(now / 800 + index * 2.3) * 2.4;
       if (probe.isPointInPath(path, x + dx + 128, 128.5 - y - dy, 'evenodd')) { x += dx; y += dy; }
-      if (index < 6) movingSamples.push([x, y]);
-      position.copy(target).addScaledVector(right, x * scale * worldPixel).addScaledVector(up, y * scale * worldPixel).toArray(values, index * 3);
+      const depth = (radical(index + 1, 5) * 2 - 1) * 18;
+      if (index < 6) { movingSamples.push([x, y]); volumeSamples.push([x, y, depth]); }
+      local.set(x, y, depth).applyEuler(rotation).multiplyScalar(scale * worldPixel);
+      position.copy(target).addScaledVector(right, local.x).addScaledVector(up, local.y).addScaledVector(normal, local.z).toArray(values, index * 3);
     });
     return values;
   }
-  return { positions: mark, samples, get movingSamples() { return movingSamples; } };
+  return { positions: mark, samples, get movingSamples() { return movingSamples; }, get volumeSamples() { return volumeSamples; } };
 }
 
 /** Update only the existing point buffer, preserving the scene object's identity. */
@@ -43,9 +47,17 @@ function writePositions(points, values) {
   attribute.array.set(values); attribute.needsUpdate = true; points.geometry.computeBoundingSphere();
 }
 
-/** Interpolate in the existing typed array, without allocating a point buffer each frame. */
+/** Burst out in three dimensions, then settle exactly on real targets without a camera zoom. */
 function interpolatePositions(working, starts, ends, ease) {
-  for (let i = 0; i < working.length; i++) working[i] = THREE.MathUtils.lerp(starts[i], ends[i], ease);
+  const burst = Math.sin(Math.PI * ease) * (1 - ease) * 110;
+  for (let index = 0; index < working.length / 3; index++) {
+    const angle = index * 2.399963229728653;
+    const vertical = ((index * .61803398875) % 1) * 2 - 1;
+    const horizontal = Math.sqrt(1 - vertical * vertical);
+    working[index * 3] = THREE.MathUtils.lerp(starts[index * 3], ends[index * 3], ease) + Math.cos(angle) * horizontal * burst;
+    working[index * 3 + 1] = THREE.MathUtils.lerp(starts[index * 3 + 1], ends[index * 3 + 1], ease) + vertical * burst;
+    working[index * 3 + 2] = THREE.MathUtils.lerp(starts[index * 3 + 2], ends[index * 3 + 2], ease) + Math.sin(angle) * horizontal * burst;
+  }
 }
 
 /** Preserve matching node positions when membership data changes during the entrance. */
@@ -102,6 +114,6 @@ export function createPilotEntry(points, camera, target, pathData) {
       return true;
     },
     finish,
-    stats() { return { phase, progress, boundNodes: nodes.length, pointCount: points.geometry.getAttribute('position')?.count || 0, pointsId: points.uuid, nodeIds: nodes.slice(0, 6).map(node => node.id), oracleSamples: mark.samples.slice(0, 6), movingSamples: mark.movingSamples, minimumMs: MINIMUM_HOLD_MS, markScale: .7, visibleAt: firstDraw ?? null, elapsedMs: firstDraw === undefined ? 0 : Math.max(0, lastNow - firstDraw), positions: Array.from(points.geometry.getAttribute('position')?.array.slice(0, 18) || []), targets: Array.from(ends?.slice(0, 18) || []) }; },
+    stats() { return { phase, progress, boundNodes: nodes.length, pointCount: points.geometry.getAttribute('position')?.count || 0, pointsId: points.uuid, nodeIds: nodes.slice(0, 6).map(node => node.id), oracleSamples: mark.samples.slice(0, 6), movingSamples: mark.movingSamples, oracleVolumeSamples: mark.volumeSamples, volumeDepth: 36, collections: [...new Set(nodes.flatMap(node => node.collections || []))], minimumMs: MINIMUM_HOLD_MS, markScale: .7, visibleAt: firstDraw ?? null, elapsedMs: firstDraw === undefined ? 0 : Math.max(0, lastNow - firstDraw), positions: Array.from(points.geometry.getAttribute('position')?.array.slice(0, 18) || []), targets: Array.from(ends?.slice(0, 18) || []) }; },
   };
 }

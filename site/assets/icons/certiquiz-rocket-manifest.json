@@ -1,0 +1,6 @@
+{
+  "source": "scripts/site/layout.mjs#quizIcon",
+  "revision": "f70939161dabd8ed410924e89048b4b27b3f37ba",
+  "adaptation": "Existing project SVG, unchanged paths and viewBox; fixed 24px dimensions for CSS mask.",
+  "sha256": "3a06174d81370fefc00d6d9d52dcc9766d09284e2ab907253f0e98b24d3bf50d"
+}

@@ -35,7 +35,7 @@
   <text x="980" y="342" class="body" text-anchor="middle">Capacities and execution</text>
   <text x="980" y="375" class="body" text-anchor="middle">Validation of access</text>
   <rect x="76" y="416" width="668" height="44" rx="16" fill="#e9e6fa"/>
-  <text x="410" y="445" class="body" text-anchor="middle">The client's part of the host application.</text>
+  <text x="410" y="445" class="body" text-anchor="middle">The client forms part of the host application.</text>
   <rect x="136" y="494" width="928" height="78" rx="22" class="card"/>
   <text x="600" y="543" class="body" text-anchor="middle">Compatibility: protocol + transport + authentication</text>
 </svg>

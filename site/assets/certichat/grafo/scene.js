@@ -1,12 +1,12 @@
-import * as THREE from '../../vendor/three/three.module.js?v=a037a30fedef';
-import { OrbitControls } from '../../vendor/three/OrbitControls.js?v=a037a30fedef';
-import { collectionIds, pilotLayout, pilotNodeCollections, pilotNodeCollection, pilotPreviewZone, pilotPreviewIds, pilotColors } from './state.js?v=a037a30fedef';
-import { pilotCameraStep, pilotFrame, pilotResultCluster } from './camera.js?v=a037a30fedef';
-import { createPilotMotion, pilotWorldPixel } from './motion.js?v=a037a30fedef';
-import { buildPilotReplay, pilotReplayFrame, pilotPresentationFrame, pilotQueryFrame } from './replay.js?v=a037a30fedef';
-import { createPilotSpider } from './spider.js?v=a037a30fedef';
-import { createPilotHighlight } from './highlight.js?v=a037a30fedef';
-import { createPilotEntry } from './entry.js?v=a037a30fedef';
+import * as THREE from '../../vendor/three/three.module.js?v=06c036a5fa01';
+import { OrbitControls } from '../../vendor/three/OrbitControls.js?v=06c036a5fa01';
+import { collectionIds, pilotLayout, pilotNodeCollections, pilotNodeCollection, pilotPreviewZone, pilotPreviewIds, pilotColors } from './state.js?v=06c036a5fa01';
+import { pilotCameraStep, pilotFrame, pilotResultCluster } from './camera.js?v=06c036a5fa01';
+import { createPilotMotion, pilotWorldPixel } from './motion.js?v=06c036a5fa01';
+import { buildPilotReplay, pilotReplayFrame, pilotPresentationFrame, pilotQueryFrame } from './replay.js?v=06c036a5fa01';
+import { createPilotSpider } from './spider.js?v=06c036a5fa01';
+import { createPilotHighlight } from './highlight.js?v=06c036a5fa01';
+import { createPilotEntry } from './entry.js?v=06c036a5fa01';
 
 function blendZoneColor(zones, colors, key, value) {
   const matches = zones.filter(zone => zone[key].has(value));
@@ -52,7 +52,7 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
   let previewBanks = [], previewTransition, previewWeights = pilotPreviewIds.map(() => 0);
   const sample = (values, value) => { values.push(value); if (values.length > 240) values.shift(); };
   const object = new THREE.Object3D(), raycaster = new THREE.Raycaster();
-  const palette = () => { const style = getComputedStyle(canvas); return { ...pilotColors, unknown: style.getPropertyValue('--muted').trim() || pilotColors.unknown, cognee: style.getPropertyValue('--muted').trim() || pilotColors.unknown, spider: style.getPropertyValue('--pilot-spider').trim() }; };
+  const palette = () => { const style = getComputedStyle(canvas); return { ...pilotColors, certiquiz: style.getPropertyValue('--quiz-accent').trim() || pilotColors.certiquiz, unknown: style.getPropertyValue('--muted').trim() || pilotColors.unknown, cognee: style.getPropertyValue('--muted').trim() || pilotColors.unknown, spider: style.getPropertyValue('--pilot-spider').trim() }; };
   function invalidate() { if (!frame && !destroyed && !lost && !document.hidden) frame = requestAnimationFrame(draw); }
   function changeGeometry(target, values, colors) {
     target.geometry.dispose(); target.geometry = geometry();
@@ -62,7 +62,7 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
   }
   function nodeColor(id, colors) { return colors[pilotNodeCollection(state, id)]; }
   function rebuildContext() {
-    positions = pilotLayout(state); byId = new Map(positions.map(node => [node.id, node]));
+    positions = pilotLayout(state, document.documentElement.dataset.theme === 'dark' ? 1.15 : 1); byId = new Map(positions.map(node => [node.id, node]));
     const colors = palette(), vertices = [], shades = [], lines = [], lineColors = [];
     for (const node of positions) { vertices.push(node.x, node.y, node.z); new THREE.Color(colors.unknown).toArray(shades, shades.length); }
     for (const edge of state.graph.edges) for (const id of [edge.source, edge.target]) { const node = byId.get(id); lines.push(node.x, node.y, node.z); new THREE.Color(colors.unknown).toArray(lineColors, lineColors.length); }
@@ -116,7 +116,7 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
       const curve = relationCurves[index], samples = curve.getPoints(16);
       const commonVideo = [...(sourceURLs.get(edge.source) || [])].some(url => /\/certitube\/[\w-]{11}\/$/.test(new URL(url).pathname) && sourceURLs.get(edge.target)?.has(url));
       const common = pilotNodeCollections(state, edge.source).filter(bank => pilotNodeCollections(state, edge.target).includes(bank));
-      const color = new THREE.Color(group ? colors[group.bank] : commonVideo ? colors.certitube : common.includes('certisearch') ? colors.certisearch : common.includes('certitips') ? colors.certitips : colors.unknown);
+      const color = new THREE.Color(group ? colors[group.bank] : commonVideo ? colors.certitube : common.includes('certisearch') ? colors.certisearch : common.includes('certiquiz') ? colors.certiquiz : common.includes('certitips') ? colors.certitips : colors.unknown);
       for (let i = 1; i < samples.length; i++) for (const value of [samples[i - 1], samples[i]]) { value.toArray(vertices, vertices.length); color.toArray(shades, shades.length); }
       object.position.copy(curve.getPoint(.8)); object.scale.setScalar(1); object.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), curve.getTangent(.8).normalize()); object.updateMatrix(); arrows.setMatrixAt(index, object.matrix); arrows.setColorAt(index, color);
     });
@@ -233,7 +233,7 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     lastFrame = now; previousActive = active;
     if (travel) {
       if (travel.followSpider && spiderTarget) travel.look.copy(spiderTarget);
-      const phase = motion.matches ? 1 : Math.min(1, (now - travel.started) / (travel.retreat === undefined ? 1400 : 2200));
+      const phase = motion.matches ? 1 : Math.min(1, (now - travel.started) / (travel.duration ?? (travel.retreat === undefined ? 1400 : 2200)));
       const step = pilotCameraStep(travel.start, travel.end, phase, travel.retreat);
       const orbit = new THREE.Spherical(step.radius, step.phi, step.theta);
       controls.target.lerpVectors(travel.target, travel.look, step.targetPhase); camera.position.setFromSpherical(orbit).add(controls.target); controls.update(); if (phase === 1) travel = null;
@@ -285,8 +285,9 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     arrows.instanceMatrix.needsUpdate = true; arrows.computeBoundingSphere();
     const node = byId.get(selected);
     const focused = Boolean(selected || state.active.size);
-    points.material.size = 1.35; points.material.opacity = focused ? .1 : .2; contextEdges.material.opacity = focused ? .018 : .05;
-    highlight.draw(previewWeights, document.documentElement.dataset.theme === 'dark', paletteColors.unknown);
+    const dark = document.documentElement.dataset.theme === 'dark';
+    points.material.size = dark ? 1.15 : 1.35; points.material.opacity = dark ? (focused ? .14 : .32) : (focused ? .1 : .2); contextEdges.material.opacity = dark ? (focused ? .007 : .018) : (focused ? .018 : .05);
+    highlight.draw(previewWeights, dark, paletteColors.unknown, paletteColors.certiquiz);
     const animating = motionField.draw(now, camera, height, motion.matches, discovery, stopped || presentationProgress === 0 && !replay && !searching);
     const touched = [...discovery.touched].slice(-3), bank = discovery.group?.bank || pilotNodeCollection(state, discovery.targets[0]?.id);
     const nextActivity = JSON.stringify([bank, touched, discovery.active]);
@@ -301,6 +302,17 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
   }
   function resize() { width = Math.max(1, canvas.clientWidth); height = Math.max(1, canvas.clientHeight); camera.aspect = width / height; camera.updateProjectionMatrix(); renderer.setSize(width, height, false); if (state) { overviewDistance = framing().distance; controls.minDistance = overviewDistance / 12; } invalidate(); }
   function gesture() { entry?.finish(); controls.enabled = true; travel = null; follow = false; onGesture(); invalidate(); }
+  /** Accumulate rapid zoom commands against their destination; drag/selection can cancel travel. */
+  function zoom(factor) {
+    if (!state) return;
+    const distance = travel?.zoomDistance ?? camera.position.distanceTo(controls.target);
+    const target = controls.target.clone(), direction = camera.position.clone().sub(target);
+    gesture();
+    const next = THREE.MathUtils.clamp(distance / factor, controls.minDistance, controls.maxDistance);
+    moveCamera(target, next, direction);
+    if (travel) { travel.duration = 280; travel.zoomDistance = next; }
+  }
+
   controls.addEventListener('start', () => { interacting = true; gesture(); }); controls.addEventListener('end', () => { interacting = false; invalidate(); }); controls.addEventListener('change', invalidate);
   let down;
   canvas.addEventListener('pointerdown', event => { down = [event.clientX, event.clientY]; }, { signal: scope.signal });
@@ -323,7 +335,7 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     if (!state || event.ctrlKey || event.altKey || event.metaKey) return;
     if (event.key === 'Home') { gesture(); fit(); } else if (event.key.toLowerCase() === 'f') { gesture(); fit([...state.active]); }
     else if (event.key === 'Enter') pick(width / 2, height / 2);
-    else if (['+', '=', '-'].includes(event.key)) { gesture(); camera.position.sub(controls.target).multiplyScalar(event.key === '-' ? 1.2 : .8).add(controls.target); controls.update(); }
+    else if (['+', '=', '-'].includes(event.key)) zoom(event.key === '-' ? 1 / 1.2 : 1.25);
     else if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) { gesture(); const orbit = new THREE.Spherical().setFromVector3(camera.position.clone().sub(controls.target)); orbit.theta += event.key === 'ArrowLeft' ? -.12 : event.key === 'ArrowRight' ? .12 : 0; orbit.phi = THREE.MathUtils.clamp(orbit.phi + (event.key === 'ArrowUp' ? -.12 : event.key === 'ArrowDown' ? .12 : 0), .05, Math.PI - .05); camera.position.setFromSpherical(orbit).add(controls.target); controls.update(); }
     else return; event.preventDefault(); invalidate();
   }, { signal: scope.signal });
@@ -399,7 +411,9 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
       }
     },
     replay() {
-      if (motion.matches || !state || state.active.size && (state.provisional || state.mismatch)) return false;
+      if (motion.matches || !state || !selected && state.active.size && (state.provisional || state.mismatch)) return false;
+      // Play resumes the current view while a concept is selected; the tour is for the overview.
+      if (selected) { stopped = false; follow = false; manualFrame = true; travel = reveal = null; onMotion(true); invalidate(); return true; }
       stopped = false; follow = true; manualFrame = false; overviewOrbit = !state.active.size; wasDiscovering = false; onMotion(true);
       if (!state.active.size) { fit(); return true; }
       const groups = buildPilotReplay(state); if (!groups.length) return false;
@@ -421,7 +435,7 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
       const direction = new THREE.Vector3().setFromSpherical(orbit), { target, distance } = framing(nodes.map(node => node.id), direction);
       moveCamera(target, distance, direction);
     },
-    zoom(factor) { if (!state) return; gesture(); const distance = camera.position.distanceTo(controls.target); camera.position.sub(controls.target).multiplyScalar(THREE.MathUtils.clamp(distance / factor, controls.minDistance, controls.maxDistance) / distance).add(controls.target); controls.update(); invalidate(); },
+    zoom,
     stats() { return { entry: entry?.stats(), preview: previewStats(), highlight: highlight.stats(), ...motionField.stats(), spider: spider.stats(), replay: { running: Boolean(replay), run: replayRun, bank: replay?.groups[replay.index]?.bank, touched: [...(replay?.touched || [])] }, contextGeometry: [points.geometry.uuid, contextEdges.geometry.uuid], contextColors: positions.slice(0, 6).map((node, index) => ({ id: node.id, color: new THREE.Color().fromBufferAttribute(points.geometry.attributes.color, index).getHexString() })), selectedId: selected, nodePositions: selectedIds.map(projectedNode), pan: controls.mouseButtons.LEFT === THREE.MOUSE.PAN, framePending: Boolean(frame), camera: camera.position.toArray(), target: controls.target.toArray(), renderedIds: [...selectedIds], renderedRelations: renderedEdges.map(edge => ({ ...edge })), arrows: renderedEdges.map((edge, index) => { const color = new THREE.Color(); arrows.getColorAt(index, color); return { ...edge, progress: arrowProgress[index], color: '#' + color.getHexString() }; }), contextLost: lost, pointsPixelSize: points.material.size, pointSizeAttenuation: points.material.sizeAttenuation, contextOpacity: points.material.opacity, contextEdgeOpacity: contextEdges.material.opacity, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, drawCalls: renderer.info.render.calls, frameIntervals: [...frameIntervals], renderCpuMs: [...renderCpuMs] }; },
     resetPerformance() { frameIntervals.length = renderCpuMs.length = 0; previousActive = false; },
     destroy() {

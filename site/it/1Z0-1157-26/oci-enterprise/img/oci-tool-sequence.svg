@@ -2,7 +2,7 @@
   <title id="title">Scambio tra l'applicazione e OCI Responses API</title>
   <desc id="description">L'applicazione dichiara consultar_pedido e calcular_total. OCI restituisce richieste da strumento. L'applicazione valida e gestisce il backend, restituisce i risultati associati e presenta la risposta dopo la fine del ciclo.</desc>
   <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="m1 1 7 4-7 4" fill="none" stroke="#536078" stroke-width="1.6"/></marker><style>text{font-family:'Segoe UI',Arial,sans-serif;fill:#17243b;font-size:22px}.h{font-size:34px;font-weight:700}.label{font-size:26px;font-weight:700}.line{fill:none;stroke:#536078;stroke-width:2.5;marker-end:url(#arrow)}</style></defs>
-  <rect width="1200" height="630" fill="#f7f8fc"/><text x="56" y="65" class="h">API richieste il tuo codice esegue le proprie funzioni</text>
+  <rect width="1200" height="630" fill="#f7f8fc"/><text x="56" y="65" class="h">La API richieste il tuo codice esegue le proprie funzioni</text>
   <rect x="84" y="113" width="320" height="60" rx="16" fill="#e9e6fa"/><text x="244" y="152" text-anchor="middle" class="label">La tua richiesta</text><rect x="796" y="113" width="320" height="60" rx="16" fill="#fae6e1"/><text x="956" y="152" text-anchor="middle" class="label">OCI Responses API</text>
   <path d="M244 186v371M956 186v371" stroke="#d4d9e5" stroke-width="3" stroke-dasharray="7 8"/>
   <text x="600" y="213" text-anchor="middle">1. Richiesta e strumenti dichiarati</text><path d="M244 231H956" class="line"/>

@@ -31,7 +31,7 @@
   <rect x="428" y="137" width="344" height="211" rx="22" class="card"/>
   <g class="icon-badge" data-icon="workflow"><circle cx="490" cy="196" r="40" fill="#fae6e1"/><use href="#workflow" x="468" y="174" width="44" height="44" color="#c74436"/></g>
   <text x="547" y="204" class="label" text-anchor="start">Implementation</text>
-  <text x="455" y="271" class="body" text-anchor="start">Where's his code run?</text>
+  <text x="455" y="271" class="body" text-anchor="start">Where's his code?</text>
   <path d="M455 293H745" class="divider"/>
   <text x="455" y="326" class="body" text-anchor="start">Owned or managed</text>
   <rect x="800" y="137" width="344" height="211" rx="22" class="card"/>

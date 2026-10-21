@@ -21,5 +21,5 @@
 <path d="M600 392V476" class="flow"/>
 <path d="M996 392V510Q996 534 972 534H900" class="flow"/>
 <path d="M300 534H228Q204 534 204 510V392" class="flow"/>
-<text x="600" y="634" text-anchor="middle" class="small">O estado prepara o contexto do próximo turno. Não muda os pesos do modelo.</text>
+<text x="600" y="634" text-anchor="middle" class="small">O estado prepara o contexto do próximo turno. não muda os pesos do modelo.</text>
 </svg>

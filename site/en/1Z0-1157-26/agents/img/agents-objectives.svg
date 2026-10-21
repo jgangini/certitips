@@ -13,7 +13,7 @@
   <style>text{font-family:'Segoe UI',Arial,sans-serif;fill:#17243b}.title{font-size:34px;font-weight:700}.label{font-size:27px;font-weight:700}.body{font-size:23px;fill:#536078}.small{font-size:22px;fill:#536078}.flow{fill:none;stroke:#536078;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}.icon{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.white{fill:#fff}</style>
 </defs>
 <rect width="1200" height="560" fill="#f7f8fc"/>
-<text x="56" y="70" class="title">Three ways to solve a request</text>
+<text x="56" y="70" class="title">3 ways to solve a request</text>
 <g transform="translate(228 204)" data-concept="chatbot" data-icon="messages-square"><circle cy="7" r="66" fill="#e9eaf1"/><circle r="66" fill="url(#coral)"/><use href="#messages-square" x="-38" y="-38" width="76" height="76" color="#c74436"/></g>
 <g transform="translate(600 204)" data-concept="workflow" data-icon="workflow"><circle cy="7" r="66" fill="#e9eaf1"/><circle r="66" fill="url(#indigo)"/><use href="#workflow" x="-38" y="-38" width="76" height="76" color="#4f46b8"/></g>
 <g transform="translate(972 204)" data-concept="agent" data-icon="bot"><circle cy="7" r="66" fill="#e9eaf1"/><circle r="66" fill="url(#teal)"/><use href="#bot" x="-38" y="-38" width="76" height="76" color="#087f7a"/></g>

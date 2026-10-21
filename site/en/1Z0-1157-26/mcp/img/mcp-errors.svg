@@ -44,7 +44,7 @@
     <path d="M553 48h50m-13-9 13 9-13 9" class="arrow"/>
     <g class="correction">
       <rect x="624" width="520" height="96" rx="16"/>
-      <text x="650" y="40">Check identity, permissions</text>
+      <text x="650" y="40">Check his identity, permissions</text>
       <text x="650" y="74">and scope of every operation.</text>
     </g>
   </g>
@@ -52,7 +52,7 @@
     <g class="mistake">
       <rect x="56" width="480" height="96" rx="16"/>
       <text x="82" y="40">"To purify, register</text>
-      <text x="82" y="74">all conversation and secrets "</text>
+      <text x="82" y="74">whole conversation and secrets "</text>
     </g>
     <path d="M553 48h50m-13-9 13 9-13 9" class="arrow"/>
     <g class="correction">

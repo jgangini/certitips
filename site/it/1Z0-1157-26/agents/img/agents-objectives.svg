@@ -13,7 +13,7 @@
   <style>text{font-family:'Segoe UI',Arial,sans-serif;fill:#17243b}.title{font-size:34px;font-weight:700}.label{font-size:27px;font-weight:700}.body{font-size:23px;fill:#536078}.small{font-size:22px;fill:#536078}.flow{fill:none;stroke:#536078;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}.icon{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.white{fill:#fff}</style>
 </defs>
 <rect width="1200" height="560" fill="#f7f8fc"/>
-<text x="56" y="70" class="title">Tre modi per risolvere un richiesta</text>
+<text x="56" y="70" class="title">3 modi per risolvere un richiesta</text>
 <g transform="translate(228 204)" data-concept="chatbot" data-icon="messages-square"><circle cy="7" r="66" fill="#e9eaf1"/><circle r="66" fill="url(#coral)"/><use href="#messages-square" x="-38" y="-38" width="76" height="76" color="#c74436"/></g>
 <g transform="translate(600 204)" data-concept="workflow" data-icon="workflow"><circle cy="7" r="66" fill="#e9eaf1"/><circle r="66" fill="url(#indigo)"/><use href="#workflow" x="-38" y="-38" width="76" height="76" color="#4f46b8"/></g>
 <g transform="translate(972 204)" data-concept="agent" data-icon="bot"><circle cy="7" r="66" fill="#e9eaf1"/><circle r="66" fill="url(#teal)"/><use href="#bot" x="-38" y="-38" width="76" height="76" color="#087f7a"/></g>
@@ -23,5 +23,5 @@
 <g fill="#fff" stroke="#cbd2df"><rect x="74" y="392" width="118" height="52" rx="12"/><rect x="246" y="392" width="134" height="52" rx="12"/><rect x="452" y="392" width="75" height="52" rx="12"/><rect x="559" y="392" width="75" height="52" rx="12"/><rect x="667" y="392" width="75" height="52" rx="12"/></g>
 <g text-anchor="middle" class="small"><text x="133" y="425">Domanda</text><text x="313" y="425">Risposta</text><text x="490" y="425">A</text><text x="597" y="425">B.</text><text x="705" y="425">C</text></g>
 <path d="M968 418H998" class="flow"/><path d="M1062 444V465Q1062 483 1044 483H922Q904 483 904 465V444" class="flow"/><g fill="#fff" stroke="#b9ddd6"><rect x="840" y="392" width="128" height="52" rx="12"/><rect x="998" y="392" width="128" height="52" rx="12"/></g>
-<text x="904" y="425" text-anchor="middle" class="small">Decisione</text><text x="1062" y="425" text-anchor="middle" class="small">Azione</text><text x="967" y="520" text-anchor="middle" class="small">Osservazione e confini</text>
+<text x="904" y="425" text-anchor="middle" class="small">Decisione</text><text x="1062" y="425" text-anchor="middle" class="small">Azione</text><text x="967" y="520" text-anchor="middle" class="small">Osservazioni e confini</text>
 </svg>

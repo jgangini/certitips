@@ -1,4 +1,4 @@
-import { collectionIds, pilotNodeCollections } from './state.js?v=a037a30fedef';
+import { collectionIds, pilotNodeCollections } from './state.js?v=06c036a5fa01';
 
 // Core first, staggered feelers; on exit retract before fading the core.
 export function pilotSpiderEnvelope(elapsed, closing = false) {

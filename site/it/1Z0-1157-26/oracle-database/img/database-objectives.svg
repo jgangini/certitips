@@ -14,5 +14,5 @@
 <text x="176" y="374" class="small"><tspan x="176">Dati → embeddings </tspan><tspan x="176" dy="32">modello supportato</tspan></text>
 <text x="458" y="374" class="small"><tspan x="458">Siumilitude + filtri </tspan><tspan x="458" dy="32">Prove per RAG</tspan></text>
 <text x="740" y="374" class="small"><tspan x="740">Search, costruire, </tspan><tspan x="740" dy="32">agenti o MCP</tspan></text>
-<text x="1022" y="374" class="small"><tspan x="1022">Identity + autorizzazioni </tspan><tspan x="1022" dy="32">per ogni operazione</tspan></text></g>
+<text x="1022" y="374" class="small"><tspan x="1022">Identità + autorizzazioni </tspan><tspan x="1022" dy="32">ad ogni operazione</tspan></text></g>
 </svg>

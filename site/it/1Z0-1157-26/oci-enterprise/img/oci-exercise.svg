@@ -9,5 +9,5 @@
   <rect x="764" y="118" width="380" height="325" rx="25" fill="#e1f2ee" stroke="#bfded6" stroke-width="2"/><text x="798" y="165" class="label">OCI Generative AI</text>
   <g class="icon" stroke="#087f7a"><path d="M857 274h164a31 31 0 0 0-12-59 48 48 0 0 0-89-12 34 34 0 0 0-63 36 18 18 0 0 0 0 35Z"/></g><text x="954" y="336" text-anchor="middle" class="label">Responses API</text><text x="954" y="376" text-anchor="middle">Modello adattato</text>
   <path d="M525 250H764" class="line"/><path d="M764 324H525" class="line"/><text x="644" y="232" text-anchor="middle">Richiesta</text><text x="644" y="306" text-anchor="middle">Risultato</text>
-  <text x="600" y="502" text-anchor="middle" style="fill:#536078">Regolare endpoint · autenticazione · progetto · modello · strumenti compatibili</text>
+  <text x="600" y="502" text-anchor="middle" style="fill:#536078">Regolare endpoint · autenticazione · progetto · modello · strumenti supportati</text>
 </svg>

@@ -1,7 +1,7 @@
 .graph-pilot-page { align-items: start; }
 .graph-pilot-page:has(.certichat-panel[hidden], [data-voice-mode="true"]) > [data-graph-pilot] { width: 100%; max-width: var(--content-width); justify-self: center; }
-[data-graph-pilot] { --pilot-inset: 8px; --pilot-launcher-height: 32px; --search-accent: #2e7d32; --pilot-color: var(--red); --pilot-spider: #00c853; display: flex; flex-direction: column; height: var(--panel-height); min-width: 0; border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: var(--radius); overflow: hidden; background: var(--paper); }
-[data-theme="dark"] [data-graph-pilot] { --pilot-spider: #00ffff; }
+[data-graph-pilot] { --pilot-inset: 8px; --pilot-launcher-height: 32px; --search-accent: #2e7d32; --quiz-accent: #b58a00; --pilot-color: var(--red); --pilot-spider: #00c853; display: flex; flex-direction: column; height: var(--panel-height); min-width: 0; border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: var(--radius); overflow: hidden; background: var(--paper); }
+[data-theme="dark"] [data-graph-pilot] { --pilot-spider: #00ffff; --quiz-accent: #f2c94c; }
 [data-graph-pilot] > .certichat-heading { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 0; }
 [data-graph-pilot] .certichat-heading > a { flex-shrink: 0; color: var(--muted); font-size: 12px; }
 .graph-pilot-viewport { position: relative; flex: 1; min-height: 280px; background: radial-gradient(ellipse at 50% 45%, #fff, #f7f8fa 45%, #e9ecf1); overflow: hidden; }
@@ -16,10 +16,14 @@
 [data-graph-pilot] [hidden] { display: none; }
 [data-graph-pilot] .chat-graph-card, [data-graph-pilot] .chat-graph-card-connector { border-color: var(--pilot-color); stroke: var(--pilot-color); }
 [data-graph-pilot] .chat-graph-card { max-width: min(280px, calc(100% - 100px)); }
+[data-graph-pilot] .chat-graph-legend [data-source="quiz"] { color: #29230c; background: #f2c94c; border-color: #f2c94c; }
+[data-graph-pilot] .chat-graph-active button[data-source="quiz"] { border-color: var(--quiz-accent); }
+[data-graph-pilot] .chat-graph-active button[data-source="quiz"][aria-pressed="true"] { background: #f2c94c; color: #29230c; }
+[data-graph-pilot] .chat-graph-card a[data-source="quiz"]::before { mask-image: url("../../icons/certiquiz-rocket.svg"); }
 [data-graph-pilot] .chat-graph-legend [data-source="search"] { color: #fff; background: var(--search-accent); border-color: var(--search-accent); }
 [data-graph-pilot] .chat-graph-legend [data-source="search"] svg { fill: none; stroke: currentColor; }
 [data-graph-pilot] .chat-graph-legend button { display: inline-flex; align-items: center; gap: 4px; font: inherit; font-size: 11px; cursor: pointer; }
-[data-graph-pilot] .chat-graph-legend .graph-pilot-structure { background: var(--muted); border-color: var(--muted); color: var(--paper); cursor: pointer; }
+[data-graph-pilot] .chat-graph-legend .graph-pilot-structure { background: var(--muted); border-color: var(--muted); color: var(--paper); cursor: default; }
 [data-graph-pilot] .chat-graph-legend button:enabled:hover:not([aria-pressed="true"]) { box-shadow: 0 2px 5px rgb(0 0 0 / .35); }
 [data-graph-pilot] .chat-graph-legend button[aria-pressed="true"] { box-shadow: inset 0 3px 6px rgb(0 0 0 / .72), inset 0 -2px 2px rgb(255 255 255 / .4); outline: none; }
 [data-graph-pilot] .chat-graph-legend button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
@@ -88,3 +92,6 @@
 [data-graph-pilot][data-renderer="fallback"] .chat-graph-toolbar:has([data-voice-mode="true"]) > [data-pilot-active-fit] { display: inline-flex; }
 [data-graph-pilot][data-renderer="fallback"] .chat-graph-toolbar > .certichat:has([data-voice-mode="true"]) { right: calc(100% + var(--pilot-inset)); }
 [data-graph-pilot][data-renderer="fallback"] .graph-pilot-viewport:has([data-voice-mode="true"]) { padding-bottom: calc(54px + 2 * var(--pilot-inset)); }
+
+/* A concept without validated references has only its title, without an empty divider. */
+[data-graph-pilot] .chat-graph-card:has([data-pilot-card-sources][hidden]) > strong { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }

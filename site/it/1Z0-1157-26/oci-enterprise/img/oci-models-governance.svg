@@ -28,7 +28,7 @@
   <text x="220" y="268" class="label" text-anchor="middle">Embed</text>
   <text x="220" y="311" class="body" text-anchor="middle">testo → vettori</text>
   <text x="220" y="345" class="body" text-anchor="middle">Search per somiglianza</text>
-  <text x="600" y="268" class="label" text-anchor="middle">Ritiro opzionale</text>
+  <text x="600" y="268" class="label" text-anchor="middle">Rilevamento opzionale</text>
   <text x="600" y="311" class="body" text-anchor="middle">I candidati sono ordinati</text>
   <text x="600" y="345" class="body" text-anchor="middle">come richiesto da</text>
   <text x="980" y="268" class="label" text-anchor="middle">Chat</text>
@@ -39,7 +39,7 @@
   <text x="84" y="477" class="body" text-anchor="start">Capacità comune · consumo per uso</text>
   <rect x="616" y="397" width="528" height="103" rx="22" class="card"/>
   <text x="644" y="441" class="label" text-anchor="start">Dedicated AI Clusters</text>
-  <text x="644" y="477" class="body" text-anchor="start">capacità dedicata · tempo riservato</text>
+  <text x="644" y="477" class="body" text-anchor="start">capacità dedicata</text>
   <rect x="56" y="536" width="1088" height="122" rx="22" fill="#17243b"/>
   <text x="238" y="582" class="label" text-anchor="middle" style="fill:#fff">Rete</text>
   <text x="238" y="626" class="body" text-anchor="middle" style="fill:#d1d8e7">Percorso privato · ZPR</text>

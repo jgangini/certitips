@@ -16,5 +16,5 @@
 <rect x="336" y="439" width="528" height="40" rx="20" fill="#f7f8fc"/>
 <text x="600" y="466" text-anchor="middle" class="small">Il risultato torna al contesto</text>
 <rect x="200" y="517" width="800" height="58" rx="20" fill="#e1f2ee"/>
-<text x="600" y="554" text-anchor="middle" class="body">Prove: nome</text>
+<text x="600" y="554" text-anchor="middle" class="body">Prove: nome · argomenti · ID · risultato</text>
 </svg>

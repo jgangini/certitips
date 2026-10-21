@@ -62,7 +62,7 @@
     <g class="mistake">
       <rect x="56" width="480" height="96" rx="16"/>
       <text x="82" y="40">"Input valid =</text>
-      <text x="82" y="74">Retirement allowed "</text>
+      <text x="82" y="74">Retirement permitted "</text>
     </g>
     <path d="M553 48h50m-13-9 13 9-13 9" class="arrow"/>
     <g class="correction">

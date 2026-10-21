@@ -57,6 +57,6 @@
   <text x="919" y="448" class="label" text-anchor="start">Observação.</text>
   <text x="827" y="515" class="body" text-anchor="start">Como rastrear uma falha?</text>
   <path d="M827 537H1117" class="divider"/>
-  <text x="827" y="570" class="body" text-anchor="start">Loks, métrica e pista</text>
+  <text x="827" y="570" class="body" text-anchor="start">Loks, métrica e faixa.</text>
   <text x="600" y="648" class="body" text-anchor="middle">Design → build → try → display → observe → melhorar</text>
 </svg>

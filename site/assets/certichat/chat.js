@@ -1,15 +1,15 @@
-import { navigateSite } from "../site/navigation.js?v=a037a30fedef";
-import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=a037a30fedef";
-import { readStored, writeStored } from "../site/storage.js?v=a037a30fedef";
-import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=a037a30fedef";
-import { installVoiceChatControls } from "./voz/chat.js?v=a037a30fedef";
-import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=a037a30fedef";
-import { activityTrail, validActivityTrail } from "./activity.js?v=a037a30fedef";
-import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=a037a30fedef";
-import { readChatStream } from "./stream.js?v=a037a30fedef";
-import { watchChatPresentation } from './presentation.js?v=a037a30fedef';
-import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=a037a30fedef';
-export { safeSourceURL } from "./trace.js?v=a037a30fedef";
+import { navigateSite } from "../site/navigation.js?v=06c036a5fa01";
+import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=06c036a5fa01";
+import { readStored, writeStored } from "../site/storage.js?v=06c036a5fa01";
+import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=06c036a5fa01";
+import { installVoiceChatControls } from "./voz/chat.js?v=06c036a5fa01";
+import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=06c036a5fa01";
+import { activityTrail, validActivityTrail } from "./activity.js?v=06c036a5fa01";
+import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=06c036a5fa01";
+import { readChatStream } from "./stream.js?v=06c036a5fa01";
+import { watchChatPresentation } from './presentation.js?v=06c036a5fa01';
+import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=06c036a5fa01';
+export { safeSourceURL } from "./trace.js?v=06c036a5fa01";
 
 const escapeChat = text => String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const responseIdPattern = /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -488,7 +488,7 @@ if (root) {
 
   async function initialize() {
     if (!chat) {
-      await import("../deep-chat.js?v=a037a30fedef");
+      await import("../deep-chat.js?v=06c036a5fa01");
       window.remarkable_plugins = [{ plugin: markdown => configureChatMarkdown(markdown, root.dataset.siteRoot) }];
       chat = document.createElement("deep-chat");
       chat.chatStyle = { border: "none", width: "100%", height: "100%", backgroundColor: "var(--paper)", color: "var(--ink)", fontFamily: "inherit" };

@@ -1,20 +1,22 @@
-import { indexGraph } from './model.js?v=a037a30fedef';
-import { normalizeTrace } from '../trace.js?v=a037a30fedef';
+import { indexGraph } from './model.js?v=06c036a5fa01';
+import { normalizeTrace } from '../trace.js?v=06c036a5fa01';
 
-export const collectionIds = ['certitips', 'certitube', 'certisearch'];
+export const collectionIds = ['certitips', 'certiquiz', 'certitube', 'certisearch'];
 export const pilotPreviewIds = [...collectionIds, 'cognee'];
-export const pilotColors = { certitips: '#c74634', certitube: '#0d65ad', certisearch: '#2e7d32', unknown: '#747680' };
+export const pilotColors = { certitips: '#c74634', certiquiz: '#b58a00', certitube: '#0d65ad', certisearch: '#2e7d32', unknown: '#747680' };
+/** Classify already validated public citations; indexed memberships remain authoritative. */
+export function pilotSourceCollection(url) {
+  const path = new URL(url).pathname;
+  return path.includes('/certitube/') ? 'certitube' : path.includes('/certisearch/') ? 'certisearch' : /\/practice\/$/.test(path) ? 'certiquiz' : 'certitips';
+}
 export function pilotNodeCollections(state, id) {
   const banks = new Set(state.memberships.get(id) || []);
-  for (const source of state.sources) if (source.nodeId === id) {
-    const path = new URL(source.url).pathname;
-    banks.add(path.includes('/certitube/') ? 'certitube' : path.includes('/certisearch/') ? 'certisearch' : 'certitips');
-  }
+  if (!banks.size) for (const source of state.sources) if (source.nodeId === id) banks.add(pilotSourceCollection(source.url));
   return collectionIds.filter(bank => banks.has(bank));
 }
 export function pilotNodeCollection(state, id) {
   const banks = pilotNodeCollections(state, id);
-  return banks.includes('certitube') ? 'certitube' : banks.includes('certisearch') ? 'certisearch' : banks[0] || 'unknown';
+  return banks.includes('certitube') ? 'certitube' : banks.includes('certisearch') ? 'certisearch' : banks.includes('certiquiz') ? 'certiquiz' : banks[0] || 'unknown';
 }
 export function pilotSourceZone(state, bank) {
   const nodes = new Set(collectionIds.includes(bank) ? state.graph.nodes.filter(node => pilotNodeCollections(state, node.id).includes(bank)).map(node => node.id) : []);
@@ -27,7 +29,7 @@ export function pilotPreviewZone(state, bank) {
   return bank === 'cognee' ? { nodes: new Set(state.graph.nodes.map(node => node.id)), edges: new Set(state.graph.edges.map((_, index) => index)) } : pilotSourceZone(state, bank);
 }
 export const relationKey = edge => JSON.stringify([edge.source, edge.target, edge.label]);
-export const collectionCenters = { certitips: [-330, 30, 0], certitube: [290, 75, 160], certisearch: [20, -120, -320], unknown: [0, 0, 50] };
+export const collectionCenters = { certitips: [-330, 30, 0], certiquiz: [40, 250, -60], certitube: [290, 75, 160], certisearch: [20, -120, -320], unknown: [0, 0, 50] };
 
 export function createPilotState(snapshot, banks, siteRoot) {
   if (!/^[a-f0-9]{64}$/.test(snapshot?.version)) throw new Error('Invalid graph version');
@@ -107,11 +109,12 @@ function hash(value) {
   return (result >>> 0) / 4294967296;
 }
 
-export function pilotLayout(state) {
+/** Preserve node identity and internal spacing while optionally separating collection centers. */
+export function pilotLayout(state, separation = 1) {
   return state.graph.nodes.map(node => {
     const collections = [...(state.memberships.get(node.id) || [])].sort();
     const centers = (collections.length ? collections : ['unknown']).map(id => collectionCenters[id]);
-    const center = [0, 1, 2].map(axis => centers.reduce((sum, value) => sum + value[axis], 0) / centers.length);
+    const center = [0, 1, 2].map(axis => centers.reduce((sum, value) => sum + value[axis], 0) / centers.length * separation);
     const angle = hash(node.id) * Math.PI * 2, vertical = hash(`${node.id}:y`) * 2 - 1, radius = 24 + 130 * Math.cbrt(hash(`${node.id}:r`));
     const horizontal = Math.sqrt(1 - vertical ** 2) * radius;
     return { ...node, collections, x: center[0] + Math.cos(angle) * horizontal, y: center[1] + vertical * radius, z: center[2] + Math.sin(angle) * horizontal };

@@ -1,6 +1,6 @@
-import { t, localizedURL, language } from '../../site/i18n.js?v=a037a30fedef';
-import { readTrace, sourcePath } from '../trace.js?v=a037a30fedef';
-import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotColors } from './state.js?v=a037a30fedef';
+import { t, localizedURL, language } from '../../site/i18n.js?v=06c036a5fa01';
+import { readTrace, sourcePath } from '../trace.js?v=06c036a5fa01';
+import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=06c036a5fa01';
 
 let mounted;
 const instances = new WeakMap();
@@ -32,8 +32,8 @@ export function mountGraphPilot(scope = document) {
   const walk = root.querySelector('[data-pilot-walk]');
   const scrollButtons = [...root.querySelectorAll('[data-pilot-scroll]')];
   const timestamp = new Intl.DateTimeFormat(language, { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
-  const sourceName = id => ({ certitips: 'tips', certitube: 'tube', certisearch: 'search', cognee: 'cognee' })[id] || 'unknown';
-  let follow = true, generatedAt, indexing = false, healthRequest;
+  const sourceName = id => ({ certitips: 'tips', certiquiz: 'quiz', certitube: 'tube', certisearch: 'search', cognee: 'cognee' })[id] || 'unknown';
+  let follow = true, generatedAt, checkedAt, indexing = false, healthRequest;
   const freshness = element('span'); freshness.className = 'graph-pilot-freshness'; freshness.dataset.pilotFreshness = ''; freshness.hidden = true; freshness.setAttribute('role', 'img');
   const updating = element('span'); updating.className = 'certichat-spinner chat-graph-updating';
   updating.hidden = true; updating.setAttribute('role', 'status'); updating.setAttribute('aria-label', t('Actualizando el índice de conocimiento'));
@@ -61,7 +61,7 @@ export function mountGraphPilot(scope = document) {
   // Native button activation (click, Enter or Space) alone changes the selected source layers.
   const updateLegendSelection = () => scene?.preview([...enabledBanks]);
   for (const chip of root.querySelectorAll('.chat-graph-legend [data-source]')) {
-    const bank = { tips: 'certitips', tube: 'certitube', search: 'certisearch', cognee: 'cognee' }[chip.dataset.source];
+    const bank = { tips: 'certitips', quiz: 'certiquiz', tube: 'certitube', search: 'certisearch', cognee: 'cognee' }[chip.dataset.source];
     chip.setAttribute('aria-pressed', 'false');
     chip.addEventListener('click', () => {
       if (enabledBanks.has(bank)) enabledBanks.delete(bank); else enabledBanks.add(bank);
@@ -73,7 +73,7 @@ export function mountGraphPilot(scope = document) {
     const label = running ? t('Detener') : t('Reproducir');
     if (reducedMotion.matches) replayButton.setAttribute('aria-description', t('Animación desactivada por la preferencia de movimiento reducido.'));
     else replayButton.removeAttribute('aria-description');
-    replayButton.disabled = reducedMotion.matches || !scene || !state || !running && state.active.size > 0 && (state.provisional || state.mismatch);
+    replayButton.disabled = reducedMotion.matches || !scene || !state || !running && !selectedId && state.active.size > 0 && (state.provisional || state.mismatch);
     replayButton.title = label; replayButton.setAttribute('aria-label', label);
     replayButton.setAttribute('aria-pressed', String(running));
     replayButton.querySelector('use').setAttribute('href', new URL(`../../icons/lucide-${running ? 'square' : 'play'}.svg`, import.meta.url).href);
@@ -82,10 +82,10 @@ export function mountGraphPilot(scope = document) {
     if (!selectedId) return;
     selectedId = undefined; selection.textContent = ''; card.hidden = true; connector.setAttribute('hidden', '');
     for (const button of concepts.querySelectorAll('button')) button.setAttribute('aria-pressed', 'false');
-    scene?.clearSelection();
+    scene?.clearSelection(); motionControl();
   }
   document.addEventListener('click', event => {
-    if (![card, canvas, concepts].some(node => event.composedPath().includes(node))) dismiss();
+    if (![card, canvas, concepts, root.querySelector('.chat-graph-toolbar')].some(node => event.composedPath().includes(node))) dismiss();
   }, { signal });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') dismiss(); }, { signal });
   function select(id, center = false) {
@@ -93,7 +93,7 @@ export function mountGraphPilot(scope = document) {
     const node = state?.graph.byId.get(id); if (!node) return;
     selectedId = id;
     const bank = pilotNodeCollection(state, id);
-    root.style.setProperty('--pilot-color', pilotColors[bank]); card.dataset.source = sourceName(bank);
+    root.style.setProperty('--pilot-color', bank === 'certiquiz' ? 'var(--quiz-accent)' : pilotColors[bank]); card.dataset.source = sourceName(bank);
     const title = root.querySelector('[data-pilot-card-title]'); title.replaceChildren();
     const tag = [...concepts.querySelectorAll('button')].find(button => button.dataset.nodeId === id);
     const ordinal = tag?.querySelector('.chat-graph-number')?.textContent;
@@ -101,17 +101,17 @@ export function mountGraphPilot(scope = document) {
     title.append(element('span', t(node.label)));
     const target = root.querySelector('[data-pilot-card-sources]'); target.replaceChildren();
     const sources = state.sources.filter(source => source.nodeId === id);
-    if (!sources.length) target.append(element('p', t('Sin referencia asociada a esta consulta.')));
     for (const source of sources) {
       const path = sourcePath(source.url, siteRoot); if (!path) continue;
       const link = element('a', t(source.title)); link.href = localizedURL(path); link.dataset.sourceUrl = source.url; link.title = t(source.title);
-      link.dataset.source = /(?:^|\/)certisearch\//.test(path) ? 'search' : /(?:^|\/)certitube\//.test(path) ? 'tube' : 'tips'; link.setAttribute('aria-label', t('Profundizar: {title}', { title: t(source.title) })); target.append(link);
+      link.dataset.source = sourceName(pilotSourceCollection(source.url)); link.setAttribute('aria-label', t('Profundizar: {title}', { title: t(source.title) })); target.append(link);
     }
+    target.hidden = target.childElementCount === 0;
     const count = state.edges.filter(edge => edge.source === id || edge.target === id).length;
     selection.textContent = t('{label}. {count} relaciones en la evidencia mostrada.', { label: t(node.label), count });
     for (const button of concepts.querySelectorAll('button')) button.setAttribute('aria-pressed', String(button.dataset.nodeId === id));
     card.hidden = false;
-    scene?.select(id, center);
+    scene?.select(id, center); motionControl();
     const button = [...concepts.querySelectorAll('button')].find(button => button.dataset.nodeId === id);
     if (button) concepts.scrollTo({ left: concepts.scrollLeft + button.getBoundingClientRect().left - concepts.getBoundingClientRect().left - (concepts.clientWidth - button.offsetWidth) / 2, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   }
@@ -130,7 +130,6 @@ export function mountGraphPilot(scope = document) {
   }
   function renderCollections() {
     for (const legend of root.querySelectorAll('.chat-graph-legend [data-source]')) {
-      if (legend.dataset.source === 'cognee') { legend.disabled = false; continue; }
       const bank = state.collections.find(value => sourceName(value.id) === legend.dataset.source);
       legend.disabled = !bank?.available;
       legend.setAttribute('aria-busy', String(banksPending));
@@ -155,10 +154,13 @@ export function mountGraphPilot(scope = document) {
   }
   function renderMeta() {
     const target = root.querySelector('[data-pilot-meta]'); target.replaceChildren();
-    const date = new Date(generatedAt);
+    const processed = new Date(generatedAt), date = checkedAt || processed;
     for (const [name, value] of [[t('Conceptos'), `${state.active.size}/${state.graph.nodes.length.toLocaleString(language)}`], [t('Relaciones'), `${state.edges.length}/${state.graph.edges.length.toLocaleString(language)}`], [t('Actualización'), Number.isFinite(date.getTime()) ? timestamp.format(date).replaceAll('/', '-').replace(',', '') : t('fecha no disponible')], [t('Versión'), state.graphVersion.slice(0, 12)]]) {
       const item = element('div'); item.append(element('dt', name), element('dd', value)); target.append(item);
     }
+    const sync = target.children[2].querySelector('dd');
+    sync.dataset.pilotSync = '';
+    sync.title = t(checkedAt ? 'Última sincronización con el repositorio (hora de Perú, UTC−5). Índice generado el {when}.' : 'Índice generado el {when} (hora de Perú, UTC−5). Sincronización del repositorio pendiente de comprobar.', { when: Number.isFinite(processed.getTime()) ? timestamp.format(processed).replaceAll('/', '-').replace(',', '') : t('fecha no disponible') });
     const version = target.lastElementChild.querySelector('dd');
     version.title = state.graphVersion; version.setAttribute('aria-busy', String(indexing));
     updating.hidden = !indexing; version.append(updating, freshness);
@@ -203,7 +205,7 @@ export function mountGraphPilot(scope = document) {
   root.querySelector('[data-pilot-zoom-out]').addEventListener('click', () => scene?.zoom(.8), { signal });
   replayButton.addEventListener('click', () => {
     if (animating) { scene?.stop(); return; }
-    dismiss(); follow = true; root.dataset.followPaused = 'false'; scene?.replay();
+    follow = !selectedId; root.dataset.followPaused = String(!follow); scene?.replay();
   }, { signal });
   window.addEventListener('certichat:stop', () => scene?.stop(true), { signal });
   window.addEventListener('certivoice:command', event => { if (['stop', 'interrupt', 'exit'].includes(event.detail)) scene?.stop(true); }, { signal });
@@ -269,6 +271,9 @@ export function mountGraphPilot(scope = document) {
     if (!apiBase || document.hidden || signal.aborted || healthRequest) return;
     healthRequest = json(`${apiBase}/api/health`, true).then(data => {
       indexing = data.knowledge?.indexing === true;
+      // Only server-confirmed, timezone-aware sync times may advance the visible date.
+      const value = data.knowledge?.checkedAt;
+      if (typeof value === 'string' && /(?:Z|[+-]\d{2}:\d{2})$/i.test(value) && Number.isFinite(Date.parse(value))) checkedAt = new Date(value);
       if (!data.knowledge) snapshotRetry = true;
       refreshSnapshot(data.knowledge?.graphVersion, data.knowledge?.checkedAt);
     }).catch(() => { indexing = false; snapshotRetry = true; }).finally(() => { healthRequest = null; if (state && !signal.aborted) { renderMeta(); renderFreshness(); } });
@@ -291,7 +296,7 @@ export function mountGraphPilot(scope = document) {
     const revision = ++sceneRevision; scene?.destroy(); scene = undefined;
     if (compact.matches) { availability(false); return; }
     try {
-      const { createPilotScene } = await import('./scene.js?v=a037a30fedef');
+      const { createPilotScene } = await import('./scene.js?v=06c036a5fa01');
       if (signal.aborted || revision !== sceneRevision) return;
       availability(true); canvas.dataset.disposed = 'false';
       scene = createPilotScene(canvas, labels, select, () => { follow = false; root.dataset.followPaused = 'true'; }, availability, anchorCard, value => { zoom.textContent = `${Math.round(value * 100)}%`; }, (running, bank = '') => {
@@ -300,7 +305,7 @@ export function mountGraphPilot(scope = document) {
       }, activity => {
         walk.hidden = !activity;
         if (!activity) return;
-        walk.style.setProperty('--walk-color', pilotColors[activity.bank]);
+        walk.style.setProperty('--walk-color', activity.bank === 'certiquiz' ? 'var(--quiz-accent)' : pilotColors[activity.bank]);
         root.querySelector('[data-pilot-walk-bank]').textContent = state.collections.find(bank => bank.id === activity.bank)?.label || t('Conceptos');
         root.querySelector('[data-pilot-walk-concepts]').textContent = activity.nodes.map(node => t(node.label)).join('\n');
       }, motionControl);

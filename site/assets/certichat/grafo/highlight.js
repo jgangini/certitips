@@ -1,5 +1,5 @@
-import * as THREE from '../../vendor/three/three.module.js?v=a037a30fedef';
-import { pilotPreviewIds, pilotColors, pilotPreviewZone } from './state.js?v=a037a30fedef';
+import * as THREE from '../../vendor/three/three.module.js?v=06c036a5fa01';
+import { pilotPreviewIds, pilotColors, pilotPreviewZone } from './state.js?v=06c036a5fa01';
 
 // The overlay contains only existing members/edges; it never strengthens grey context.
 export function createPilotHighlight(scene) {
@@ -28,14 +28,18 @@ export function createPilotHighlight(scene) {
         }
       }
     },
-    draw(weights, dark, contextColor) {
+    draw(weights, dark, contextColor, quizColor = pilotColors.certiquiz) {
       layers.forEach(({ bank, group, cloud, lines }, index) => {
-        if (bank === 'cognee') { cloud.material.uniforms.color.value.set(contextColor); lines.material.color.set(contextColor); }
+        if (bank === 'cognee' || bank === 'certiquiz') { const color = bank === 'cognee' ? contextColor : quizColor; cloud.material.uniforms.color.value.set(color); lines.material.color.set(color); }
         group.visible = weights[index] > 0;
-        cloud.material.uniforms.opacity.value = weights[index] * (dark ? .065 : .045);
-        lines.material.opacity = weights[index] * (dark ? .34 : .3);
+        // Dense source layers must not become opaque surfaces when their lines overlap.
+        const edges = (lines.geometry.attributes.position?.count || 0) / 2;
+        const density = Math.sqrt(400 / Math.max(400, edges));
+        cloud.material.uniforms.size.value = (dark ? 5 : 12) * Math.min(2, devicePixelRatio || 1);
+        cloud.material.uniforms.opacity.value = weights[index] * (dark ? .24 : .045);
+        lines.material.opacity = weights[index] * (dark ? .15 * density : .3);
       });
     },
-    stats: () => layers.map(({ bank, group, cloud, lines }) => ({ bank, visible: group.visible, color: lines.material.color.getHexString(), points: cloud.geometry.attributes.position?.count || 0, edges: (lines.geometry.attributes.position?.count || 0) / 2, lineOpacity: lines.material.opacity, cloudOpacity: cloud.material.uniforms.opacity.value })),
+    stats: () => layers.map(({ bank, group, cloud, lines }) => ({ bank, visible: group.visible, color: lines.material.color.getHexString(), points: cloud.geometry.attributes.position?.count || 0, edges: (lines.geometry.attributes.position?.count || 0) / 2, lineOpacity: lines.material.opacity, cloudOpacity: cloud.material.uniforms.opacity.value, pointSize: cloud.material.uniforms.size.value })),
   };
 }

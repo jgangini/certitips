@@ -39,7 +39,7 @@
   <text x="84" y="477" class="body" text-anchor="start">Common capacity · consumption by use</text>
   <rect x="616" y="397" width="528" height="103" rx="22" class="card"/>
   <text x="644" y="441" class="label" text-anchor="start">Dedicated AI Clusters</text>
-  <text x="644" y="477" class="body" text-anchor="start">dedicated capacity · time reserved</text>
+  <text x="644" y="477" class="body" text-anchor="start">dedicated capacity</text>
   <rect x="56" y="536" width="1088" height="122" rx="22" fill="#17243b"/>
   <text x="238" y="582" class="label" text-anchor="middle" style="fill:#fff">Network</text>
   <text x="238" y="626" class="body" text-anchor="middle" style="fill:#d1d8e7">Private Route · ZPR</text>

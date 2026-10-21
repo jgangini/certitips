@@ -14,5 +14,5 @@
 <text x="176" y="374" class="small"><tspan x="176">Data → embeddings </tspan><tspan x="176" dy="32">model supported</tspan></text>
 <text x="458" y="374" class="small"><tspan x="458">Siumilitude + filters </tspan><tspan x="458" dy="32">Evidence for RAG</tspan></text>
 <text x="740" y="374" class="small"><tspan x="740">Search, build, </tspan><tspan x="740" dy="32">agents or MCP</tspan></text>
-<text x="1022" y="374" class="small"><tspan x="1022">Identity + permissions </tspan><tspan x="1022" dy="32">for each operation</tspan></text></g>
+<text x="1022" y="374" class="small"><tspan x="1022">Identity + permissions </tspan><tspan x="1022" dy="32">at each operation</tspan></text></g>
 </svg>

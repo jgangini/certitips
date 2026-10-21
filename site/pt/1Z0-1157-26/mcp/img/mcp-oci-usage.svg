@@ -34,6 +34,6 @@
   <text x="575" y="389" class="body" text-anchor="middle">Aplique credenciais.</text>
   <text x="1010" y="389" class="body" text-anchor="middle">Devolve dados.</text>
   <rect x="56" y="488" width="1088" height="108" rx="22" class="card"/>
-  <text x="86" y="531" class="label" text-anchor="start">Contratos com relatório autorizado</text>
-  <text x="86" y="568" class="body" text-anchor="start">Mesmo período = mesma moeda = mesmo fuso horário = mesmo intervalo</text>
+  <text x="86" y="531" class="label" text-anchor="start">Contratos com relatório autorizado.</text>
+  <text x="86" y="568" class="body" text-anchor="start">O mesmo período = mesma moeda = mesmo fuso horário = mesmo intervalo</text>
 </svg>
