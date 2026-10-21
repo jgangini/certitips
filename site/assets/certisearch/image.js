@@ -1,4 +1,4 @@
-import { validateCase, assertCurrentResponse } from './case.js?v=06c036a5fa01';
+import { validateCase, assertCurrentResponse } from './case.js?v=1201ff168136';
 
 export const IMAGE_LIMIT = 384 * 1024;
 const invalid = () => { throw new Error('La imagen no es válida o supera el límite admitido.'); };
