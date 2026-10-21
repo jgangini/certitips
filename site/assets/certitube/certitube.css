@@ -1,0 +1,124 @@
+.tube-player { margin: 0; border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: var(--radius); overflow: hidden; background: var(--white); }
+.tube-player, .tube-videos { box-shadow: 0 8px 36px var(--shadow); }
+/* ponytail: the noninteractive card receives citation focus; its controls keep keyboard outlines. */
+.tube-player:focus, .tube-watch:focus { outline: none; }
+.tube-heading { margin-bottom: 0; }
+.tube-watch { display: contents; }
+.tube-heading strong, .tube-videos header strong { display: block; line-height: 1.05; }
+/* YouTube IFrame API requiere un viewport de al menos 200×200 px. */
+.tube-screen { position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 200px; background: #111; }
+.tube-screen > * { display: block; width: 100%; height: 100%; border: 0; }
+.tube-screen .tube-loading { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.tube-player [hidden] { display: none; }
+.tube-player [data-tube-status] { margin: 0; padding: 10px 16px; color: var(--muted); }
+.tube-chapters { display: flex; align-items: center; gap: 6px; padding: 0 8px; border-top: 1px solid var(--line); }
+.tube-chapter-list { display: flex; flex: 1; min-width: 0; gap: 6px; margin: 6px 0; padding: 2px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+.tube-chapter-list::-webkit-scrollbar { display: none; }
+.tube-chapters :is(a,[role="tab"]) { flex-shrink: 0; display: inline-flex; align-items: stretch; border: 1px solid var(--line); border-radius: 4px; background: var(--hover); color: var(--ink); font-size: 13px; line-height: 1.4; white-space: nowrap; text-decoration: none; }
+.tube-time { margin: 3px 0; padding: 0 6px; border-right: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.tube-chapter-title { padding: 3px 6px; }
+.tube-chapters :is(a[aria-current="true"],[aria-selected="true"]) { background: var(--red); border-color: var(--red); color: var(--on-red); }
+.tube-chapters a[aria-current="true"] .tube-time { border-color: currentColor; }
+.tube-chapters :is(a,[role="tab"]):hover { border-color: var(--red); }
+.tube-chapters :is(a,[role="tab"]):focus-visible { outline-offset: -3px; }
+.tube-scroll { flex-shrink: 0; width: 32px; height: 32px; min-height: 32px; padding: 0; }
+.tube-scroll svg { width: 14px; height: 14px; }
+.tube-scroll:disabled { display: none; }
+.tube-summary, .tube-resources, .tube-chapter-description { border-top: 1px solid var(--line); padding: 12px 20px; background: var(--white); color: var(--muted); font-size: .8rem; line-height: 1.5; }
+.tube-summary h2, .tube-resources h2, .tube-chapter-description h3 { margin: 0 0 4px; color: var(--red); font-size: .65rem; font-weight: 750; letter-spacing: 1px; text-transform: uppercase; line-height: 1.6; }
+.tube-summary { padding-top: 0; }
+.tube-summary h2 { position: sticky; top: 0; z-index: 1; margin: 0 -20px 12px; padding: 12px 20px 4px; background: var(--white); }
+.tube-summary h2::after { content: ""; position: absolute; inset: 100% 0 auto; height: 12px; background: linear-gradient(var(--white), transparent); pointer-events: none; }
+.tube-resources > :first-child, .tube-chapter-description > :first-child { margin-top: 0; }
+.tube-summary > p:first-of-type, .tube-chapter-description > p:first-of-type { margin-top: 0; }
+.tube-summary > :last-child, .tube-resources > :last-child, .tube-chapter-description > :last-child { margin-bottom: 0; }
+.tube-description { overflow: hidden; }
+.tube-resources ul { padding: 0; list-style: none; }
+.tube-resources li { display: flex; align-items: baseline; gap: 8px; margin: 6px 0; }
+.tube-resources li svg { flex-shrink: 0; width: 12px; height: 12px; fill: currentColor; }
+.tube-resources li, .tube-resources a { color: var(--ink); }
+.tube-resources a { display: inline-flex; flex: 0 1 auto; align-items: baseline; gap: 8px; min-width: 0; max-width: 100%; }
+.tube-resources a span { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tube-resources li:is(:hover, :focus-within), .tube-resources li:is(:hover, :focus-within) a { color: var(--red); }
+.course-page[data-page^="certitube"] { --sidebar: 0px; }
+.course-page[data-page^="certitube"] :is(.course-main, .prose) { max-width: none; }
+.tube-detail { display: grid; grid-template-columns: minmax(0, 1fr) clamp(300px, 30%, 360px); gap: 24px; align-items: start; }
+.tube-videos { align-self: stretch; contain: size; min-height: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: var(--radius); background: var(--white); }
+.tube-videos > header { flex-shrink: 0; }
+.tube-videos ol { flex: 1; min-height: 0; list-style: none; padding: 8px; margin: 0; overflow: auto; scroll-snap-type: y proximity; }
+.tube-videos li { scroll-snap-align: start; }
+.tube-videos a { display: flex; gap: 10px; padding: 8px; margin-bottom: 8px; border: 1px solid transparent; border-radius: 7px; background: var(--hover); color: var(--ink); font-size: .85rem; line-height: 1.4; text-decoration: none; }
+.tube-videos a:hover, .tube-videos a:focus-visible { border-color: var(--red); color: var(--ink); }
+.tube-videos img { flex-shrink: 0; width: clamp(120px, 45%, 144px); height: auto; aspect-ratio: 16 / 9; align-self: flex-start; border-radius: 5px; background: var(--hover); }
+.tube-videos a > span { min-width: 0; align-self: center; }
+.tube-videos a strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.tube-video-summary { display: none; }
+.tube-summary, .tube-description, .tube-resources, .tube-videos ol { scrollbar-color: var(--scrollbar) transparent; scrollbar-width: thin; }
+@media (min-width: 801px) {
+  .tube-player { height: var(--panel-height); display: flex; flex-direction: column; }
+}
+@media (min-width: 1001px) {
+  .tube-heading, .tube-chapters { flex-shrink: 0; }
+  .tube-screen { flex-shrink: 1; max-height: 40%; }
+  .tube-summary { flex: 0 1 auto; min-height: 100px; max-height: 25%; overflow: auto; padding-bottom: 24px; mask-image: linear-gradient(#000 calc(100% - 14px), transparent); }
+  .tube-description { flex-shrink: 0; min-height: 0; max-height: 25%; overflow: auto; }
+  .tube-resources { flex: 1 0 auto; min-height: 0; overflow: auto; }
+  .tube-player:has(.tube-chapters[hidden]) .tube-summary { flex: 1 1 auto; max-height: none; }
+  .tube-player:has(.tube-chapters[hidden]) .tube-resources { flex: 0 0 auto; }
+}
+@media (min-width: 801px) {
+  .course-page[data-page^="certitube"] #main { width: var(--frame-width); margin-left: var(--frame-left); margin-right: 0; padding: 20px 0; }
+  .tube-detail { max-width: var(--content-width); margin-inline: auto; }
+}
+@media (min-width: 1001px) {
+  .course-page[data-page^="certitube"]:has(.certichat:not(.is-beside-content) [data-chat-open]:not([hidden])) .tube-videos { max-height: calc(var(--panel-height) + 20px - 2 * var(--layout-gap) - var(--chat-launcher-size)); }
+}
+@media (max-width: 1000px) {
+  .tube-detail { grid-template-columns: minmax(0, 1fr); }
+  .tube-watch { flex: none; display: flex; flex-direction: column; width: 100%; min-width: 0; min-height: min-content; max-height: 50%; background: var(--white); }
+  .tube-heading { flex: none; }
+  .tube-browse { flex: 1; width: 100%; min-width: 0; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding-bottom: calc(2 * var(--layout-gap) + var(--chat-launcher-size)); scrollbar-color: var(--scrollbar) transparent; scrollbar-width: thin; }
+  .tube-chapters { position: sticky; top: 0; z-index: 2; background: var(--white); }
+  .tube-screen { flex-shrink: 1; max-height: 40dvh; }
+  .tube-summary h2 { position: static; }
+  .tube-summary h2::after { display: none; }
+  .tube-videos { contain: none; margin: 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; box-shadow: none; overflow: visible; }
+  .tube-videos > header { display: none; }
+  .tube-videos ol { display: block; padding: 0; overflow: visible; scroll-snap-type: none; }
+  .tube-videos li { margin: 0 0 20px; }
+  .tube-videos a { display: block; margin-bottom: 0; padding: 0; border-radius: 0; font-size: .9rem; }
+  .tube-videos img { display: block; width: 100%; height: auto; border-radius: 0; }
+  .tube-videos a > span { display: block; padding: 10px var(--content-gutter); }
+  .tube-videos a strong { display: block; overflow: visible; }
+}
+@media (min-width: 801px) and (max-width: 1000px) {
+  .course-page[data-page^="certitube"] #main { padding-bottom: calc(2 * var(--layout-gap) + var(--chat-launcher-size)); }
+  .tube-player { height: auto; overflow: clip; }
+  .tube-watch { position: sticky; top: var(--header); z-index: 3; max-height: calc((100dvh - var(--header) - var(--footer-height)) / 2); }
+  .tube-browse { flex: none; overflow: visible; padding-bottom: 0; }
+  .tube-chapters { top: calc(var(--header) + var(--tube-watch-height)); }
+  .tube-videos ol { padding: 8px; }
+  .tube-videos a { display: flex; gap: var(--layout-gap); padding: 16px; border-radius: 7px; }
+  .tube-videos a strong { font-size: 1.45rem; line-height: 1.05; }
+  .tube-videos img { width: 40%; }
+  .tube-videos a > span { align-self: flex-start; padding: 0; }
+  .tube-video-summary { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; margin-top: 8px; color: var(--muted); font-size: .8rem; line-height: 1.5; }
+  .tube-videos li:last-child { margin-bottom: 0; }
+}
+@media (max-width: 800px) {
+  .course-page[data-page^="certitube"] { overflow: hidden; }
+  .course-page[data-page^="certitube"] #main { position: fixed; inset: var(--header) 0 var(--footer-height); width: auto; margin: 0; padding: 0; }
+  .course-page[data-page^="certitube"] .prose { height: 100%; }
+  .tube-detail { display: flex; flex-direction: column; gap: 0; width: 100%; min-width: 0; height: 100%; overflow: hidden; }
+  /* ponytail: reuse the player section's data hooks while its two mobile children fill the content area. */
+  .tube-player { display: contents; }
+  .tube-watch { border-top: 4px solid var(--red); }
+  .tube-heading strong { font-size: 1.25rem; }
+}
+@media (max-width: 800px) and (max-height: 540px) {
+  /* Con poco alto, desplazar el conjunto permite conservar el mínimo del proveedor. */
+  .course-page[data-page^="certitube"] #main { overflow-y: auto; }
+  .tube-detail { height: auto; overflow: visible; }
+  .tube-watch { max-height: none; }
+  .tube-browse { flex: none; overflow: visible; }
+}

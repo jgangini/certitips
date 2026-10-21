@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "icons": [
+    {
+      "library": "lucide",
+      "name": "pencil",
+      "theme": "default",
+      "file": "lucide-pencil.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/pencil.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "7e1ca7a6f5c1eb949671df762f2baadd32f5bd841d43153c3a15279af7d78d0c",
+      "sha256": "479ce98d328e49fbf7c226fdffd4cc4a12baf54711379c43b1df8d1a560cda22",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "check",
+      "theme": "default",
+      "file": "lucide-check.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/check.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "7f33acc9a77a61659531044525fc008edebe215bf4dcf1c789c8674ad3277db0",
+      "sha256": "dc94bf01c078de0c2863c19312c0afd1e5f0b1d472891dd07afcba5609e30d21",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "calculator",
+      "theme": "default",
+      "file": "lucide-calculator.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/calculator.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "a6b191250b1ffabdf9fc9536662309f1b0f65336aa681d75bae9f1708baaefd0",
+      "sha256": "9bb2f9c0761f53d43489c4ff36d1ff8f738ee09a7541297ddfb604603e46cfe7",
+      "license": "ISC and Feather MIT",
+      "color": null
+    }
+  ]
+}

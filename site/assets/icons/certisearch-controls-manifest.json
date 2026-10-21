@@ -48,7 +48,83 @@
       "sha256": "2e69d788f51dc5e4f90c51e933b036e4987ebd0c88e284ee899e3f84de9b82d7",
       "license": "ISC and Feather MIT",
       "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "folder-open",
+      "theme": "default",
+      "file": "lucide-folder-open.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/folder-open.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "ee57452b40e71df310214091dd9da1941a397c83197b8ff8d7ae66dd4242578b",
+      "sha256": "518fc7a58c20a2c95fcbf71c9d77b736cefbc71bb3345c47fdbe1f992c7ad932",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "droplet",
+      "theme": "default",
+      "file": "lucide-droplet.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/droplet.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "abca4df60f91c605d945c6fe5ee0e6c919b53116d81e268f4581f8841bf24751",
+      "sha256": "da4c1fd0e5ffea07f579bc84b44d70cbf51d6300f8ae3646743cac0ef268b925",
+      "license": "ISC and Feather MIT",
+      "color": "#2997ff"
+    },
+    {
+      "library": "lucide",
+      "name": "mic",
+      "theme": "default",
+      "file": "lucide-mic.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/mic.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "9b940cd735d1ffa270ba670c4e677d9a09400f3fa81d6b3f405b12a3b67a59a8",
+      "sha256": "22ec62328251331854c3aaaf9ac3379cedf03d134b4c97561de1eb375dcc56d9",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "lucide",
+      "name": "file-chart-column",
+      "theme": "default",
+      "file": "lucide-file-chart-column.svg",
+      "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/file-chart-column.svg",
+      "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+      "source_sha256": "7d3798a02beb8d13bb629d073b753b0a1909086fc6ebefcf5467d6264339d1fa",
+      "sha256": "e3a2dc46ed9be1f823e7c172f18b1b736a205ee984b37ea7e464c584d1b153bb",
+      "license": "ISC and Feather MIT",
+      "color": null
+    },
+    {
+      "library": "skill-icons",
+      "name": "oracle",
+      "theme": "dark",
+      "file": "skill-icons-oracle-dark.svg",
+      "source": "https://raw.githubusercontent.com/LelouchFR/skill-icons/5401d691a2268d5a3ee6c3b3163c31b6a2a0be6d/assets/oracle-dark.svg",
+      "commit": "5401d691a2268d5a3ee6c3b3163c31b6a2a0be6d",
+      "source_sha256": "932c450f3df6ccb22597661e9d76dd79b81cd6018f4524f506f95b8f2bebe345",
+      "sha256": "1297d3d7f7a63b3b4db907ae3ba47c40a4dd6a63eab9de553660c91dbaa57e70",
+      "license": "MIT",
+      "color": null
     }
   ],
-  "licenseFile": "assets/icons/LICENSE-certisearch-controls.txt"
+  "licenseFile": "assets/icons/LICENSE-certisearch-controls.txt",
+  "derivatives": [
+    {
+      "file": "annotation-cursor.svg",
+      "source": "User-provided SVG, 2026-10-19 request",
+      "changes": "Unchanged user-provided path geometry; 32px cursor size, blue fill, no outline",
+      "sha256": "21acf1a6af23b4dd7d2df43e874f652ce122ef8a6d8d0365f03bd1a8106a62a2",
+      "license": "Not specified by the user; no third-party license asserted"
+    },
+    {
+      "file": "oracle-estimator.svg",
+      "source": "skill-icons-oracle-dark.svg",
+      "changes": "Removed background tile; preserved Oracle O path geometry, currentColor per explicit user request",
+      "sha256": "7d4c7799d3ffd3534abe2a6b83db046fed2b13d335f8b3023629eace93d4674f",
+      "license": "MIT; see LICENSE-certisearch-skill-icons-LICENSE.txt"
+    }
+  ]
 }
