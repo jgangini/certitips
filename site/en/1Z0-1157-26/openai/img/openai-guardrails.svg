@@ -17,6 +17,6 @@
   <rect x="56" y="436" width="1088" height="228" rx="22" fill="#17243b"/><text x="84" y="478" class="label white">Trace: What happened, how long it took and how it ended</text>
   <text x="84" y="516" class="white">Examples · Fictitious times</text>
   <g fill="#263952"><rect x="84" y="544" width="304" height="92" rx="14"/><rect x="448" y="544" width="304" height="92" rx="14"/><rect x="812" y="544" width="304" height="92" rx="14"/></g>
-  <g text-anchor="middle"><text x="236" y="579" class="white">Input validated</text><text x="236" y="614" class="white">12 ms · accepted</text><text x="600" y="579" class="white">Consultation authorized</text><text x="600" y="614" class="white">85 ms · complete</text><text x="964" y="579" class="white">Revised output</text><text x="964" y="614" class="white">10 m · approved</text></g>
+  <g text-anchor="middle"><text x="236" y="579" class="white">Input validated</text><text x="236" y="614" class="white">12 ms · accepted</text><text x="600" y="579" class="white">Query authorized</text><text x="600" y="614" class="white">85 ms · complete</text><text x="964" y="579" class="white">Revised output</text><text x="964" y="614" class="white">10 m · approved</text></g>
   <path d="M388 590H448" stroke="#9babc2" stroke-width="2.5"/><path d="M752 590H812" stroke="#9babc2" stroke-width="2.5"/>
 </svg>

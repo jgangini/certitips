@@ -1,15 +1,15 @@
-import { navigateSite } from "../site/navigation.js?v=d74a86d320d2";
-import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=d74a86d320d2";
-import { readStored, writeStored } from "../site/storage.js?v=d74a86d320d2";
-import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=d74a86d320d2";
-import { installVoiceChatControls } from "./voz/chat.js?v=d74a86d320d2";
-import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=d74a86d320d2";
-import { activityTrail, validActivityTrail } from "./activity.js?v=d74a86d320d2";
-import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=d74a86d320d2";
-import { readChatStream } from "./stream.js?v=d74a86d320d2";
-import { watchChatPresentation } from './presentation.js?v=d74a86d320d2';
-import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=d74a86d320d2';
-export { safeSourceURL } from "./trace.js?v=d74a86d320d2";
+import { navigateSite } from "../site/navigation.js?v=a037a30fedef";
+import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=a037a30fedef";
+import { readStored, writeStored } from "../site/storage.js?v=a037a30fedef";
+import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=a037a30fedef";
+import { installVoiceChatControls } from "./voz/chat.js?v=a037a30fedef";
+import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=a037a30fedef";
+import { activityTrail, validActivityTrail } from "./activity.js?v=a037a30fedef";
+import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=a037a30fedef";
+import { readChatStream } from "./stream.js?v=a037a30fedef";
+import { watchChatPresentation } from './presentation.js?v=a037a30fedef';
+import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=a037a30fedef';
+export { safeSourceURL } from "./trace.js?v=a037a30fedef";
 
 const escapeChat = text => String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const responseIdPattern = /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -101,14 +101,23 @@ if (root) {
   if (dock) {
     dock.append(root);
     panel.setAttribute("role", "region");
-    root.querySelector("[data-chat-close]").hidden = true;
+    root.querySelector("[data-chat-close]").hidden = false;
     root.querySelector('.certichat-actions a').hidden = true;
   }
   const viewer = document.querySelector("#diagram-viewer"), homeParent = document.body;
   let presenting = false, launcherVoiceState = {};
   const mobileChat = matchMedia("(max-width: 800px)");
   let launcherContent = document.querySelector(".tube-detail, [data-group-carousel]") || document.querySelector(".course-page .course-main");
+  // Move the same instance between its dock and local icon control, preserving chat/case state.
+  function positionDockLauncher() {
+    launcher.setAttribute('aria-label', 'CertiChat'); launcher.title = 'CertiChat';
+    const controls = document.querySelector(isSearchPage() ? '.search-toolbar' : '.graph-pilot-viewport .chat-graph-toolbar');
+    const compact = panel.hidden || !isSearchPage() && panel.dataset.voiceMode === "true";
+    const parent = compact && controls ? controls : dock;
+    if (root.parentNode !== parent) parent.insertBefore(root, parent === controls ? controls.querySelector('[data-pilot-active-fit]') : null);
+  }
   function positionLauncher() {
+    if (dock) return positionDockLauncher();
     if (presenting || !launcherContent || !panel.hidden) return;
     const content = launcherContent.querySelector(".path-section.is-active, .tube-player") || launcherContent;
     const box = launcherContent.getBoundingClientRect(), gap = parseFloat(getComputedStyle(root).getPropertyValue("--layout-gap"));
@@ -158,6 +167,16 @@ if (root) {
   const confirmation = root.querySelector("[data-chat-confirm]"), confirmClear = confirmation.querySelector("[data-chat-confirm-yes]"), cancelClear = confirmation.querySelector("[data-chat-confirm-no]");
   const clearError = root.querySelector("[data-chat-clear-error]"), closeClearError = root.querySelector("[data-chat-clear-error-close]");
   const storageKey = `certichat:${root.dataset.siteRoot}`;
+  let openPreference = null;
+  try { openPreference = sessionStorage.getItem(`${storageKey}:open`); } catch { /* Keep the current document preference without storage. */ }
+  /** Preserve an explicit close across navigation; automatic layout closes remain temporary. */
+  function rememberOpen(value) {
+    openPreference = value;
+    try {
+      if (value === null) sessionStorage.removeItem(`${storageKey}:open`);
+      else sessionStorage.setItem(`${storageKey}:open`, value);
+    } catch { /* The live instance still retains the choice. */ }
+  }
   const quizLockKey = "certitips:certiquiz:active-player";
   const quizApi = root.dataset.quizApi;
   function readQuizLock() {
@@ -180,7 +199,8 @@ if (root) {
   addEventListener("pagehide", () => {
     presentation?.cancel(); presentation = undefined;
     if (dock && !textNavigating && !referenceNavigation) {
-      try { sessionStorage.removeItem(`${storageKey}:open`); sessionStorage.removeItem(`${storageKey}:reference`); } catch { /* Navigation also works without session storage. */ }
+      if (openPreference !== "false") rememberOpen(null);
+      try { sessionStorage.removeItem(`${storageKey}:reference`); } catch { /* Navigation also works without session storage. */ }
     }
     const scroller = chat?.shadowRoot?.querySelector("#messages");
     if (scroller && !panel.hidden) {
@@ -273,9 +293,10 @@ if (root) {
     const nodes = event.composedPath(), link = nodes.find(node => node.tagName === "A");
     if (!link) return;
     const source = nodes.some(node => node === chat || node.matches?.("[data-graph-pilot]")) && safeSourceURL(link.dataset.sourceUrl, root.dataset.siteRoot);
-    referenceNavigation = source ? link.href : undefined;
+    referenceNavigation = source && openPreference !== "false" ? link.href : undefined;
     if (!referenceNavigation) return;
-    try { sessionStorage.setItem(`${storageKey}:open`, "true"); sessionStorage.setItem(`${storageKey}:reference`, referenceNavigation); } catch { /* La navegación sigue disponible sin almacenamiento. */ }
+    rememberOpen("true");
+    try { sessionStorage.setItem(`${storageKey}:reference`, referenceNavigation); } catch { /* La navegación sigue disponible sin almacenamiento. */ }
   });
 
   async function finishTextNavigation() {
@@ -285,7 +306,10 @@ if (root) {
     const result = pending.navigation ? pending : await performVoiceAction(pending.action);
     if (!result.navigation) return;
     persist();
-    try { sessionStorage.setItem(`${storageKey}:open`, "true"); sessionStorage.setItem(`${storageKey}:reference`, result.navigation); } catch { /* Navigation also works without storage. */ }
+    if (openPreference !== "false") {
+      rememberOpen("true");
+      try { sessionStorage.setItem(`${storageKey}:reference`, result.navigation); } catch { /* Navigation also works without storage. */ }
+    }
     textNavigating = true;
     try { if (!await navigateSite(result.navigation, { source: "text" })) location.assign(result.navigation); }
     catch { setStatus(t("Sin conexión. Vuelve a intentarlo."), true); }
@@ -464,7 +488,7 @@ if (root) {
 
   async function initialize() {
     if (!chat) {
-      await import("../deep-chat.js?v=d74a86d320d2");
+      await import("../deep-chat.js?v=a037a30fedef");
       window.remarkable_plugins = [{ plugin: markdown => configureChatMarkdown(markdown, root.dataset.siteRoot) }];
       chat = document.createElement("deep-chat");
       chat.chatStyle = { border: "none", width: "100%", height: "100%", backgroundColor: "var(--paper)", color: "var(--ink)", fontFamily: "inherit" };
@@ -499,15 +523,22 @@ if (root) {
         .ai-message:not(.streamed-message) a[data-link-kind="certitips"]::before { mask-image: url("${new URL("../icons/certitips-course.svg", import.meta.url).href}"); }
         .ai-message:not(.streamed-message) a[data-link-kind="certitube"]::before { mask-image: url("${new URL("../icons/certitube.svg", import.meta.url).href}"); }`;
       chat.auxiliaryStyle += `.inner-message-container:has(> .certichat-feedback) { flex-direction: column; align-items: flex-start; }
-        .certichat-feedback { display: flex; gap: 2px; margin: 4px 0 7px; }
-        .certichat-feedback button { display: inline-grid; place-items: center; width: 26px; height: 26px; padding: 4px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); cursor: pointer; }
+        .outer-message-container:has(.certichat-feedback) { margin-bottom: 0; }
+        .outer-message-container:has(.certichat-feedback) + .outer-message-container { margin-top: 0; }
+        .outer-message-container:has(.certichat-feedback) + .outer-message-container .message-bubble { margin-top: 6px; }
+        .certichat-feedback { display: flex; gap: 2px; margin: 4px 0 0; transition: opacity 160ms ease; }
+        @media (hover: hover) and (pointer: fine) {
+          .certichat-feedback { opacity: 0; }
+          .certichat-feedback:is(:hover, :focus-within) { opacity: 1; }
+        }
+        .certichat-feedback button { display: inline-grid; place-items: center; width: 24px; height: 24px; padding: 5px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); cursor: pointer; }
         .certichat-feedback button:hover, .certichat-feedback button:focus-visible,
         .certichat-feedback button[aria-pressed="true"], .certichat-feedback button[data-copied="true"] { color: var(--ink); }
         .certichat-feedback button:focus-visible { outline: 2px solid var(--muted); outline-offset: 1px; }
         .certichat-feedback[data-rating="1"] [data-action="down"],
         .certichat-feedback[data-rating="-1"] [data-action="up"] { display: none; }
         .certichat-feedback button:disabled { cursor: wait; opacity: .65; }
-        .certichat-feedback-icon { display: block; width: 16px; height: 16px; background-color: currentColor; mask: center / contain no-repeat; }
+        .certichat-feedback-icon { display: block; width: 14px; height: 14px; background-color: currentColor; mask: center / contain no-repeat; }
         .certichat-feedback-copy { mask-image: url("${new URL("../icons/lucide-copy.svg", import.meta.url).href}"); }
         .certichat-feedback-up { mask-image: url("${new URL("../icons/lucide-thumbs-up.svg", import.meta.url).href}"); }
         .certichat-feedback-down { mask-image: url("${new URL("../icons/lucide-thumbs-down.svg", import.meta.url).href}"); }`;
@@ -679,10 +710,37 @@ if (root) {
     }
   }
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  let panelAnimation, closing = false, layoutTransition;
+  let panelAnimation, closing = false, layoutTransition, launcherAnimation, dockMotion;
+  /** Invalidate a dock operation before cancelling animations that may settle its promises. */
+  function cancelDockMotion() {
+    if (!dockMotion) return;
+    dockMotion = undefined; closing = false;
+    launcherAnimation?.cancel(); launcherAnimation = undefined;
+    panelAnimation?.cancel(); panelAnimation = undefined; layoutTransition?.skipTransition();
+    launcher.style.removeProperty('opacity'); launcher.style.removeProperty('visibility');
+  }
+  function beginDockMotion(direction) {
+    cancelDockMotion();
+    return dockMotion = { direction };
+  }
+  /** Fade the real local button only outside the dock layout snapshots. */
+  async function fadeDockLauncher(show, animate, from = 0) {
+    launcher.style.removeProperty('visibility'); launcher.style.opacity = show ? '1' : '0';
+    if (!animate || reducedMotion.matches || !launcher.animate) return;
+    const animation = launcher.animate([{ opacity: from }, { opacity: show ? 1 : 0 }], { duration: 200, easing: 'ease' });
+    launcherAnimation = animation;
+    await animation.finished.catch(() => {});
+    if (launcherAnimation === animation) launcherAnimation = undefined;
+  }
+  addEventListener('pagehide', cancelDockMotion);
+  reducedMotion.addEventListener('change', () => {
+    if (!reducedMotion.matches || !dockMotion) return;
+    launcherAnimation?.finish(); panelAnimation?.finish(); layoutTransition?.skipTransition();
+  });
   async function changeCourseLayout(change, animate) {
-    const main = presenting ? viewer.querySelector('.dialog-content') : document.querySelector('.course-page:not([data-page^="certitube"]) .course-main');
-    if (!animate || reducedMotion.matches || dock || mobileChat.matches || !main || !document.startViewTransition) return change();
+    const workspaceDock = Boolean(dock);
+    const main = presenting ? viewer.querySelector('.dialog-content') : workspaceDock ? document.querySelector(isSearchPage() ? '.search-workspace' : '[data-graph-pilot]') : document.querySelector('.course-page:not([data-page^="certitube"]) .course-main');
+    if (!animate || reducedMotion.matches || mobileChat.matches || !main || !document.startViewTransition) return change();
     while (layoutTransition) { layoutTransition.skipTransition(); await layoutTransition.finished.catch(() => {}); }
     const figure = [...main.querySelectorAll(presenting ? 'img' : '.diagram')].map(element => {
       const box = element.getBoundingClientRect();
@@ -692,7 +750,7 @@ if (root) {
     const html = document.documentElement;
     html.classList.add('is-chat-layout-transition');
     main.style.viewTransitionName = 'course-reading';
-    launcher.style.viewTransitionName = 'course-chat-launcher';
+    if (!workspaceDock) launcher.style.viewTransitionName = 'course-chat-launcher';
     if (image) image.style.viewTransitionName = 'course-diagram';
     let transition;
     const cleanup = () => {
@@ -706,40 +764,70 @@ if (root) {
       // Native snapshots interpolate the visible figure while text reflows once at its final width.
       transition = document.startViewTransition(() => {
         changed = true; change();
-        if (!presenting && !panel.hidden && !document.body.classList.contains('is-compact-nav') && main.getBoundingClientRect().width < panel.offsetWidth) document.querySelector('.menu-toggle')?.click();
+        if (!presenting && !dock && !panel.hidden && !document.body.classList.contains('is-compact-nav') && main.getBoundingClientRect().width < panel.offsetWidth) document.querySelector('.menu-toggle')?.click();
       });
       layoutTransition = transition;
       transition.finished.catch(() => {}).finally(cleanup);
-      await transition.updateCallbackDone;
+      await (workspaceDock ? transition.finished : transition.updateCallbackDone);
     } catch { if (!changed) change(); cleanup(); }
   }
+  /** Locate the minimized control within its workspace before moving the live chat out of the dock. */
+  function dockLauncherBounds(button) {
+    if (isSearchPage()) {
+      const footer = document.querySelector('.search-toolbar'), style = getComputedStyle(footer);
+      const bounds = footer.getBoundingClientRect(), visible = bounds.width ? bounds : dock.getBoundingClientRect();
+      const size = parseFloat(getComputedStyle(footer.closest('[data-certisearch]')).getPropertyValue('--workspace-control-size'));
+      const bottom = bounds.width ? bounds.top + (bounds.height + size) / 2 : visible.bottom - (parseFloat(style.height) - size) / 2;
+      return { width: size, height: size, right: visible.right - parseFloat(style.paddingRight), bottom };
+    }
+    const graph = document.querySelector('[data-graph-pilot]'), viewport = graph.querySelector('.graph-pilot-viewport').getBoundingClientRect();
+    const last = graph.querySelector('[data-pilot-active-fit]').getBoundingClientRect(), inset = parseFloat(getComputedStyle(graph).getPropertyValue('--pilot-inset'));
+    return { ...button, width: launcher.offsetWidth, height: launcher.offsetHeight,
+      right: last.width ? last.left - inset : viewport.right - inset, bottom: last.height ? last.bottom : viewport.bottom - inset };
+  }
   function animatePanel(button, fold) {
-    if (presenting && (!fold || document.startViewTransition) || dock || reducedMotion.matches || !panel.animate) return;
+    if (presenting && (!fold || document.startViewTransition) || reducedMotion.matches || !panel.animate) return;
     const box = panel.getBoundingClientRect();
     if (!box.width || !box.height) return;
-    // ponytail: fold the real panel briefly; a separate overlay is only needed if scaled content becomes distracting.
+    if (fold && dock) button = dockLauncherBounds(button);
+    // Fold the existing panel toward its local control without creating another composer.
     const small = presenting ? { transform: "translateX(100%)", opacity: 0 } : { transform: `translate(${button.right - box.right}px, ${button.bottom - box.bottom}px) scale(${button.width / box.width}, ${button.height / box.height})`, opacity: 0, borderRadius: getComputedStyle(launcher).borderRadius };
     const full = { transform: "none", opacity: 1, borderRadius: getComputedStyle(panel).borderRadius };
     return panel.animate(fold ? [full, small] : [small, full], { duration: 320, easing: "cubic-bezier(.22, 1, .36, 1)", fill: fold ? "forwards" : "none" });
   }
-  function closePanel(animate = true, focus = true) {
-    if (panel.hidden || closing) return;
+  /** Commit the closed layout, then expose and focus its launcher after the actual resize. */
+  async function finishClosingPanel(animate, focus, operation) {
+    if (operation && operation !== dockMotion) return;
+    if (!operation) launcher.style.removeProperty('visibility');
+    await changeCourseLayout(() => {
+      if (operation && operation !== dockMotion) return;
+      panel.hidden = true; launcher.hidden = false;
+      const search = document.querySelector("[data-certisearch]"); if (search) delete search.dataset.mobile;
+      launcher.style.visibility = operation ? 'hidden' : '';
+      launcher.setAttribute('aria-expanded', 'false');
+      panelAnimation?.cancel(); panelAnimation = undefined;
+      positionLauncher();
+      if (!operation) { closing = false; if (focus) launcher.focus({ preventScroll: true }); }
+    }, animate);
+    if (!operation || operation !== dockMotion) return;
+    await fadeDockLauncher(true, animate);
+    if (operation !== dockMotion) return;
+    dockMotion = undefined; closing = false; launcher.style.removeProperty('opacity');
+    if (focus) launcher.focus({ preventScroll: true });
+  }
+  function closePanel(animate = true, focus = true, explicit = true) {
+    if (explicit) rememberOpen("false");
+    else if (openPreference !== "false") rememberOpen(null);
+    if (panel.hidden) { cancelDockMotion(); positionLauncher(); return; }
+    if (closing) return;
+    const operation = dock ? beginDockMotion('closing') : null;
     closing = true;
     // Hide the voice dock before restoring the composer, so Exit never flashes the text chat.
     if (panel.hasAttribute("data-voice-mode")) { animate = false; panel.hidden = true; }
     window.dispatchEvent(new CustomEvent("certivoice:command", { detail: "exit" }));
-    try { sessionStorage.removeItem(`${storageKey}:open`); sessionStorage.removeItem(`${storageKey}:reference`); } catch { /* Storage is optional. */ }
+    try { sessionStorage.removeItem(`${storageKey}:reference`); } catch { /* Storage is optional. */ }
     panelAnimation?.cancel();
-    const finish = () => {
-      launcher.style.removeProperty("visibility");
-      return changeCourseLayout(() => {
-      panel.hidden = true; launcher.hidden = false; launcher.style.removeProperty("visibility");
-      launcher.setAttribute("aria-expanded", "false");
-      if (focus) launcher.focus({ preventScroll: true });
-      panelAnimation?.cancel(); panelAnimation = undefined; closing = false;
-      positionLauncher();
-      }, animate);
-    };
+    const finish = () => finishClosingPanel(animate, focus, operation);
     if (!animate || reducedMotion.matches || !panel.animate) return finish();
     launcher.hidden = false; launcher.style.visibility = "hidden";
     panelAnimation = animatePanel(launcher.getBoundingClientRect(), true);
@@ -749,7 +837,7 @@ if (root) {
   let syncPresentation = () => {};
   if (viewer) {
     syncPresentation = () => {
-      if (dock) { presenting = false; return; }
+      if (dock) { presenting = false; positionLauncher(); return; }
       const active = viewer.open && (viewer.classList.contains("is-presenting") || root.dataset.voiceMode === "true" || root.parentNode === viewer);
       const voiceLauncher = active && mobileChat.matches;
       launcher.setAttribute("aria-label", voiceLauncher ? t("Activar voz") : "CertiChat");
@@ -757,7 +845,7 @@ if (root) {
       if (active === presenting) return;
       panelAnimation?.cancel(); panelAnimation = undefined; closing = false;
       presenting = active;
-      if (root.dataset.voiceMode !== "true") closePanel(false, false);
+      if (root.dataset.voiceMode !== "true") closePanel(false, false, false);
       root.classList.remove("is-beside-content"); launcher.style.removeProperty("top");
       for (const name of ["top", "left", "width", "height"]) panel.style.removeProperty(`--chat-${name}`);
       // ponytail: move the live instance; rebuilding Deep Chat would lose an in-flight response.
@@ -773,19 +861,20 @@ if (root) {
     window.addEventListener("certivoice:state", event => {
       const wasVoice = launcherVoiceState.active || launcherVoiceState.resume;
       launcherVoiceState = event.detail || {};
-      if (wasVoice && !launcherVoiceState.active && !launcherVoiceState.resume && mobileChat.matches && viewer.matches("[open].is-presenting")) closePanel(false);
+      if (wasVoice && !launcherVoiceState.active && !launcherVoiceState.resume && mobileChat.matches && viewer.matches("[open].is-presenting")) closePanel(false, true, false);
       syncPresentation();
     });
     window.dispatchEvent(new CustomEvent("certivoice:state-request"));
     syncPresentation();
   }
   window.addEventListener("site:page", () => {
+    cancelDockMotion();
     const previousDock = dock;
     dock = document.querySelector("[data-explorer-chat-slot]");
     presenting = false;
     (dock || homeParent).append(root);
     panel.setAttribute("role", dock ? "region" : "dialog");
-    root.querySelector("[data-chat-close]").hidden = Boolean(dock);
+    root.querySelector("[data-chat-close]").hidden = false;
     root.querySelector('.certichat-actions a').hidden = Boolean(dock);
     for (const name of ["top", "left", "width", "height"]) panel.style.removeProperty(`--chat-${name}`);
     if (chat) {
@@ -800,8 +889,9 @@ if (root) {
       refreshVoice(busy);
     }
     syncAdvisor();
-    if (dock && panel.hidden) launcher.click();
-    if (previousDock && !dock && root.dataset.voiceMode !== "true" && !referenceNavigation) closePanel(false, false);
+    if (dock && panel.hidden && openPreference !== "false") launcher.click();
+    if (openPreference === "false" && root.dataset.voiceMode !== "true") closePanel(false, false, false);
+    if (previousDock && !dock && root.dataset.voiceMode !== "true" && !referenceNavigation) closePanel(false, false, false);
     referenceNavigation = undefined;
     try { sessionStorage.removeItem(`${storageKey}:reference`); } catch { /* La referencia ya se consumió en la navegación continua. */ }
     observeLauncher(); syncPresentation(); fitMobileViewport();
@@ -809,16 +899,18 @@ if (root) {
   function syncQuizLock() {
     quizCode = readQuizLock();
     if (quizCode) {
+      cancelDockMotion();
       const hadFocus = root.contains(document.activeElement);
       if (confirmation.open) confirmation.close();
       panelAnimation?.cancel(); panelAnimation = undefined; closing = false;
-      panel.hidden = true; launcher.hidden = false; launcher.setAttribute("aria-expanded", "false");
+      panel.hidden = true; launcher.hidden = false;
+      const search = document.querySelector("[data-certisearch]"); if (search) delete search.dataset.mobile; launcher.setAttribute("aria-expanded", "false");
       root.hidden = true;
-      try { sessionStorage.removeItem(`${storageKey}:open`); sessionStorage.removeItem(`${storageKey}:reference`); } catch { /* Storage is optional. */ }
+      try { sessionStorage.removeItem(`${storageKey}:reference`); } catch { /* Storage is optional. */ }
       if (hadFocus) document.querySelector("#main")?.focus({ preventScroll: true });
     } else if (root.hidden) {
       root.hidden = false;
-      if (dock) launcher.click();
+      if (dock && openPreference !== "false") launcher.click();
       positionLauncher();
     }
   }
@@ -851,6 +943,7 @@ if (root) {
   addEventListener("storage", event => { if (event.key === quizLockKey) { syncQuizLock(); if (quizCode) refreshQuizLock(); } });
   document.addEventListener("visibilitychange", () => { if (!document.hidden && quizCode) refreshQuizLock(); });
   launcher.addEventListener("click", async event => {
+    if (dockMotion?.direction === "opening") return;
     if (readQuizLock()) { syncQuizLock(); return; }
     if (!panel.hidden) return closePanel(event.isTrusted);
     if (presenting && mobileChat.matches && event.isTrusted) {
@@ -860,14 +953,25 @@ if (root) {
       if (root.dataset.voiceMode !== "true") return;
       panel.dataset.voiceMode = "true";
     }
-    const button = launcher.getBoundingClientRect();
+    rememberOpen("true");
+    const button = launcher.getBoundingClientRect(), opacity = Number(getComputedStyle(launcher).opacity);
+    const operation = dock ? beginDockMotion('opening') : null;
+    if (operation) {
+      await fadeDockLauncher(false, event.isTrusted, opacity);
+      if (operation !== dockMotion) return;
+    }
     await changeCourseLayout(() => {
+      if (operation && operation !== dockMotion) return;
+      launcher.style.removeProperty('opacity');
       panel.hidden = false; launcher.hidden = true; launcher.setAttribute("aria-expanded", "true");
-      try { sessionStorage.setItem(`${storageKey}:open`, "true"); } catch { /* The panel also works when session storage is blocked. */ }
+      if (isSearchPage() && mobileChat.matches && event.isTrusted) document.querySelector("[data-certisearch]").dataset.mobile = "chat";
+      positionLauncher();
+      rememberOpen("true");
       fitMobileViewport();
       if (event.isTrusted) panelAnimation = animatePanel(button, false);
-      if (!dock && event.isTrusted) root.querySelector("[data-chat-close]").focus({ preventScroll: true });
+      if (event.isTrusted) root.querySelector("[data-chat-close]").focus({ preventScroll: true });
     }, event.isTrusted);
+    if (operation) { if (operation !== dockMotion) return; dockMotion = undefined; }
     if (!opening && !busy) { opening = connect(); await opening; opening = undefined; }
   });
   let wasOpen = false;
@@ -875,17 +979,17 @@ if (root) {
     wasOpen = sessionStorage.getItem(`${storageKey}:open`) === "true" || sessionStorage.getItem(`${storageKey}:reference`) === location.href;
     sessionStorage.removeItem(`${storageKey}:reference`);
   } catch { /* Browsers may disable session storage. */ }
-  if (!quizCode && (dock || location.hash === "#certichat" || wasOpen)) launcher.click();
+  if (!quizCode && openPreference !== "false" && (dock || location.hash === "#certichat" || wasOpen)) launcher.click();
+  else positionLauncher();
   document.documentElement.classList.remove("chat-restoring");
   window.addEventListener("pageshow", event => {
+    if (event.persisted) { try { openPreference = sessionStorage.getItem(`${storageKey}:open`); } catch { /* Retain the in-memory preference. */ } }
     syncQuizLock();
     if (quizCode) refreshQuizLock();
-    if (!event.persisted || dock) return;
-    try {
-      const open = sessionStorage.getItem(`${storageKey}:open`) === "true";
-      if (open && panel.hidden && !quizCode) launcher.click();
-      if (!open && !panel.hidden) closePanel(false);
-    } catch { /* Keep the restored panel state if storage is unavailable. */ }
+    if (!event.persisted) return;
+    const open = openPreference === "true" || dock && openPreference !== "false";
+    if (open && panel.hidden && !quizCode) launcher.click();
+    if (!open && !panel.hidden) closePanel(false, false, false);
   });
   root.querySelector("[data-chat-close]").addEventListener("click", () => closePanel());
   panel.addEventListener("keydown", event => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); closePanel(); } });

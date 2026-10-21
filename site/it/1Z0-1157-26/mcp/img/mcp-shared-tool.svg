@@ -45,6 +45,6 @@
   <path d="M396 432H584" class="connector bidirectional"/>
   <text x="490" y="414" class="mono" text-anchor="middle">tools/call</text>
   <path d="M860 344H984" class="connector bidirectional"/>
-  <text x="922" y="326" class="body" text-anchor="middle">Consultazione</text>
+  <text x="922" y="326" class="body" text-anchor="middle">Query</text>
   <text x="600" y="600" class="body" text-anchor="middle">Il risultato torna al suo host richiesta.</text>
 </svg>

@@ -1,4 +1,4 @@
-import { siteBase } from "../../site/i18n.js?v=d74a86d320d2";
+import { siteBase } from "../../site/i18n.js?v=a037a30fedef";
 
 const returnKey = `certivoice:${siteBase}:practice-return`;
 if (typeof window !== "undefined") window.addEventListener("certichat:cleared", () => { try { sessionStorage.removeItem(returnKey); } catch { /* Tab storage is optional. */ } });

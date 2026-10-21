@@ -25,7 +25,7 @@
     <text x="742" y="600" text-anchor="middle">o</text>
     <rect x="500" y="632" width="484" height="124" rx="12" fill="#F1EFED" stroke="#59616E" stroke-width="1.5"/>
     <text x="742" y="681" text-anchor="middle">Dati strutturato autorizzato</text>
-    <text x="742" y="724" text-anchor="middle">Consultazione SQL</text>
+    <text x="742" y="724" text-anchor="middle">Query SQL</text>
     <text x="742" y="802" text-anchor="middle">In base alla domanda e ai permessi</text>
     <path d="M1024 536H1088" class="edge"/>
     <rect x="1088" y="236" width="336" height="600" rx="16" fill="#FFFFFF" stroke="#59616E" stroke-width="1.5"/>

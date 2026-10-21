@@ -1,4 +1,4 @@
-import { t } from '../site/i18n.js?v=d74a86d320d2';
+import { t } from '../site/i18n.js?v=a037a30fedef';
 
 const icon = name => `<span class="annotation-icon annotation-${name}" aria-hidden="true"></span>`;
 

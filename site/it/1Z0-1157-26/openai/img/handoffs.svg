@@ -28,7 +28,7 @@
   <rect x="306" y="513" width="250" height="80" rx="18" fill="#f0f2f7"/>
   <g transform="translate(331 537) scale(1.33)" class="icon" stroke="#536078"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></g><text x="388" y="562">Rimborso</text>
   <path d="M774 392C835 294 916 294 984 366" class="route"/>
-  <text x="875" y="313" text-anchor="middle" class="small muted">Consultazione chiusa</text>
+  <text x="875" y="313" text-anchor="middle" class="small muted">Query collegato</text>
   <path d="M982 432C922 534 830 534 774 437" class="route"/>
   <text x="875" y="577" text-anchor="middle" class="small muted">Restituisce un risultato</text>
   <circle cx="732" cy="413" r="48" fill="#e1f2ee"/><circle cx="1018" cy="400" r="48" fill="#e9e6fa"/>

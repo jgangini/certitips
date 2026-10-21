@@ -114,12 +114,18 @@ html[data-theme="dark"] .certichat #certichat-panel[data-voice-mode="true"] { --
 
 @media (max-width: 800px) {
   #diagram-viewer.is-presenting .certichat-launcher > svg { background: currentColor; mask: url("../icons/voice-wave.svg") center / contain no-repeat; }
-  body:has(.certichat-panel:not([hidden])[data-voice-mode="true"]) > .site-footer { visibility: hidden; height: calc(52px + env(safe-area-inset-bottom)); min-height: calc(52px + env(safe-area-inset-bottom)); }
-  body:has(.certichat-panel:not([hidden])[data-voice-mode="true"]) .certivoice-edge { bottom: calc(52px + env(safe-area-inset-bottom)); }
-  .certichat #certichat-panel[data-voice-mode="true"], #diagram-viewer.is-presenting .certichat #certichat-panel[data-voice-mode="true"] { --voice-control-size: 44px; position: fixed; inset: auto 0 0; translate: none; width: 100%; height: calc(52px + env(safe-area-inset-bottom)); box-sizing: border-box; border: 0; border-radius: 0; background: var(--paper); box-shadow: none; animation: none; }
+  body:not(.certichat-page):has(.certichat-panel:not([hidden])[data-voice-mode="true"]) > .site-footer { visibility: hidden; height: calc(52px + env(safe-area-inset-bottom)); min-height: calc(52px + env(safe-area-inset-bottom)); }
+  body:not(.certichat-page):has(.certichat-panel:not([hidden])[data-voice-mode="true"]) .certivoice-edge { bottom: calc(52px + env(safe-area-inset-bottom)); }
+  :where(body:not(.certichat-page)) .certichat #certichat-panel[data-voice-mode="true"], #diagram-viewer.is-presenting .certichat #certichat-panel[data-voice-mode="true"] { --voice-control-size: 44px; position: fixed; inset: auto 0 0; translate: none; width: 100%; height: calc(52px + env(safe-area-inset-bottom)); box-sizing: border-box; border: 0; border-radius: 0; background: var(--paper); box-shadow: none; animation: none; }
   #diagram-viewer.is-presenting > .certichat:has(#certichat-panel[data-voice-mode="true"]) { margin: 0; z-index: 10001; }
   #diagram-viewer.is-presenting:has(.certichat-panel:not([hidden])[data-voice-mode="true"]) { padding-bottom: calc(52px + env(safe-area-inset-bottom)); }
   #diagram-viewer.is-presenting:has([data-voice-mode="true"]) .diagram-slide-count { margin-right: 20px; margin-bottom: 20px; }
 }
 
 @media (max-width: 480px) { .certichat #certichat-panel[data-voice-mode="true"], #diagram-viewer.is-presenting .certichat #certichat-panel[data-voice-mode="true"] { --voice-control-size: 31px; } }
+
+/* Dedicated workspaces share the same available width with or without the live chat dock. */
+.home-main:is(.certichat-main, .certisearch-main) { max-width: calc(var(--content-width) + var(--dock-width) + 3 * var(--layout-gap)); padding-inline: var(--content-gutter); }
+@media (max-width: 1023px) { .home-main:is(.certichat-main, .certisearch-main) { padding-inline: var(--content-gutter); } }
+@media (min-width: 801px) and (max-width: 1023px) { .home-main:is(.certichat-main, .certisearch-main) { padding-inline: var(--frame-left); } }
+@media (max-width: 800px) { .home-main:is(.certichat-main, .certisearch-main) { width: 100%; max-width: none; margin: 0; padding: 0; } }

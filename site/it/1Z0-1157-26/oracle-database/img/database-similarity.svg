@@ -13,7 +13,7 @@
   <circle cx="573" cy="181" r="11" fill="#4f46b8" stroke="#fff" stroke-width="3"/>
   <text x="365" y="229" class="body">Zaino</text><text x="365" y="259" class="body">per computer portatile</text>
   <text x="110" y="234" class="body">Pulsante per laptop</text>
-  <text x="240" y="447" text-anchor="middle" class="label" fill="#c74436">Consultazione</text>
+  <text x="240" y="447" text-anchor="middle" class="label" fill="#c74436">Query</text>
   <text x="573" y="146" text-anchor="middle" class="body">Bicicletta</text>
   <text x="74" y="562" class="body">Mappa 2D illustrativo, nessuna distanza misurata.</text>
   <text x="752" y="143" class="label">Cosine: guida</text>

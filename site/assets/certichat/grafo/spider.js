@@ -1,6 +1,6 @@
-import * as THREE from '../../vendor/three/three.module.js?v=d74a86d320d2';
-import { pilotWorldPixel } from './motion.js?v=d74a86d320d2';
-import { pilotSpiderEnvelope } from './replay.js?v=d74a86d320d2';
+import * as THREE from '../../vendor/three/three.module.js?v=a037a30fedef';
+import { pilotWorldPixel } from './motion.js?v=a037a30fedef';
+import { pilotSpiderEnvelope } from './replay.js?v=a037a30fedef';
 
 // A small decorative cursor and its feelers; these are not knowledge nodes or edges.
 export function createPilotSpider(scene) {
@@ -85,7 +85,7 @@ export function createPilotSpider(scene) {
     track?.(center);
     up.setFromMatrixColumn(camera.matrixWorld, 1); right.setFromMatrixColumn(camera.matrixWorld, 0);
     corePixel = pilotWorldPixel(center, camera, height);
-    core.position.copy(center); core.quaternion.copy(camera.quaternion); core.scale.set(8.5 * corePixel, 6 * corePixel, 6 * corePixel);
+    core.position.copy(center); core.quaternion.copy(camera.quaternion); core.scale.setScalar(8.5 * corePixel);
     feet.count = 0;
     targets.forEach((target, arm) => {
       const node = nodes.get(target.id), end = new THREE.Vector3(node.x, node.y, node.z), bend = arm % 2 ? 1 : -1;
@@ -107,5 +107,7 @@ export function createPilotSpider(scene) {
     extendLegs(); geometry.attributes.color.needsUpdate = true;
     return center.clone();
   }
-  return { configure, draw, stats: () => ({ visible: group.visible, waiting, phase, transitioning: phase != 'hidden' && phase != 'active', coreOpacity: core.material.opacity, legExtensions: [...extensions], solid: [core.material, material, feet.material].every(value => value.opacity === 1 && value.blending === THREE.NoBlending && value.transparent && !value.depthTest), color: `#${core.material.color.getHexString()}`, position: center.toArray(), coreRadiusPixels: group.visible ? core.scale.x / corePixel : 0, contactCircles: group.visible ? feet.count : 0, tentacles: group.visible ? extensions.filter(value => value > 0).length : 0, targetIds: group.visible ? targets.map(target => target.id) : [] }) };
+  /** Remove the thinking cursor immediately when real answer text, failure or cancellation arrives. */
+  function hide() { wanted = group.visible = false; phase = 'hidden'; core.material.opacity = 0; feet.count = 0; extensions = []; }
+  return { configure, draw, hide, stats: () => ({ visible: group.visible, waiting, phase, transitioning: phase != 'hidden' && phase != 'active', coreOpacity: core.material.opacity, legExtensions: [...extensions], solid: [core.material, material, feet.material].every(value => value.opacity === 1 && value.blending === THREE.NoBlending && value.transparent && !value.depthTest), color: `#${core.material.color.getHexString()}`, position: center.toArray(), coreRadiusPixels: group.visible ? core.scale.x / corePixel : 0, coreAspect: core.scale.x / core.scale.y, contactCircles: group.visible ? feet.count : 0, tentacles: group.visible ? extensions.filter(value => value > 0).length : 0, targetIds: group.visible ? targets.map(target => target.id) : [] }) };
 }

@@ -1,8 +1,8 @@
-@import url("./deck.css?v=d74a86d320d2");
-@import url("./stages.css?v=d74a86d320d2");
+@import url("./deck.css?v=a037a30fedef");
+@import url("./stages.css?v=a037a30fedef");
 
-.home-main.certisearch-main{margin-inline:0;width:auto;max-width:none;padding:20px 24px;flex:1;min-height:0}
-.certisearch{display:grid;grid-template-columns:minmax(0,1fr) var(--dock-width);gap:var(--layout-gap);min-height:0;align-items:start}
+.home-main.certisearch-main{margin-inline:auto;padding-block:20px;flex:1;min-height:0}
+.certisearch{--workspace-control-size:32px;display:grid;grid-template-columns:minmax(0,1fr) var(--dock-width);gap:var(--layout-gap);min-height:0;align-items:start}
 .search-workspace{display:flex;flex-direction:column;min-width:0;height:var(--panel-height);min-height:0;overflow:hidden;background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--red);border-radius:var(--radius);box-shadow:var(--panel-shadow)}
 .search-workspace>.certichat-heading{margin-bottom:0;min-height:57px;flex-shrink:0}.search-workspace .certichat-heading h1{margin:0;font-size:inherit;font-weight:650;letter-spacing:inherit;line-height:1.05}.search-workspace .certichat-brand small{text-transform:uppercase}.search-advisor{min-width:0}
 .certisearch-page .certichat{position:static;font-size:14px}.certisearch-page .certichat-panel{position:static;width:100%;height:var(--panel-height);padding-bottom:0;border:1px solid var(--line);border-top:4px solid var(--red);border-radius:var(--radius);box-shadow:var(--panel-shadow);overflow:hidden}
@@ -62,7 +62,7 @@
 
 @media(max-width:600px){.search-workspace>.certichat-heading{flex-wrap:wrap;gap:8px}.search-heading-actions{margin-left:auto;max-width:100%}}
 
-.certisearch:has(#certichat-panel[data-voice-mode]){grid-template-columns:minmax(0,1fr)}
+.certisearch:has(#certichat-panel[data-voice-mode],#certichat-panel[hidden]){grid-template-columns:minmax(0,1fr)}
 .certisearch:has(#certichat-panel[data-voice-mode])>.search-workspace{display:flex}
 .certisearch:has(#certichat-panel[data-voice-mode])>.search-advisor{display:contents}
 .certisearch:has(#certichat-panel[data-voice-mode])>.search-advisor>.search-mobile-switch{display:none}
@@ -79,3 +79,14 @@
 .certisearch[data-annotating=true] #search-view .node:is(.annotation-near,.search-selected) .node-card{stroke:#2997ff;stroke-width:2;vector-effect:non-scaling-stroke}
 .certisearch[data-annotating=true] #search-view .case-visual:is(.annotation-near,.search-selected,:focus-visible){position:relative;outline:none;border-color:#2997ff;box-shadow:none}
 .certisearch[data-annotating=true] #search-view .case-visual:is(.annotation-near,.search-selected,:focus-visible)::after{content:'';position:absolute;inset:0;z-index:1;box-sizing:border-box;border:calc(2px / var(--search-deck-scale,1)) solid #2997ff;border-radius:inherit;pointer-events:none}
+
+/* A closed advisor stays in the local footer; case content and its pagination remain unobstructed. */
+.certisearch:has(#certichat-panel[hidden])>.search-workspace{width:100%;max-width:var(--content-width);justify-self:center;display:flex}
+.certisearch:has(#certichat-panel[hidden])>.search-advisor{display:none}
+.search-toolbar>.certichat{position:static;flex:none;margin-left:auto;line-height:0}
+.certisearch .certichat .certichat-launcher{width:var(--workspace-control-size);height:var(--workspace-control-size);min-height:var(--workspace-control-size);padding:0;gap:0}
+.certisearch .certichat-launcher>span{display:none}
+.certisearch .certichat .certichat-launcher>svg{width:16px;height:16px}
+.search-advisor .certichat-launcher{position:absolute}
+@media(min-width:801px) and (max-width:1023px){.certisearch{grid-template-columns:minmax(0,1fr);gap:16px}}
+@media(max-width:800px){.certisearch:has(#certichat-panel[hidden])>.search-workspace{margin-inline:auto}}

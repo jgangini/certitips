@@ -1076,7 +1076,7 @@ progress::-webkit-progress-value {
     --content-gutter: 24px;
   }
   .site-header { padding-inline: var(--frame-left); transition: padding-left 360ms ease, padding-right 360ms ease; }
-  .home-main:not(.certichat-main) {
+  .home-main:not(.certichat-main):not(.certisearch-main) {
     width: var(--frame-width);
     max-width: none;
     margin-left: var(--frame-left);

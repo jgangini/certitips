@@ -1,7 +1,8 @@
-import { indexGraph } from './model.js?v=d74a86d320d2';
-import { normalizeTrace } from '../trace.js?v=d74a86d320d2';
+import { indexGraph } from './model.js?v=a037a30fedef';
+import { normalizeTrace } from '../trace.js?v=a037a30fedef';
 
 export const collectionIds = ['certitips', 'certitube', 'certisearch'];
+export const pilotPreviewIds = [...collectionIds, 'cognee'];
 export const pilotColors = { certitips: '#c74634', certitube: '#0d65ad', certisearch: '#2e7d32', unknown: '#747680' };
 export function pilotNodeCollections(state, id) {
   const banks = new Set(state.memberships.get(id) || []);
@@ -20,6 +21,10 @@ export function pilotSourceZone(state, bank) {
   const edges = new Set();
   state.graph.edges.forEach((edge, index) => { if (nodes.has(edge.source) && nodes.has(edge.target)) edges.add(index); });
   return { nodes, edges };
+}
+/** Cognee previews the full structural network; it is not an evidence source or collection. */
+export function pilotPreviewZone(state, bank) {
+  return bank === 'cognee' ? { nodes: new Set(state.graph.nodes.map(node => node.id)), edges: new Set(state.graph.edges.map((_, index) => index)) } : pilotSourceZone(state, bank);
 }
 export const relationKey = edge => JSON.stringify([edge.source, edge.target, edge.label]);
 export const collectionCenters = { certitips: [-330, 30, 0], certitube: [290, 75, 160], certisearch: [20, -120, -320], unknown: [0, 0, 50] };

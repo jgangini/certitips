@@ -1,12 +1,12 @@
-import { t, locale, siteBase } from '../site/i18n.js?v=d74a86d320d2';
-import { createCase, validateCase, reviseCase, stamp, applyProposal, applyEstimate, canRetryRequest, assertCurrentResponse, stageIssues, recordStageReview, caseStorage, downloadJSON } from './case.js?v=d74a86d320d2';
-import { esc, caseView, architectureView, estimateView, stagesView, reportView, sourceLinks, oracleChangesView, proposalReview } from './view.js?v=d74a86d320d2';
-import { mountDecks } from './deck.js?v=d74a86d320d2';
-import { setSearchAdvisor, refreshSearchChat, searchRequest, sharedChatRequest } from './api-client.js?v=d74a86d320d2';
-import { mountCaseAnnotation, annotatedMessage } from './annotate.js?v=d74a86d320d2';
-import { mountChapterScroll } from '../site/chapter-scroll.js?v=d74a86d320d2';
-import { appendMeetingText } from './meeting.js?v=d74a86d320d2';
-import { validateIllustration, caseArchive, parseCaseArchive, requestIllustration } from './image.js?v=d74a86d320d2';
+import { t, locale, siteBase } from '../site/i18n.js?v=a037a30fedef';
+import { createCase, validateCase, reviseCase, stamp, applyProposal, applyEstimate, canRetryRequest, assertCurrentResponse, stageIssues, recordStageReview, caseStorage, downloadJSON } from './case.js?v=a037a30fedef';
+import { esc, caseView, architectureView, estimateView, stagesView, reportView, sourceLinks, oracleChangesView, proposalReview } from './view.js?v=a037a30fedef';
+import { mountDecks } from './deck.js?v=a037a30fedef';
+import { setSearchAdvisor, refreshSearchChat, searchRequest, sharedChatRequest } from './api-client.js?v=a037a30fedef';
+import { mountCaseAnnotation, annotatedMessage } from './annotate.js?v=a037a30fedef';
+import { mountChapterScroll } from '../site/chapter-scroll.js?v=a037a30fedef';
+import { appendMeetingText } from './meeting.js?v=a037a30fedef';
+import { validateIllustration, caseArchive, parseCaseArchive, requestIllustration } from './image.js?v=a037a30fedef';
 
 export async function mountSearch(signal) {
   const root=document.querySelector('[data-certisearch]');
@@ -215,7 +215,7 @@ async function start(root,signal,status) {
   }
 
   const actions={
-    'show-chat':()=>{root.dataset.mobile='chat';root.querySelector('[data-action="show-workspace"]').focus();},'show-workspace':()=>{delete root.dataset.mobile;root.querySelector('[data-action="show-chat"]').focus();},
+    'show-chat':()=>{root.dataset.mobile='chat';if(document.querySelector('#certichat-panel')?.hidden)document.querySelector('[data-chat-open]')?.click();root.querySelector('[data-action="show-workspace"]').focus();},'show-workspace':()=>{delete root.dataset.mobile;root.querySelector('[data-action="show-chat"]').focus();},
     'clear-chat':async()=>{if(voiceActive)throw new Error('Termina la escucha antes de cambiar de caso.');if(busy)throw new Error('Hay una solicitud en curso.');await commit({...current,history:[],updatedAt:new Date().toISOString()},false);pending=null;await caseStorage('delete',undefined,'pending');},
     'region-review':async button=>{const before=current,decision=current.decisions.find(item=>item.id===button.dataset.id);if(!decision||decision.region!==current.region)throw new Error('Define la región y los servicios antes de confirmar su disponibilidad.');if(await confirm('Confirmar revisión regional',`<p>${esc(decision.text||'')}</p>${sourceLinks([{url:decision.sourceUrl}])}`)){if(before!==current)throw new Error('El caso cambió. Solicita una propuesta actualizada.');await commit(reviseCase(current,{decisions:current.decisions.map(item=>item===decision?{...item,status:'confirmed',reviewedAt:new Date().toISOString()}:item)}));}},
     annotate:button=>{annotating=!annotating;button.setAttribute('aria-pressed',String(annotating));root.dataset.annotating=String(annotating);render();},

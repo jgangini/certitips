@@ -1,11 +1,12 @@
-import * as THREE from '../../vendor/three/three.module.js?v=d74a86d320d2';
-import { OrbitControls } from '../../vendor/three/OrbitControls.js?v=d74a86d320d2';
-import { collectionIds, pilotLayout, pilotNodeCollections, pilotNodeCollection, pilotSourceZone, pilotColors } from './state.js?v=d74a86d320d2';
-import { pilotCameraStep, pilotFrame, pilotResultCluster } from './camera.js?v=d74a86d320d2';
-import { createPilotMotion, pilotWorldPixel } from './motion.js?v=d74a86d320d2';
-import { buildPilotReplay, pilotReplayFrame, pilotPresentationFrame, pilotQueryFrame } from './replay.js?v=d74a86d320d2';
-import { createPilotSpider } from './spider.js?v=d74a86d320d2';
-import { createPilotHighlight } from './highlight.js?v=d74a86d320d2';
+import * as THREE from '../../vendor/three/three.module.js?v=a037a30fedef';
+import { OrbitControls } from '../../vendor/three/OrbitControls.js?v=a037a30fedef';
+import { collectionIds, pilotLayout, pilotNodeCollections, pilotNodeCollection, pilotPreviewZone, pilotPreviewIds, pilotColors } from './state.js?v=a037a30fedef';
+import { pilotCameraStep, pilotFrame, pilotResultCluster } from './camera.js?v=a037a30fedef';
+import { createPilotMotion, pilotWorldPixel } from './motion.js?v=a037a30fedef';
+import { buildPilotReplay, pilotReplayFrame, pilotPresentationFrame, pilotQueryFrame } from './replay.js?v=a037a30fedef';
+import { createPilotSpider } from './spider.js?v=a037a30fedef';
+import { createPilotHighlight } from './highlight.js?v=a037a30fedef';
+import { createPilotEntry } from './entry.js?v=a037a30fedef';
 
 function blendZoneColor(zones, colors, key, value) {
   const matches = zones.filter(zone => zone[key].has(value));
@@ -36,19 +37,22 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
   const focusEdges = new THREE.LineSegments(geometry(), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: .85 }));
   const arrows = new THREE.InstancedMesh(new THREE.ConeGeometry(2.2, 6, 6), new THREE.MeshBasicMaterial(), 256); arrows.count = 0;
   scene.add(points, contextEdges, focus, focusEdges, arrows);
+  const pageGlass = document.getElementById('language-transition');
+  delete canvas.dataset.firstFrame;
+  const entry = canvas.dataset.entryPath ? createPilotEntry(points, camera, controls.target, canvas.dataset.entryPath) : null;
   const motionField = createPilotMotion(scene);
   const spider = createPilotSpider(scene);
   const highlight = createPilotHighlight(scene);
   let state, positions = [], byId = new Map(), key, frame = 0, destroyed = false, lost = false, travel, reveal, selected, selectedIds = [], renderedEdges = [], width = 1, height = 1, follow = true, interacting = false, previousActive = false, lastFrame = 0, overviewDistance = 1, lastFocusKey;
   const frameIntervals = [], renderCpuMs = [];
   let replay, replayRun = 0, presentationProgress = 1, liveEdges = [], liveGroups = [], animationIds = [], spiderTarget, activityKey, manualFrame = false;
-  let stopped = false, requestId, overviewOrbit = true, wasDiscovering = false;
+  let stopped = false, requestId, overviewOrbit = true, wasDiscovering = false, textStarted = false, cameraGroup;
   let queryStarted = 0, arrowTime = 0, previousArrowFrame = 0, relationCurves = [], arrowProgress = [];
-  const querying = () => state?.phase === 'loading' || Boolean(state?.requestId && !state.terminal);
-  let previewBanks = [], previewTransition, previewWeights = [0, 0, 0];
+  const querying = () => !textStarted && (state?.phase === 'loading' || Boolean(state?.requestId && !state.terminal) || state?.phase === 'complete' && presentationProgress === 0);
+  let previewBanks = [], previewTransition, previewWeights = pilotPreviewIds.map(() => 0);
   const sample = (values, value) => { values.push(value); if (values.length > 240) values.shift(); };
   const object = new THREE.Object3D(), raycaster = new THREE.Raycaster();
-  const palette = () => { const style = getComputedStyle(canvas); return { ...pilotColors, unknown: style.getPropertyValue('--muted').trim() || pilotColors.unknown, spider: style.getPropertyValue('--pilot-spider').trim() }; };
+  const palette = () => { const style = getComputedStyle(canvas); return { ...pilotColors, unknown: style.getPropertyValue('--muted').trim() || pilotColors.unknown, cognee: style.getPropertyValue('--muted').trim() || pilotColors.unknown, spider: style.getPropertyValue('--pilot-spider').trim() }; };
   function invalidate() { if (!frame && !destroyed && !lost && !document.hidden) frame = requestAnimationFrame(draw); }
   function changeGeometry(target, values, colors) {
     target.geometry.dispose(); target.geometry = geometry();
@@ -69,7 +73,7 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     controls.minDistance = overviewDistance / 12;
   }
   function colorContext() {
-    const zones = previewBanks.map(bank => ({ bank, ...pilotSourceZone(state, bank) }));
+    const zones = previewBanks.map(bank => ({ bank, ...pilotPreviewZone(state, bank) }));
     const colors = palette();
     const nodeColors = points.geometry.attributes.color, edgeColors = contextEdges.geometry.attributes.color;
     const nodes = new Float32Array(nodeColors.array.length), edges = new Float32Array(edgeColors.array.length);
@@ -84,7 +88,7 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
   function advancePreview(now) {
     if (!previewTransition) return;
     const phase = motion.matches ? 1 : THREE.MathUtils.smoothstep((now - previewTransition.started) / 360, 0, 1);
-    previewWeights = collectionIds.map((bank, index) => THREE.MathUtils.lerp(previewTransition.weights[index], Number(previewBanks.includes(bank)), phase));
+    previewWeights = pilotPreviewIds.map((bank, index) => THREE.MathUtils.lerp(previewTransition.weights[index], Number(previewBanks.includes(bank)), phase));
     for (const [attribute, start, end] of previewTransition.attributes) {
       for (let i = 0; i < end.length; i++) attribute.array[i] = THREE.MathUtils.lerp(start[i], end[i], phase);
       attribute.needsUpdate = true;
@@ -139,8 +143,9 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     if (!replay) return;
     replay = undefined; rebuildFocus(false); onReplay(false);
   }
-  function stop() {
-    stopped = true; stopReplay(); travel = reveal = null; onActivity(null); onMotion(false); invalidate();
+  function stop(immediate = false) {
+    if (immediate) spider.hide();
+    entry?.finish(); controls.enabled = true; stopped = true; stopReplay(); travel = reveal = null; onActivity(null); onMotion(false); invalidate();
   }
   function advanceReplay(now) {
     if (!replay) return null;
@@ -182,19 +187,47 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     const distance = THREE.MathUtils.clamp(framing(step.group.nodeIds).distance * .65, overviewDistance / 6, overviewDistance * .7);
     moveCamera(spiderTarget, distance, direction); travel.followSpider = true;
   }
+  /** Share the Play camera approach and tracking with real thinking, without inventing targets. */
+  function followDiscovery(discovery) {
+    if (!discovery.active) { cameraGroup = undefined; return; }
+    if (!discovery.group || motion.matches || stopped || !follow || manualFrame || selected || interacting) return;
+    const group = replay ? `replay-${replayRun}` : requestId;
+    if (cameraGroup === group) return;
+    cameraGroup = group; frameSpider(discovery);
+  }
+  /** Render the same point cloud while awaiting data and during the one-time entrance. */
+  function drawEntry(now) {
+    if (!entry?.active) { canvas.dataset.entryPhase = 'ready'; canvas.setAttribute('aria-busy', 'false'); controls.enabled = true; return false; }
+    camera.updateMatrixWorld();
+    const active = entry.draw(now, width, height, motion.matches, palette().unknown, !pageGlass || getComputedStyle(pageGlass).display === 'none');
+    canvas.dataset.entryPhase = entry.stats().phase; canvas.setAttribute('aria-busy', String(active));
+    controls.enabled = !active;
+    if (!active) return false;
+    const visible = scene.children.map(node => node.visible);
+    scene.children.forEach(node => { node.visible = node === points; });
+    renderer.render(scene, camera);
+    if (!canvas.dataset.firstFrame) canvas.dataset.firstFrame = 'true';
+    scene.children.forEach((node, index) => { node.visible = visible[index]; });
+    canvas.dataset.drawCount = String(Number(canvas.dataset.drawCount || 0) + 1);
+    if (!motion.matches) invalidate();
+    return true;
+  }
   function draw(now) {
-    frame = 0; if (destroyed || lost || document.hidden || !state) return;
+    frame = 0; if (destroyed || lost || document.hidden) return;
+    if (drawEntry(now) || !state) return;
     const started = performance.now(), replayStep = advanceReplay(now);
     advancePreview(now);
     const searching = querying() && !motion.matches && !stopped;
-    const discovery = replayStep || (searching ? pilotQueryFrame(animationIds, liveEdges, liveGroups, now - queryStarted) : pilotPresentationFrame(animationIds, liveEdges, liveGroups, motion.matches || stopped ? Number(presentationProgress > 0) : presentationProgress));
+    const discovery = replayStep || (searching ? pilotQueryFrame(animationIds, liveEdges, liveGroups, now - queryStarted) : pilotPresentationFrame(animationIds, liveEdges, liveGroups, 1));
     if (wasDiscovering && !discovery.active && !stopped && follow && !manualFrame && !selected) { overviewOrbit = true; fit(); }
     wasDiscovering = discovery.active;
+    followDiscovery(discovery);
     const activeBanks = new Set(discovery.targets.map(target => replayStep?.group.bank || pilotNodeCollection(state, target.id)));
     if (discovery.active) discovery.touched = new Set([...discovery.touched].filter(id => activeBanks.has(replayStep?.group.bank || pilotNodeCollection(state, id))));
     discovery.cursor = discovery.active;
     const delta = lastFrame ? Math.min(50, now - lastFrame) : 16;
-    const orbiting = !stopped && !motion.matches && follow && !manualFrame && overviewOrbit && !replay && !selected && !interacting;
+    const tracking = discovery.active && follow && !manualFrame && !selected;
+    const orbiting = !stopped && !motion.matches && !tracking;
     const active = Boolean(searching || replay || travel || reveal || interacting || orbiting || (!stopped && !motion.matches && (state.active.size || selected)));
     if (active && previousActive && now - lastFrame < 250) sample(frameIntervals, now - lastFrame);
     lastFrame = now; previousActive = active;
@@ -207,9 +240,12 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     }
     if (orbiting && !travel) {
       const direction = camera.position.clone().sub(controls.target).applyAxisAngle(new THREE.Vector3(0, 1, 0), delta * .000045);
-      const bounds = framing(undefined, direction);
-      overviewDistance = bounds.distance;
-      controls.target.copy(bounds.target); camera.position.copy(direction.normalize().multiplyScalar(overviewDistance)).add(controls.target); controls.update();
+      // Manual pan/zoom/selection cancels automatic framing, not the Play orbit.
+      if (follow && !manualFrame && overviewOrbit && !selected) {
+        const bounds = framing(undefined, direction); overviewDistance = bounds.distance;
+        controls.target.copy(bounds.target); direction.normalize().multiplyScalar(overviewDistance);
+      }
+      camera.position.copy(direction).add(controls.target); controls.update();
     }
     const paletteColors = palette();
     camera.updateMatrixWorld();
@@ -249,13 +285,14 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     arrows.instanceMatrix.needsUpdate = true; arrows.computeBoundingSphere();
     const node = byId.get(selected);
     const focused = Boolean(selected || state.active.size);
-    points.material.opacity = focused ? .1 : .2; contextEdges.material.opacity = focused ? .018 : .05;
-    highlight.draw(previewWeights, document.documentElement.dataset.theme === 'dark');
+    points.material.size = 1.35; points.material.opacity = focused ? .1 : .2; contextEdges.material.opacity = focused ? .018 : .05;
+    highlight.draw(previewWeights, document.documentElement.dataset.theme === 'dark', paletteColors.unknown);
     const animating = motionField.draw(now, camera, height, motion.matches, discovery, stopped || presentationProgress === 0 && !replay && !searching);
     const touched = [...discovery.touched].slice(-3), bank = discovery.group?.bank || pilotNodeCollection(state, discovery.targets[0]?.id);
     const nextActivity = JSON.stringify([bank, touched, discovery.active]);
     if (nextActivity !== activityKey) { activityKey = nextActivity; onActivity(discovery.active && animationIds.length ? { bank, nodes: touched.map(id => ({ id, label: state.graph.byId.get(id)?.label })).filter(node => node.label) } : null); }
     renderer.render(scene, camera);
+    if (!canvas.dataset.firstFrame) canvas.dataset.firstFrame = 'true';
     if (node) { const screen = new THREE.Vector3(node.x, node.y, node.z).project(camera); onAnchor(screen.z >= -1 && screen.z <= 1 ? { x: (screen.x + 1) * width / 2, y: (1 - screen.y) * height / 2, width, height } : null); } else onAnchor(null);
     onZoom(overviewDistance / camera.position.distanceTo(controls.target));
     sample(renderCpuMs, performance.now() - started);
@@ -263,11 +300,12 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     if (searching || replay || travel || reveal || animating || orbiting || previewTransition || spider.stats().transitioning) invalidate();
   }
   function resize() { width = Math.max(1, canvas.clientWidth); height = Math.max(1, canvas.clientHeight); camera.aspect = width / height; camera.updateProjectionMatrix(); renderer.setSize(width, height, false); if (state) { overviewDistance = framing().distance; controls.minDistance = overviewDistance / 12; } invalidate(); }
-  function gesture() { travel = null; follow = false; onGesture(); invalidate(); }
-  controls.addEventListener('start', () => { interacting = true; gesture(); }); controls.addEventListener('end', () => { interacting = false; }); controls.addEventListener('change', invalidate);
+  function gesture() { entry?.finish(); controls.enabled = true; travel = null; follow = false; onGesture(); invalidate(); }
+  controls.addEventListener('start', () => { interacting = true; gesture(); }); controls.addEventListener('end', () => { interacting = false; invalidate(); }); controls.addEventListener('change', invalidate);
   let down;
   canvas.addEventListener('pointerdown', event => { down = [event.clientX, event.clientY]; }, { signal: scope.signal });
   function pick(x, y) {
+    if (!state || entry?.active) return;
     raycaster.setFromCamera(new THREE.Vector2(x / width * 2 - 1, -y / height * 2 + 1), camera);
     raycaster.params.Points.threshold = controls.maxDistance * 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) / height * 6;
     const hits = raycaster.intersectObject(focus, false);
@@ -305,7 +343,7 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
     const bank = previewBanks.length === 1 ? previewBanks[0] : null;
     const result = { bank, banks: [...previewBanks], weights: [...previewWeights], transitioning: Boolean(previewTransition), points: 0, edges: 0 };
     if (!bank) return result;
-    const matches = (mesh, index) => new THREE.Color().fromBufferAttribute(mesh.geometry.attributes.color, index).getHexString() === new THREE.Color(pilotColors[bank]).getHexString();
+    const matches = (mesh, index) => new THREE.Color().fromBufferAttribute(mesh.geometry.attributes.color, index).getHexString() === new THREE.Color(palette()[bank]).getHexString();
     result.points = positions.filter((node, index) => matches(points, index)).length;
     result.edges = state.graph.edges.filter((edge, index) => matches(contextEdges, index * 2) && matches(contextEdges, index * 2 + 1)).length;
     return result;
@@ -313,15 +351,14 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
   const resizeObserver = new ResizeObserver(resize), theme = new MutationObserver(() => { if (state) { rebuildContext(); rebuildFocus(false, replay?.groups[replay.index]); } });
   resizeObserver.observe(canvas); theme.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] }); resize();
   return {
-    preview(banks) { const values = Array.isArray(banks) ? banks : [banks]; const next = collectionIds.filter(bank => values.includes(bank)); if (next.join() === previewBanks.join()) return; previewBanks = next; if (state) colorContext(); },
-    update(next, shouldFollow = true) {
+    preview(banks) { const values = Array.isArray(banks) ? banks : [banks]; const next = pilotPreviewIds.filter(bank => values.includes(bank)); if (next.join() === previewBanks.join()) return; previewBanks = next; if (state) colorContext(); },
+    update(next, shouldFollow = true, entryReady = true) {
       state = next; follow = shouldFollow;
       if (next.requestId !== requestId || ['loading', 'accepted'].includes(next.phase)) {
-        presentationProgress = next.requestId ? 0 : 1;
+        presentationProgress = next.requestId ? 0 : 1; textStarted = false; cameraGroup = undefined;
         if (['loading', 'accepted'].includes(next.phase)) { stopped = false; travel = null; queryStarted = performance.now(); }
       }
-      if (next.phase === 'complete' && presentationProgress === 0) presentationProgress = .001;
-      if (['history', 'legacy.complete', 'idle', 'error'].includes(next.phase)) presentationProgress = 1;
+      if (['history', 'legacy.complete', 'idle', 'error'].includes(next.phase)) { presentationProgress = 1; textStarted = true; spider.hide(); }
       requestId = next.requestId; onMotion(!motion.matches && !stopped);
       const nextKey = `${state.graphVersion}:${state.layoutRevision || 0}`;
       const focusKey = JSON.stringify([[...state.active], state.edges, state.sources]);
@@ -331,21 +368,25 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
         const initial = framing(); overviewDistance = initial.distance;
         camera.position.sub(controls.target).normalize().multiplyScalar(initial.distance).add(initial.target);
         controls.target.copy(initial.target); controls.update(); travel = null;
-      } else if (follow && !stopped && presentationProgress === 1) fit(); }
+      } else if (follow && !stopped && presentationProgress === 1) fit();
+        camera.updateMatrixWorld(); if (entryReady) entry?.configure(positions, width, height); }
       else if (focusKey !== lastFocusKey) { manualFrame = false; selected = undefined; rebuildFocus(); }
+      if (entryReady && entry?.stats().phase === 'waiting') { camera.updateMatrixWorld(); entry.configure(positions, width, height); }
       lastFocusKey = focusKey; invalidate();
     },
+    /** The presentation event represents actual visible text, not SSE status/metadata. */
     present(progress) {
-      if (!Number.isFinite(progress) || progress <= presentationProgress || progress > 1) return;
-      const first = presentationProgress === 0; presentationProgress = progress;
-      if (!replay && !motion.matches && !stopped && follow && !manualFrame) {
-        if (progress === 1) { wasDiscovering = false; overviewOrbit = true; fit(); }
-        else if (first && animationIds.length) frameSpider(pilotPresentationFrame(animationIds, liveEdges, liveGroups, progress));
+      if (!Number.isFinite(progress) || progress <= 0 || progress > 1 || textStarted) return;
+      textStarted = true; presentationProgress = 1;
+      if (!replay) {
+        spider.hide(); cameraGroup = undefined; wasDiscovering = false; onActivity(null);
+        if (!stopped && follow && !manualFrame) { overviewOrbit = true; fit(); }
       }
       invalidate();
     },
     select(id, center = false) {
       if (!byId.has(id)) return;
+      entry?.finish(); controls.enabled = true;
       const previous = selected;
       stopReplay(); selected = id; rebuildFocus(false);
       if (center) {
@@ -363,16 +404,15 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
       if (!state.active.size) { fit(); return true; }
       const groups = buildPilotReplay(state); if (!groups.length) return false;
       selected = undefined; onAnchor(null); follow = true; manualFrame = false; replay = { groups, index: -1, started: performance.now() }; replayRun++; travel = reveal = null;
-      const step = advanceReplay(replay.started);
-      frameSpider(step);
+      advanceReplay(replay.started);
       invalidate(); return true;
     },
     clearSelection() { selected = undefined; onAnchor(null); rebuildFocus(false); },
     stop,
-    fit() { follow = true; manualFrame = true; stopReplay(); fit(undefined, .4); },
+    fit() { if (!state) return; entry?.finish(); controls.enabled = true; follow = true; manualFrame = true; stopReplay(); fit(undefined, .4); },
     fitActive() {
-      if (!state.active.size) return;
-      follow = true;
+      if (!state?.active.size) return;
+      entry?.finish(); controls.enabled = true; follow = true;
       manualFrame = true;
       stopReplay();
       const nodes = pilotResultCluster([...state.active].map(id => byId.get(id)).filter(Boolean));
@@ -381,14 +421,14 @@ export function createPilotScene(canvas, labels, onSelect, onGesture, onAvailabi
       const direction = new THREE.Vector3().setFromSpherical(orbit), { target, distance } = framing(nodes.map(node => node.id), direction);
       moveCamera(target, distance, direction);
     },
-    zoom(factor) { gesture(); const distance = camera.position.distanceTo(controls.target); camera.position.sub(controls.target).multiplyScalar(THREE.MathUtils.clamp(distance / factor, controls.minDistance, controls.maxDistance) / distance).add(controls.target); controls.update(); invalidate(); },
-    stats() { return { preview: previewStats(), highlight: highlight.stats(), ...motionField.stats(), spider: spider.stats(), replay: { running: Boolean(replay), run: replayRun, bank: replay?.groups[replay.index]?.bank, touched: [...(replay?.touched || [])] }, contextGeometry: [points.geometry.uuid, contextEdges.geometry.uuid], contextColors: positions.slice(0, 6).map((node, index) => ({ id: node.id, color: new THREE.Color().fromBufferAttribute(points.geometry.attributes.color, index).getHexString() })), selectedId: selected, nodePositions: selectedIds.map(projectedNode), pan: controls.mouseButtons.LEFT === THREE.MOUSE.PAN, framePending: Boolean(frame), camera: camera.position.toArray(), target: controls.target.toArray(), renderedIds: [...selectedIds], renderedRelations: renderedEdges.map(edge => ({ ...edge })), arrows: renderedEdges.map((edge, index) => { const color = new THREE.Color(); arrows.getColorAt(index, color); return { ...edge, progress: arrowProgress[index], color: '#' + color.getHexString() }; }), contextLost: lost, pointsPixelSize: points.material.size, pointSizeAttenuation: points.material.sizeAttenuation, contextOpacity: points.material.opacity, contextEdgeOpacity: contextEdges.material.opacity, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, drawCalls: renderer.info.render.calls, frameIntervals: [...frameIntervals], renderCpuMs: [...renderCpuMs] }; },
+    zoom(factor) { if (!state) return; gesture(); const distance = camera.position.distanceTo(controls.target); camera.position.sub(controls.target).multiplyScalar(THREE.MathUtils.clamp(distance / factor, controls.minDistance, controls.maxDistance) / distance).add(controls.target); controls.update(); invalidate(); },
+    stats() { return { entry: entry?.stats(), preview: previewStats(), highlight: highlight.stats(), ...motionField.stats(), spider: spider.stats(), replay: { running: Boolean(replay), run: replayRun, bank: replay?.groups[replay.index]?.bank, touched: [...(replay?.touched || [])] }, contextGeometry: [points.geometry.uuid, contextEdges.geometry.uuid], contextColors: positions.slice(0, 6).map((node, index) => ({ id: node.id, color: new THREE.Color().fromBufferAttribute(points.geometry.attributes.color, index).getHexString() })), selectedId: selected, nodePositions: selectedIds.map(projectedNode), pan: controls.mouseButtons.LEFT === THREE.MOUSE.PAN, framePending: Boolean(frame), camera: camera.position.toArray(), target: controls.target.toArray(), renderedIds: [...selectedIds], renderedRelations: renderedEdges.map(edge => ({ ...edge })), arrows: renderedEdges.map((edge, index) => { const color = new THREE.Color(); arrows.getColorAt(index, color); return { ...edge, progress: arrowProgress[index], color: '#' + color.getHexString() }; }), contextLost: lost, pointsPixelSize: points.material.size, pointSizeAttenuation: points.material.sizeAttenuation, contextOpacity: points.material.opacity, contextEdgeOpacity: contextEdges.material.opacity, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, drawCalls: renderer.info.render.calls, frameIntervals: [...frameIntervals], renderCpuMs: [...renderCpuMs] }; },
     resetPerformance() { frameIntervals.length = renderCpuMs.length = 0; previousActive = false; },
     destroy() {
       onActivity(null);
       if (replay) { replay = undefined; onReplay(false); }
       destroyed = true; cancelAnimationFrame(frame); scope.abort(); resizeObserver.disconnect(); theme.disconnect(); controls.dispose();
-      scene.traverse(node => { if (node.isInstancedMesh) node.dispose(); node.geometry?.dispose(); if (node.material) node.material.dispose(); }); renderer.dispose(); onAnchor(null); canvas.dataset.cameraMoving = 'false'; canvas.dataset.disposed = 'true';
+      scene.traverse(node => { if (node.isInstancedMesh) node.dispose(); node.geometry?.dispose(); if (node.material) node.material.dispose(); }); renderer.dispose(); onAnchor(null); canvas.dataset.cameraMoving = 'false'; canvas.dataset.disposed = 'true'; canvas.setAttribute('aria-busy', 'false');
     },
   };
 }

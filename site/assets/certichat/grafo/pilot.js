@@ -1,6 +1,6 @@
-import { t, localizedURL, language } from '../../site/i18n.js?v=d74a86d320d2';
-import { readTrace, sourcePath } from '../trace.js?v=d74a86d320d2';
-import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotColors } from './state.js?v=d74a86d320d2';
+import { t, localizedURL, language } from '../../site/i18n.js?v=a037a30fedef';
+import { readTrace, sourcePath } from '../trace.js?v=a037a30fedef';
+import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotColors } from './state.js?v=a037a30fedef';
 
 let mounted;
 const instances = new WeakMap();
@@ -32,8 +32,9 @@ export function mountGraphPilot(scope = document) {
   const walk = root.querySelector('[data-pilot-walk]');
   const scrollButtons = [...root.querySelectorAll('[data-pilot-scroll]')];
   const timestamp = new Intl.DateTimeFormat(language, { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
-  const sourceName = id => ({ certitips: 'tips', certitube: 'tube', certisearch: 'search' })[id] || 'unknown';
-  let follow = true, generatedAt, checkedAt, indexing = false, healthRequest;
+  const sourceName = id => ({ certitips: 'tips', certitube: 'tube', certisearch: 'search', cognee: 'cognee' })[id] || 'unknown';
+  let follow = true, generatedAt, indexing = false, healthRequest;
+  const freshness = element('span'); freshness.className = 'graph-pilot-freshness'; freshness.dataset.pilotFreshness = ''; freshness.hidden = true; freshness.setAttribute('role', 'img');
   const updating = element('span'); updating.className = 'certichat-spinner chat-graph-updating';
   updating.hidden = true; updating.setAttribute('role', 'status'); updating.setAttribute('aria-label', t('Actualizando el índice de conocimiento'));
   function updateScroll() {
@@ -54,28 +55,24 @@ export function mountGraphPilot(scope = document) {
     line.setAttribute('y1', top + card.offsetHeight); line.setAttribute('x2', anchor.x); line.setAttribute('y2', anchor.y);
   }
   const compact = matchMedia('(max-width: 800px)');
-  let state, banks, scene, serverLoaded = false, events = [], selectedId, sceneRevision = 0, bankRequest, bankTimer;
-  let animating = false;
-  let hoveredBank = null, focusedBank = null;
+  let state, banks, scene, serverLoaded = false, events = [], selectedId, sceneRevision = 0, bankRequest, snapshotRequest, lastBankCheck, nextSnapshotCheck = 0;
+  let animating = false, loadFailed = false, serverSettled = !apiBase, banksPending = Boolean(apiBase), snapshotRetry = false;
   const enabledBanks = new Set();
-  const previewLegend = () => scene?.preview([...new Set([...enabledBanks, hoveredBank, focusedBank].filter(Boolean))]);
+  // Native button activation (click, Enter or Space) alone changes the selected source layers.
+  const updateLegendSelection = () => scene?.preview([...enabledBanks]);
   for (const chip of root.querySelectorAll('.chat-graph-legend [data-source]')) {
-    const bank = { tips: 'certitips', tube: 'certitube', search: 'certisearch' }[chip.dataset.source];
-    const preview = previewLegend;
+    const bank = { tips: 'certitips', tube: 'certitube', search: 'certisearch', cognee: 'cognee' }[chip.dataset.source];
     chip.setAttribute('aria-pressed', 'false');
     chip.addEventListener('click', () => {
       if (enabledBanks.has(bank)) enabledBanks.delete(bank); else enabledBanks.add(bank);
-      chip.setAttribute('aria-pressed', String(enabledBanks.has(bank))); preview();
+      chip.setAttribute('aria-pressed', String(enabledBanks.has(bank))); updateLegendSelection();
     }, { signal });
-    chip.addEventListener('pointerdown', () => { focusedBank = null; }, { signal });
-    chip.addEventListener('pointerenter', () => { hoveredBank = bank; preview(); }, { signal });
-    chip.addEventListener('pointerleave', () => { hoveredBank = null; preview(); }, { signal });
-    chip.addEventListener('focus', () => { focusedBank = chip.matches(':focus-visible') ? bank : null; preview(); }, { signal });
-    chip.addEventListener('blur', () => { focusedBank = null; preview(); }, { signal });
   }
   function motionControl(running = animating) {
     animating = running; root.dataset.animating = String(running);
-    const label = reducedMotion.matches ? t('Animación desactivada por la preferencia de movimiento reducido.') : running ? t('Detener animación') : state?.active.size ? t('Repetir animación') : t('Girar mapa');
+    const label = running ? t('Detener') : t('Reproducir');
+    if (reducedMotion.matches) replayButton.setAttribute('aria-description', t('Animación desactivada por la preferencia de movimiento reducido.'));
+    else replayButton.removeAttribute('aria-description');
     replayButton.disabled = reducedMotion.matches || !scene || !state || !running && state.active.size > 0 && (state.provisional || state.mismatch);
     replayButton.title = label; replayButton.setAttribute('aria-label', label);
     replayButton.setAttribute('aria-pressed', String(running));
@@ -132,10 +129,13 @@ export function mountGraphPilot(scope = document) {
     return messages[state.phase] || '';
   }
   function renderCollections() {
-    for (const bank of state.collections) {
-      const legend = root.querySelector(`.chat-graph-legend [data-source="${sourceName(bank.id)}"]`);
-      legend.title = bank.available ? bank.label : `${bank.label} · ${t('Sin documentos indexados')}`;
-      legend.setAttribute('aria-label', legend.title); legend.dataset.available = String(bank.available);
+    for (const legend of root.querySelectorAll('.chat-graph-legend [data-source]')) {
+      if (legend.dataset.source === 'cognee') { legend.disabled = false; continue; }
+      const bank = state.collections.find(value => sourceName(value.id) === legend.dataset.source);
+      legend.disabled = !bank?.available;
+      legend.setAttribute('aria-busy', String(banksPending));
+      legend.removeAttribute('title');
+      legend.setAttribute('aria-label', bank?.available ? legend.textContent.trim() : `${legend.textContent.trim()} · ${t('Sin documentos indexados')}`); legend.dataset.available = String(Boolean(bank?.available));
     }
   }
   function renderEvidence() {
@@ -146,20 +146,27 @@ export function mountGraphPilot(scope = document) {
     }
     for (const edge of state.edges) relations.append(element('li', `${t(state.graph.byId.get(edge.source).label)} → ${t(edge.label)} → ${t(state.graph.byId.get(edge.target).label)}`));
   }
+  function renderFreshness() {
+    const warning = freshness;
+    root.dataset.graphSource = serverLoaded ? 'api' : 'local';
+    warning.hidden = !state || !serverSettled || serverLoaded && !snapshotRetry;
+    const message = serverLoaded ? t('No se pudo comprobar el mapa actual; se conserva la última instantánea verificada.') : t('Instantánea local: no se pudo comprobar el mapa publicado.');
+    warning.title = message; warning.setAttribute('aria-label', message);
+  }
   function renderMeta() {
     const target = root.querySelector('[data-pilot-meta]'); target.replaceChildren();
-    const when = checkedAt || generatedAt, date = new Date(when);
+    const date = new Date(generatedAt);
     for (const [name, value] of [[t('Conceptos'), `${state.active.size}/${state.graph.nodes.length.toLocaleString(language)}`], [t('Relaciones'), `${state.edges.length}/${state.graph.edges.length.toLocaleString(language)}`], [t('Actualización'), Number.isFinite(date.getTime()) ? timestamp.format(date).replaceAll('/', '-').replace(',', '') : t('fecha no disponible')], [t('Versión'), state.graphVersion.slice(0, 12)]]) {
       const item = element('div'); item.append(element('dt', name), element('dd', value)); target.append(item);
     }
     const version = target.lastElementChild.querySelector('dd');
     version.title = state.graphVersion; version.setAttribute('aria-busy', String(indexing));
-    updating.hidden = !indexing; version.append(updating);
+    updating.hidden = !indexing; version.append(updating, freshness);
   }
   function render(shouldFollow = follow) {
     status.textContent = statusMessage(); root.dataset.phase = state.phase; root.dataset.provisional = String(state.provisional); root.dataset.versionMismatch = String(state.mismatch);
     if (!selectedId) { card.hidden = true; connector.setAttribute('hidden', ''); }
-    renderCollections(); renderEvidence(); renderMeta(); updateScroll(); activeFit.disabled = !state.active.size; scene?.update(state, shouldFollow);
+    renderCollections(); renderEvidence(); renderMeta(); renderFreshness(); updateScroll(); activeFit.disabled = !state.active.size; scene?.update(state, shouldFollow, serverLoaded || serverSettled);
     motionControl();
   }
   function progress(event) {
@@ -186,6 +193,7 @@ export function mountGraphPilot(scope = document) {
   window.addEventListener('certichat:trace', event => {
     if (!state) return;
     if (event.detail?.status === 'idle') clearTrace();
+    else if (event.detail?.status === 'error') scene?.stop(true);
     else if (event.detail?.status === 'loading') { events = []; state.requestId = null; state.terminal = false; showPilotTrace(state, null); state.phase = 'loading'; state.lanes.clear(); render(); }
     else if (event.detail?.status === 'ready' && !state.requestId) { showPilotTrace(state, event.detail.trace, 'legacy.complete'); state.terminal = true; render(); }
   }, { signal });
@@ -197,50 +205,93 @@ export function mountGraphPilot(scope = document) {
     if (animating) { scene?.stop(); return; }
     dismiss(); follow = true; root.dataset.followPaused = 'false'; scene?.replay();
   }, { signal });
-  window.addEventListener('certichat:stop', () => scene?.stop(), { signal });
-  window.addEventListener('certivoice:command', event => { if (['stop', 'interrupt', 'exit'].includes(event.detail)) scene?.stop(); }, { signal });
+  window.addEventListener('certichat:stop', () => scene?.stop(true), { signal });
+  window.addEventListener('certivoice:command', event => { if (['stop', 'interrupt', 'exit'].includes(event.detail)) scene?.stop(true); }, { signal });
   reducedMotion.addEventListener('change', () => { if (state) render(false); }, { signal });
   async function json(url, api = false) { const response = await fetch(url, { signal: AbortSignal.any([signal, AbortSignal.timeout(12000)]), ...(api ? { headers: { 'X-CertiChat': '1' }, cache: 'no-store' } : {}) }); if (!response.ok) throw new Error('Graph unavailable'); return response.json(); }
   function refreshBanks() {
-    if (!apiBase || bankRequest || bankTimer || signal.aborted) return;
-    bankRequest = json(`${apiBase}/api/graph/banks`, true).then(data => { banks = data; if (state && !signal.aborted) { setPilotBanks(state, banks); render(); } }).catch(() => {}).finally(() => {
+    if (!apiBase || bankRequest || snapshotRequest || signal.aborted) return;
+    bankRequest = json(`${apiBase}/api/graph/banks`, true).then(data => {
+      if (!state || signal.aborted) return;
+      if (data?.version !== state.graphVersion || state.expectedContentVersion && data.contentVersion !== state.expectedContentVersion || !Array.isArray(data.banks) || !Array.isArray(data.memberships)) throw new Error('Incompatible memberships');
+      banks = data; setPilotBanks(state, banks); render(false);
+    }).catch(() => { snapshotRetry = true; }).finally(() => {
       bankRequest = null;
-      if (!signal.aborted && state?.bankMismatch) bankTimer = setTimeout(() => { bankTimer = null; refreshBanks(); }, 30000);
+      if (!signal.aborted) { snapshotRetry ||= Boolean(state?.bankMismatch); renderFreshness(); }
     });
   }
-  function install(snapshot, server = false) {
+  function install(snapshot, server = false, matchingBanks = banks) {
     if (signal.aborted || serverLoaded && !server) return;
-    const next = createPilotState(snapshot, banks, siteRoot);
+    const next = createPilotState(snapshot, matchingBanks, siteRoot);
     if (!next.graph.nodes.length) throw new Error('Graph empty');
     if (events.length) for (const event of events) applyPilotProgress(next, event); else { const saved = readTrace(siteRoot); if (saved) showPilotTrace(next, saved); }
-    generatedAt = snapshot.generatedAt; state = next; serverLoaded ||= server; render(); if (state.bankMismatch) refreshBanks();
+    generatedAt = snapshot.generatedAt; state = next; banks = matchingBanks; serverLoaded ||= server;
+    if (selectedId && !state.graph.byId.has(selectedId)) selectedId = undefined;
+    render(); if (selectedId) select(selectedId); if (state.bankMismatch) refreshBanks();
+    if (loadFailed) { loadFailed = false; availability(root.dataset.renderer === 'webgl2'); }
   }
   const tasks = [];
   if (root.dataset.graphUrl) tasks.push(json(root.dataset.graphUrl).then(data => install(data)));
   if (apiBase) {
-    tasks.push(json(`${apiBase}/api/graph`, true).then(data => install(data, true)));
-    tasks.push(json(`${apiBase}/api/graph/banks`, true).then(data => { banks = data; if (state) { setPilotBanks(state, banks); render(); } }));
+    snapshotRequest = json(`${apiBase}/api/graph`, true).then(data => { install(data, true); nextSnapshotCheck = Date.now() + 300000; }).catch(error => { snapshotRetry = true; throw error; }).finally(() => { snapshotRequest = null; serverSettled = true; if (state && !signal.aborted) render(false); });
+    tasks.push(snapshotRequest);
+    tasks.push(json(`${apiBase}/api/graph/banks`, true).then(data => { banks = data; if (state) { setPilotBanks(state, banks); render(); } }).catch(error => { snapshotRetry = true; throw error; }).finally(() => { banksPending = false; if (state && !signal.aborted) { snapshotRetry ||= Boolean(banks && banks.version !== state.graphVersion); renderCollections(); renderFreshness(); } }));
+  }
+  /** Reuse health identity; older backends receive a bounded full check every five minutes. */
+  function needsSnapshot(version) {
+    if (!serverLoaded || snapshotRetry) return true;
+    if (/^[a-f0-9]{64}$/.test(version || '')) return version !== state?.graphVersion;
+    return Date.now() >= nextSnapshotCheck;
+  }
+  /** Latest corpus membership can change while the active graph identity remains unchanged. */
+  function refreshCurrentBanks(checkedAt) {
+    if (Date.now() < nextSnapshotCheck && (!checkedAt || checkedAt === lastBankCheck)) return;
+    lastBankCheck = checkedAt; nextSnapshotCheck = Date.now() + 300000; refreshBanks();
+  }
+  /** Validate the pair before mutating the visible snapshot; stale pairs keep the last good view. */
+  function acceptSnapshot(snapshot, matchingBanks, checkedAt) {
+    const candidate = createPilotState(snapshot, matchingBanks, siteRoot);
+    if (!candidate.graph.nodes.length || !setPilotBanks(candidate, matchingBanks)) throw new Error('Graph and memberships are not coherent');
+    if (signal.aborted) return;
+    snapshotRetry = false; lastBankCheck = checkedAt; nextSnapshotCheck = Date.now() + 300000;
+    if (!serverLoaded || state?.graphVersion !== snapshot.version) install(snapshot, true, matchingBanks);
+    else if (state.bankContentVersion !== matchingBanks.contentVersion || state.bankMismatch) { banks = matchingBanks; setPilotBanks(state, banks); render(false); }
+  }
+  /** Revalidate after a version change/failure, keeping one request and an atomic graph/banks pair. */
+  function refreshSnapshot(version, checkedAt) {
+    if (!serverSettled || banksPending || snapshotRequest || bankRequest || signal.aborted) return;
+    if (!needsSnapshot(version)) { refreshCurrentBanks(checkedAt); return; }
+    snapshotRequest = Promise.all([json(`${apiBase}/api/graph`, true), json(`${apiBase}/api/graph/banks`, true)])
+      .then(([snapshot, matchingBanks]) => acceptSnapshot(snapshot, matchingBanks, checkedAt))
+      .catch(() => { snapshotRetry = true; }).finally(() => { snapshotRequest = null; if (!signal.aborted) renderFreshness(); });
   }
   function refreshHealth() {
     if (!apiBase || document.hidden || signal.aborted || healthRequest) return;
     healthRequest = json(`${apiBase}/api/health`, true).then(data => {
-      indexing = data.knowledge?.indexing === true; checkedAt = data.knowledge?.checkedAt;
-    }).catch(() => { indexing = false; }).finally(() => { healthRequest = null; if (state && !signal.aborted) renderMeta(); });
+      indexing = data.knowledge?.indexing === true;
+      if (!data.knowledge) snapshotRetry = true;
+      refreshSnapshot(data.knowledge?.graphVersion, data.knowledge?.checkedAt);
+    }).catch(() => { indexing = false; snapshotRetry = true; }).finally(() => { healthRequest = null; if (state && !signal.aborted) { renderMeta(); renderFreshness(); } });
     return healthRequest;
   }
   tasks.push(refreshHealth());
   const healthTimer = setInterval(refreshHealth, 30000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshHealth(); }, { signal });
-  Promise.allSettled(tasks).then(() => { if (!signal.aborted && !state) status.textContent = t('No se pudo cargar la instantánea del mapa. Actualiza la página para volver a intentarlo.'); });
+  function loadFailure() {
+    loadFailed = true; scene?.stop(); canvas.setAttribute('aria-busy', 'false'); canvas.hidden = true; renderStatus.hidden = false;
+    renderStatus.textContent = status.textContent = t('No se pudo cargar la instantánea del mapa. Actualiza la página para volver a intentarlo.');
+  }
+  Promise.allSettled(tasks).then(() => { if (!signal.aborted && !state) loadFailure(); });
   function availability(available) {
-    root.dataset.renderer = available ? 'webgl2' : 'fallback'; canvas.hidden = !available; labels.hidden = !available; renderStatus.hidden = available || compact.matches;
+    root.dataset.renderer = available ? 'webgl2' : 'fallback'; if (!available) canvas.setAttribute('aria-busy', 'false'); canvas.hidden = !available; labels.hidden = !available; renderStatus.hidden = available || compact.matches;
+    if (loadFailed) { loadFailure(); return; }
     if (!available && !compact.matches) renderStatus.textContent = t('La vista 3D no está disponible. Selecciona un concepto para consultar sus fuentes.');
   }
   async function configureRenderer() {
     const revision = ++sceneRevision; scene?.destroy(); scene = undefined;
     if (compact.matches) { availability(false); return; }
     try {
-      const { createPilotScene } = await import('./scene.js?v=d74a86d320d2');
+      const { createPilotScene } = await import('./scene.js?v=a037a30fedef');
       if (signal.aborted || revision !== sceneRevision) return;
       availability(true); canvas.dataset.disposed = 'false';
       scene = createPilotScene(canvas, labels, select, () => { follow = false; root.dataset.followPaused = 'true'; }, availability, anchorCard, value => { zoom.textContent = `${Math.round(value * 100)}%`; }, (running, bank = '') => {
@@ -253,16 +304,17 @@ export function mountGraphPilot(scope = document) {
         root.querySelector('[data-pilot-walk-bank]').textContent = state.collections.find(bank => bank.id === activity.bank)?.label || t('Conceptos');
         root.querySelector('[data-pilot-walk-concepts]').textContent = activity.nodes.map(node => t(node.label)).join('\n');
       }, motionControl);
-      if (state) scene.update(state, follow);
-      previewLegend();
+      if (state) scene.update(state, follow, serverLoaded || serverSettled);
+      if (loadFailed) loadFailure();
+      updateLegendSelection();
     } catch { if (!signal.aborted && revision === sceneRevision) availability(false); }
   }
   compact.addEventListener('change', configureRenderer, { signal }); void configureRenderer();
   const instance = {
     root,
     resetPerformance: () => scene?.resetPerformance(),
-    debug: () => ({ phase: state?.phase || 'loading', graphVersion: state?.graphVersion, requestId: state?.requestId, seq: state?.seq, activeIds: [...(state?.active || [])], provisional: state?.provisional, sources: state?.sources.map(source => ({ ...source })), memberships: state ? [...state.memberships].map(([nodeId, values]) => ({ nodeId, banks: [...values] })) : [], renderer: scene?.stats(), follow, selectedId }),
-    destroy() { if (signal.aborted) return; abort.abort(); clearTimeout(bankTimer); clearInterval(healthTimer); scene?.destroy(); stripSize.disconnect(); renderStatus.remove(); instances.delete(root); if (mounted === instance) mounted = undefined; },
+    debug: () => ({ snapshot: { source: serverLoaded ? 'api' : 'local', refreshing: Boolean(snapshotRequest || bankRequest), retry: snapshotRetry }, phase: state?.phase || 'loading', graphVersion: state?.graphVersion, requestId: state?.requestId, seq: state?.seq, activeIds: [...(state?.active || [])], provisional: state?.provisional, sources: state?.sources.map(source => ({ ...source })), memberships: state ? [...state.memberships].map(([nodeId, values]) => ({ nodeId, banks: [...values] })) : [], renderer: scene?.stats(), follow, selectedId }),
+    destroy() { if (signal.aborted) return; abort.abort(); clearInterval(healthTimer); scene?.destroy(); stripSize.disconnect(); renderStatus.remove(); instances.delete(root); if (mounted === instance) mounted = undefined; },
   };
   parentSignal?.addEventListener('abort', () => instance.destroy(), { once: true });
   instances.set(root, instance); mounted = instance; return instance;

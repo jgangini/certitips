@@ -1,4 +1,4 @@
-import { t, siteBase, prepareLocale } from "./i18n.js?v=d74a86d320d2";
+import { t, siteBase, prepareLocale } from "./i18n.js?v=a037a30fedef";
 
 let navigate;
 export function navigateSite(url, options) { return navigate ? navigate(url, options) : Promise.resolve(false); }
@@ -11,10 +11,10 @@ function supportedURL(value) {
 }
 async function pageModules(doc) {
   const mounts = [];
-  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=d74a86d320d2')).mountQuiz);
-  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=d74a86d320d2')).mountTube);
-  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=d74a86d320d2')).mountGraphPilot);
-  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=d74a86d320d2')).mountSearch);
+  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=a037a30fedef')).mountQuiz);
+  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=a037a30fedef')).mountTube);
+  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=a037a30fedef')).mountGraphPilot);
+  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=a037a30fedef')).mountSearch);
   return mounts;
 }
 async function stylesFor(doc, signal) {

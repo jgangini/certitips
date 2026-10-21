@@ -15,12 +15,12 @@
   <rect x="536" y="163" width="608" height="142" rx="22" fill="#fae6e1"/>
   <circle cx="593" cy="223" r="34" fill="#fff"/>
   <g transform="translate(571 201) scale(1.83)" class="icon" stroke="#c74436"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73zM12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></g>
-  <text x="649" y="208" class="label">Specialista dell'ordine</text><text x="649" y="245">Controllare con stato e articoli</text><text x="649" y="280" class="muted">Risultato: ordine "in preparazione"</text>
+  <text x="649" y="208" class="label">Specialista dell'ordine</text><text x="649" y="245">Query stato e articoli</text><text x="649" y="280" class="muted">Risultato: ordine "in preparazione"</text>
   <rect x="536" y="374" width="608" height="142" rx="22" fill="#e1f2ee"/>
   <circle cx="593" cy="434" r="34" fill="#fff"/>
   <g transform="translate(571 412) scale(1.83)" class="icon" stroke="#087f7a"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M12 11h4M12 16h4M8 11h.01M8 16h.01"/></g>
   <text x="649" y="419" class="label">Specialista di politica</text><text x="649" y="456">Ricompense regola applicabile</text><text x="649" y="491" class="muted">Risultato: Condizioni di pensionamento</text>
-  <path d="M348 270H400Q416 270 416 254V219Q416 203 432 203H536" class="line"/><text x="448" y="184" text-anchor="middle" class="muted">Consultazione</text>
+  <path d="M348 270H400Q416 270 416 254V219Q416 203 432 203H536" class="line"/><text x="448" y="184" text-anchor="middle" class="muted">Query</text>
   <path d="M536 280H470Q454 280 454 296V305Q454 321 438 321H348" class="line"/><text x="432" y="351" text-anchor="middle" class="muted">Risultato</text>
   <path d="M348 389H400Q416 389 416 405V411Q416 427 432 427H536" class="line"/>
   <path d="M536 490H400Q380 490 380 470V457Q380 441 364 441H348" class="line"/>

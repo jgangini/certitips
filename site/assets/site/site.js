@@ -1,7 +1,7 @@
-import { installPageNavigation, navigateSite } from "./navigation.js?v=d74a86d320d2";
-import { t, locale, localizedURL, siteBase } from "./i18n.js?v=d74a86d320d2";
-import { readStored, writeStored } from "./storage.js?v=d74a86d320d2";
-import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt } from "./content-search.js?v=d74a86d320d2";
+import { installPageNavigation, navigateSite } from "./navigation.js?v=a037a30fedef";
+import { t, locale, localizedURL, siteBase } from "./i18n.js?v=a037a30fedef";
+import { readStored, writeStored } from "./storage.js?v=a037a30fedef";
+import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt } from "./content-search.js?v=a037a30fedef";
 
 // The root entry recalls a language; missing routes are handled by the 404 allowlist.
 if (/^(?:index\.html)?$/.test(location.pathname.slice(siteBase.length))) {
@@ -31,14 +31,17 @@ function clearLanguageTransition() {
 }
 if (languageTransition?.open) {
   const ready = () => {
-    if (document.readyState === 'loading' || document.querySelector('main [aria-busy="true"]')) return;
+    // A rendered graph entrance is the loading view itself; its data may remain busy.
+    const paintedGraph = document.querySelector('[data-graph-pilot] [data-pilot-canvas][data-first-frame="true"]:not([hidden])')?.closest('[data-graph-pilot]');
+    const pending = [...document.querySelectorAll('main [aria-busy="true"]')].some(node => !paintedGraph?.contains(node));
+    if (document.readyState === 'loading' || pending) return;
     observer.disconnect();
-    // ponytail: navigation timing includes loading; only pad fast transitions.
-    languageTransitionTimer = setTimeout(clearLanguageTransition, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : Math.max(0, 700 - performance.now()));
+    // Other pages retain their minimum glass duration and complete-data readiness.
+    languageTransitionTimer = setTimeout(clearLanguageTransition, paintedGraph || matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : Math.max(0, 700 - performance.now()));
   };
   const observer = new MutationObserver(ready);
   signal.addEventListener("abort", () => observer.disconnect(), { once: true });
-  observer.observe(document.querySelector('main'), { subtree: true, childList: true, attributes: true, attributeFilter: ['aria-busy'] });
+  observer.observe(document.querySelector('main'), { subtree: true, childList: true, attributes: true, attributeFilter: ['aria-busy', 'data-first-frame', 'hidden'] });
   document.addEventListener('DOMContentLoaded', ready, { ...({ once: true }), signal });
   ready();
 }
