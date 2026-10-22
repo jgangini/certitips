@@ -1,5 +1,5 @@
-import { t } from "../../site/i18n.js?v=f6ce4d580193";
-import { voiceContext } from "./actions.js?v=f6ce4d580193";
+import { t } from "../../site/i18n.js?v=b3b939609c94";
+import { voiceContext } from "./actions.js?v=b3b939609c94";
 
 export function installVoiceChatControls(chat) {
   let state = { enabled: false, active: false, muted: false }, requestBusy = false;

@@ -1,7 +1,7 @@
-import { installPageNavigation, navigateSite } from "./navigation.js?v=f6ce4d580193";
-import { t, locale, localizedURL, siteBase } from "./i18n.js?v=f6ce4d580193";
-import { readStored, writeStored } from "./storage.js?v=f6ce4d580193";
-import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, searchMatches } from "./content-search.js?v=f6ce4d580193";
+import { installPageNavigation, navigateSite } from "./navigation.js?v=b3b939609c94";
+import { t, locale, localizedURL, siteBase } from "./i18n.js?v=b3b939609c94";
+import { readStored, writeStored } from "./storage.js?v=b3b939609c94";
+import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, searchMatches } from "./content-search.js?v=b3b939609c94";
 
 // The root entry recalls a language; missing routes are handled by the 404 allowlist.
 if (/^(?:index\.html)?$/.test(location.pathname.slice(siteBase.length))) {

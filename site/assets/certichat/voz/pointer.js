@@ -1,4 +1,4 @@
-import { siteBase } from "../../site/i18n.js?v=f6ce4d580193";
+import { siteBase } from "../../site/i18n.js?v=b3b939609c94";
 
 export async function diagramPointer(answer, doc = document) {
   const viewer = doc.querySelector("#diagram-viewer[open].is-presenting[data-source-id]"), image = viewer?.querySelector(".dialog-content img");

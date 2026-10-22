@@ -22,7 +22,7 @@
 .chat-graph-card-connector[hidden] { display: none; }
 .chat-graph-card strong { display: block; margin-bottom: 5px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
 .chat-graph-card p { margin: 4px 0 0; color: var(--muted); }
-.chat-graph-card a { display: block; margin-top: 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--ink); }
+.chat-graph-card a { display: block; margin-top: 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--ink); text-decoration: underline; text-underline-offset: 2px; padding-bottom: 2px; }
 .chat-graph-card a:hover { color: var(--red); }
 .chat-graph-card a::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -2px; background: currentColor; mask: url("../../icons/certitips-course.svg") center / contain no-repeat; }
 .chat-graph-card a[data-source="tube"]::before { mask-image: url("../../icons/certitube.svg"); }

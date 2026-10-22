@@ -1,6 +1,6 @@
-import * as THREE from '../../vendor/three/three.module.js?v=f6ce4d580193';
-import { pilotWorldPixel } from './motion.js?v=f6ce4d580193';
-import { pilotSpiderEnvelope } from './replay.js?v=f6ce4d580193';
+import * as THREE from '../../vendor/three/three.module.js?v=b3b939609c94';
+import { pilotWorldPixel } from './motion.js?v=b3b939609c94';
+import { pilotSpiderEnvelope } from './replay.js?v=b3b939609c94';
 
 // A small decorative cursor and its feelers; these are not knowledge nodes or edges.
 export function createPilotSpider(scene) {
@@ -18,10 +18,10 @@ export function createPilotSpider(scene) {
   const feet = new THREE.InstancedMesh(new THREE.RingGeometry(5.5, 6.2, 32), new THREE.MeshBasicMaterial({ ...solid, color: '#00ffff', side: THREE.DoubleSide }), 8);
   feet.renderOrder = 6; feet.frustumCulled = false; group.add(feet);
   const foot = new THREE.Object3D();
-  let currentColor;
+  let currentColor, contactIds = [];
   const center = new THREE.Vector3(), desired = new THREE.Vector3(), up = new THREE.Vector3(), right = new THREE.Vector3(), point = new THREE.Vector3();
   const steps = Array.from({ length: 8 }, () => ({ id: null, start: new THREE.Vector3(), tip: new THREE.Vector3() }));
-  let nodes = new Map(), initialized = false, previous = 0, targets = [], corePixel = 1, waiting = false;
+  let nodes = new Map(), initialized = false, previous = 0, targets = [], corePixel = 1;
   let wanted = false, started = 0, fadeFrom = 0, exitPositions, extensions = [], phase = 'hidden';
   function visibility(now, active, reduced) {
     if (reduced) { wanted = group.visible = false; phase = 'hidden'; return false; }
@@ -46,13 +46,6 @@ export function createPilotSpider(scene) {
     const count = extensions.filter(value => value > 0).length;
     geometry.setDrawRange(0, count * 36); geometry.attributes.position.needsUpdate = true;
   }
-  function waitingLegs(pixel) {
-    for (let arm = 0; arm < 8; arm++) for (let dot = 0; dot < 36; dot++) {
-      const angle = arm * Math.PI / 4, t = dot / 35;
-      point.copy(center).addScaledVector(right, Math.cos(angle) * pixel * (10 + 24 * t)).addScaledVector(up, Math.sin(angle) * pixel * (8 + 18 * t) + Math.sin(t * Math.PI) * pixel * 5);
-      point.toArray(positions, (arm * 36 + dot) * 3);
-    }
-  }
   function configure(values) { nodes = new Map(values.map(node => [node.id, node])); if (!values.length) { initialized = false; steps.forEach(step => step.id = null); } }
   function targetPosition(camera, height) {
     desired.set(0, 0, 0);
@@ -65,8 +58,9 @@ export function createPilotSpider(scene) {
     return pixel;
   }
   function draw(now, camera, height, reduced, frame, color, track) {
+    contactIds = [];
     const contacts = frame.targets.filter(target => nodes.has(target.id));
-    const active = frame.active && (contacts.length > 0 || frame.waiting === true);
+    const active = frame.active && contacts.length > 0;
     if (!visibility(now, active, reduced)) return null;
     if (!wanted) {
       feet.count = 0; extendLegs(exitPositions);
@@ -77,11 +71,11 @@ export function createPilotSpider(scene) {
       for (let offset = 0; offset < colors.length; offset += 3) core.material.color.toArray(colors, offset);
     }
     targets = contacts.length ? Array.from({ length: 8 }, (_, index) => contacts[index % contacts.length]) : [];
-    waiting = frame.waiting === true;
     const pixel = targetPosition(camera, height);
     if (!initialized) { center.copy(desired); initialized = true; }
-    const delta = Math.min(50, Math.max(0, now - previous)); previous = now;
-    center.lerp(desired, 1 - Math.exp(-delta / 160));
+    // A slow collection rebuild must not turn the next visible step into a leap.
+    const delta = Math.min(16, Math.max(0, now - previous)); previous = now;
+    center.lerp(desired, 1 - Math.exp(-delta / 320));
     track?.(center);
     up.setFromMatrixColumn(camera.matrixWorld, 1); right.setFromMatrixColumn(camera.matrixWorld, 0);
     corePixel = pilotWorldPixel(center, camera, height);
@@ -99,15 +93,15 @@ export function createPilotSpider(scene) {
         curve.getPoint(dot / 35, point).toArray(positions, (arm * 36 + dot) * 3);
       }
       if (target.progress >= 1 && extensions[arm] === 1) {
+        if (!contactIds.includes(target.id)) contactIds.push(target.id);
         foot.position.copy(end); foot.quaternion.copy(camera.quaternion); foot.scale.setScalar(pilotWorldPixel(end, camera, height)); foot.updateMatrix(); feet.setMatrixAt(feet.count++, foot.matrix);
       }
     });
     feet.instanceMatrix.needsUpdate = true;
-    if (waiting) waitingLegs(corePixel);
     extendLegs(); geometry.attributes.color.needsUpdate = true;
     return center.clone();
   }
   /** Remove the thinking cursor immediately when real answer text, failure or cancellation arrives. */
-  function hide() { wanted = group.visible = false; phase = 'hidden'; core.material.opacity = 0; feet.count = 0; extensions = []; }
-  return { configure, draw, hide, stats: () => ({ visible: group.visible, waiting, phase, transitioning: phase != 'hidden' && phase != 'active', coreOpacity: core.material.opacity, legExtensions: [...extensions], solid: [core.material, material, feet.material].every(value => value.opacity === 1 && value.blending === THREE.NoBlending && value.transparent && !value.depthTest), color: `#${core.material.color.getHexString()}`, position: center.toArray(), coreRadiusPixels: group.visible ? core.scale.x / corePixel : 0, coreAspect: core.scale.x / core.scale.y, contactCircles: group.visible ? feet.count : 0, tentacles: group.visible ? extensions.filter(value => value > 0).length : 0, targetIds: group.visible ? targets.map(target => target.id) : [] }) };
+  function hide() { contactIds = []; wanted = group.visible = false; phase = 'hidden'; core.material.opacity = 0; feet.count = 0; extensions = []; }
+  return { configure, draw, hide, contacts: () => contactIds, stats: () => ({ visible: group.visible, phase, transitioning: phase != 'hidden' && phase != 'active', coreOpacity: core.material.opacity, legExtensions: [...extensions], solid: [core.material, material, feet.material].every(value => value.opacity === 1 && value.blending === THREE.NoBlending && value.transparent && !value.depthTest), color: `#${core.material.color.getHexString()}`, position: center.toArray(), coreRadiusPixels: group.visible ? core.scale.x / corePixel : 0, coreAspect: core.scale.x / core.scale.y, contactCircles: group.visible ? feet.count : 0, contactIds: [...contactIds], tentacles: group.visible ? extensions.filter(value => value > 0).length : 0, targetIds: group.visible ? targets.map(target => target.id) : [] }) };
 }

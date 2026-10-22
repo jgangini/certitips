@@ -1,15 +1,15 @@
-import { navigateSite } from "../site/navigation.js?v=f6ce4d580193";
-import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=f6ce4d580193";
-import { readStored, writeStored } from "../site/storage.js?v=f6ce4d580193";
-import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=f6ce4d580193";
-import { installVoiceChatControls } from "./voz/chat.js?v=f6ce4d580193";
-import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=f6ce4d580193";
-import { activityTrail, validActivityTrail } from "./activity.js?v=f6ce4d580193";
-import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=f6ce4d580193";
-import { readChatStream } from "./stream.js?v=f6ce4d580193";
-import { watchChatPresentation } from './presentation.js?v=f6ce4d580193';
-import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=f6ce4d580193';
-export { safeSourceURL } from "./trace.js?v=f6ce4d580193";
+import { navigateSite } from "../site/navigation.js?v=b3b939609c94";
+import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=b3b939609c94";
+import { readStored, writeStored } from "../site/storage.js?v=b3b939609c94";
+import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=b3b939609c94";
+import { installVoiceChatControls } from "./voz/chat.js?v=b3b939609c94";
+import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=b3b939609c94";
+import { activityTrail, validActivityTrail } from "./activity.js?v=b3b939609c94";
+import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=b3b939609c94";
+import { readChatStream } from "./stream.js?v=b3b939609c94";
+import { watchChatPresentation } from './presentation.js?v=b3b939609c94';
+import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=b3b939609c94';
+export { safeSourceURL } from "./trace.js?v=b3b939609c94";
 
 const escapeChat = text => String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const responseIdPattern = /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -488,15 +488,16 @@ if (root) {
 
   async function initialize() {
     if (!chat) {
-      await import("../deep-chat.js?v=f6ce4d580193");
+      await import("../deep-chat.js?v=b3b939609c94");
       window.remarkable_plugins = [{ plugin: markdown => configureChatMarkdown(markdown, root.dataset.siteRoot) }];
       chat = document.createElement("deep-chat");
       chat.chatStyle = { border: "none", width: "100%", height: "100%", backgroundColor: "var(--paper)", color: "var(--ink)", fontFamily: "inherit" };
+      // Match the voice controls reservation: Deep Chat reapplies this style on every keystroke.
       chat.textInput = {
         characterLimit: 1500, placeholder: { text: t("Escribe tu consulta"), style: { color: "var(--muted)" } },
         styles: {
           container: { width: "100%", boxSizing: "border-box", margin: "0", backgroundColor: "var(--paper)", border: "unset", borderTop: "1px solid var(--line)", borderRadius: "0", boxShadow: "unset" },
-          text: { color: "var(--ink)", fontSize: "16px", paddingTop: "11px", paddingBottom: "13px", paddingLeft: "12px", paddingRight: "2.4em" },
+          text: { color: "var(--ink)", fontSize: "16px", paddingTop: "11px", paddingBottom: "13px", paddingLeft: "12px", paddingRight: "56px" },
         },
       };
       chat.submitButtonStyles = { submit: { container: { default: { display: "flex", alignItems: "center", justifyContent: "center", width: "44px", height: "44px", boxSizing: "border-box", margin: "0", insetInlineEnd: "8px", insetBlockEnd: "4px", borderRadius: "0", backgroundColor: "transparent" } } } };

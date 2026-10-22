@@ -1,4 +1,4 @@
-import * as THREE from '../../vendor/three/three.module.js?v=f6ce4d580193';
+import * as THREE from '../../vendor/three/three.module.js?v=b3b939609c94';
 
 export function pilotWorldPixel(point, camera, height) {
   const view = camera.matrixWorldInverse.elements;
@@ -10,13 +10,13 @@ export function pilotWorldPixel(point, camera, height) {
 export function createPilotMotion(scene) {
   const group = new THREE.Group(); scene.add(group);
   const waves = Array.from({ length: 3 }, () => {
-    const mesh = new THREE.InstancedMesh(new THREE.RingGeometry(1, 1.065, 48), new THREE.MeshBasicMaterial({ transparent: true, opacity: .5, depthWrite: false, depthTest: false, side: THREE.DoubleSide }), 97);
+    const mesh = new THREE.InstancedMesh(new THREE.RingGeometry(1, 1.065, 48), new THREE.MeshBasicMaterial({ transparent: true, opacity: .5, depthWrite: false, depthTest: false, side: THREE.DoubleSide }), 512);
     mesh.count = 0; mesh.renderOrder = 3; group.add(mesh); return mesh;
   });
   const object = new THREE.Object3D(), point = new THREE.Vector3();
   let nodes = [], started = 0, selectedId, pulseRadiusPixels = 0, visibleWaveNodes = 0;
   function configure(nextNodes, selected) {
-    nodes = nextNodes.slice(0, 97); selectedId = selected; started = performance.now();
+    nodes = nextNodes.slice(0, 512); selectedId = selected; started = performance.now();
     for (let wave = 0; wave < waves.length; wave++) {
       const mesh = waves[wave]; mesh.count = nodes.length;
       nodes.forEach((node, index) => mesh.setColorAt(index, new THREE.Color(node.colors[wave % node.colors.length])));

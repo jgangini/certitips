@@ -1,11 +1,11 @@
-import { collectionIds, pilotNodeCollections } from './state.js?v=f6ce4d580193';
+import { collectionIds, pilotNodeCollections } from './state.js?v=b3b939609c94';
 
-// Core first, staggered feelers; on exit retract before fading the core.
+// Show the complete spider from the first frame; on exit retract before fading the core.
 export function pilotSpiderEnvelope(elapsed, closing = false) {
   const ease = value => { const t = Math.max(0, Math.min(1, value)); return t * t * (3 - 2 * t); };
   const core = closing ? 1 - ease((elapsed - 240) / 200) : ease(elapsed / 180);
-  const legs = Array.from({ length: 8 }, (_, arm) => closing ? 1 - ease(elapsed / 240) : ease((elapsed - 180 - arm * 45) / 200));
-  const phase = closing ? elapsed >= 440 ? 'hidden' : elapsed < 240 ? 'retracting' : 'fading' : elapsed >= 695 ? 'active' : 'appearing';
+  const legs = Array.from({ length: 8 }, () => closing ? 1 - ease(elapsed / 240) : 1);
+  const phase = closing ? elapsed >= 440 ? 'hidden' : elapsed < 240 ? 'retracting' : 'fading' : elapsed >= 180 ? 'active' : 'appearing';
   return { core, legs, phase };
 }
 
@@ -46,8 +46,8 @@ export function pilotPresentationFrame(ids, edges, groups, progress) {
 }
 
 export function pilotQueryFrame(ids, edges, groups, elapsed) {
-  // Waiting is a decorative cursor, without synthetic knowledge IDs or relationships.
-  if (!ids.length) return { active: true, waiting: true, targets: [], touched: new Set(), progress: [] };
+  // Discovery starts only after real candidates arrive.
+  if (!ids.length) return { active: false, targets: [], touched: new Set(), progress: [] };
   return { ...pilotDiscoveryFrame(ids, edges, Math.max(0, elapsed) % (Math.max(1, groups.length) * 3200), groups), active: true };
 }
 
@@ -58,4 +58,10 @@ export function pilotTentacleFrame(ids, elapsed) {
   const touched = new Set(ids.slice(0, batch * 8));
   for (const target of targets) if (target.progress >= 1) touched.add(target.id);
   return { targets, touched, active: ids.length > 0 && elapsed < batches * span + 180 };
+}
+
+/** Count unique discovered evidence; a relation requires both of its real endpoints. */
+export function pilotDiscoveryCounts(discovered, state) {
+  const nodes = new Set([...state.active].filter(id => discovered.has(id)));
+  return { nodes: nodes.size, edges: state.edges.filter(edge => nodes.has(edge.source) && nodes.has(edge.target)).length };
 }

@@ -1,13 +1,13 @@
-import { navigateSite } from "../../site/navigation.js?v=f6ce4d580193";
-import { t, locale, language, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=f6ce4d580193";
-import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./audio.js?v=f6ce4d580193";
-import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./actions.js?v=f6ce4d580193";
-import { diagramPointer } from "./pointer.js?v=f6ce4d580193";
-import { clearVoiceHighlight } from "./study.js?v=f6ce4d580193";
-import { activityTrail } from "../activity.js?v=f6ce4d580193";
-import { voiceDiagnostics } from "./telemetry.js?v=f6ce4d580193";
-import { getSearchAdvisor } from "../../certisearch/api-client.js?v=f6ce4d580193";
-import { MeetingAudioBuffer, MEETING_DURATION, MEETING_REVIEW_INTERVAL } from "../../certisearch/meeting.js?v=f6ce4d580193";
+import { navigateSite } from "../../site/navigation.js?v=b3b939609c94";
+import { t, locale, language, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=b3b939609c94";
+import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./audio.js?v=b3b939609c94";
+import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./actions.js?v=b3b939609c94";
+import { diagramPointer } from "./pointer.js?v=b3b939609c94";
+import { clearVoiceHighlight } from "./study.js?v=b3b939609c94";
+import { activityTrail } from "../activity.js?v=b3b939609c94";
+import { voiceDiagnostics } from "./telemetry.js?v=b3b939609c94";
+import { getSearchAdvisor } from "../../certisearch/api-client.js?v=b3b939609c94";
+import { MeetingAudioBuffer, MEETING_DURATION, MEETING_REVIEW_INTERVAL } from "../../certisearch/meeting.js?v=b3b939609c94";
 
 const root = typeof document === "undefined" ? null : document.querySelector("[data-certivoice]");
 if (root) {

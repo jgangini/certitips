@@ -1,12 +1,12 @@
-import { t, locale, siteBase } from '../site/i18n.js?v=f6ce4d580193';
-import { createCase, validateCase, reviseCase, stamp, applyProposal, applyEstimate, canRetryRequest, assertCurrentResponse, stageIssues, recordStageReview, caseStorage, downloadJSON } from './case.js?v=f6ce4d580193';
-import { esc, caseView, architectureView, estimateView, stagesView, reportView, sourceLinks, oracleChangesView, proposalReview } from './view.js?v=f6ce4d580193';
-import { mountDecks } from './deck.js?v=f6ce4d580193';
-import { setSearchAdvisor, refreshSearchChat, searchRequest, sharedChatRequest } from './api-client.js?v=f6ce4d580193';
-import { mountCaseAnnotation, annotatedMessage } from './annotate.js?v=f6ce4d580193';
-import { mountChapterScroll } from '../site/chapter-scroll.js?v=f6ce4d580193';
-import { appendMeetingText } from './meeting.js?v=f6ce4d580193';
-import { validateIllustration, caseArchive, parseCaseArchive, requestIllustration } from './image.js?v=f6ce4d580193';
+import { t, locale, siteBase } from '../site/i18n.js?v=b3b939609c94';
+import { createCase, validateCase, reviseCase, stamp, applyProposal, applyEstimate, canRetryRequest, assertCurrentResponse, stageIssues, recordStageReview, caseStorage, downloadJSON } from './case.js?v=b3b939609c94';
+import { esc, caseView, architectureView, estimateView, stagesView, reportView, sourceLinks, oracleChangesView, proposalReview } from './view.js?v=b3b939609c94';
+import { mountDecks } from './deck.js?v=b3b939609c94';
+import { setSearchAdvisor, refreshSearchChat, searchRequest, sharedChatRequest } from './api-client.js?v=b3b939609c94';
+import { mountCaseAnnotation, annotatedMessage } from './annotate.js?v=b3b939609c94';
+import { mountChapterScroll } from '../site/chapter-scroll.js?v=b3b939609c94';
+import { appendMeetingText } from './meeting.js?v=b3b939609c94';
+import { validateIllustration, caseArchive, parseCaseArchive, requestIllustration } from './image.js?v=b3b939609c94';
 
 export async function mountSearch(signal) {
   const root=document.querySelector('[data-certisearch]');

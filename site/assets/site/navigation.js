@@ -1,4 +1,4 @@
-import { t, siteBase, prepareLocale } from "./i18n.js?v=f6ce4d580193";
+import { t, siteBase, prepareLocale } from "./i18n.js?v=b3b939609c94";
 
 let navigate;
 export function navigateSite(url, options) { return navigate ? navigate(url, options) : Promise.resolve(false); }
@@ -11,10 +11,10 @@ function supportedURL(value) {
 }
 async function pageModules(doc) {
   const mounts = [];
-  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=f6ce4d580193')).mountQuiz);
-  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=f6ce4d580193')).mountTube);
-  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=f6ce4d580193')).mountGraphPilot);
-  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=f6ce4d580193')).mountSearch);
+  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=b3b939609c94')).mountQuiz);
+  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=b3b939609c94')).mountTube);
+  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=b3b939609c94')).mountGraphPilot);
+  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=b3b939609c94')).mountSearch);
   return mounts;
 }
 async function stylesFor(doc, signal) {
@@ -135,7 +135,7 @@ export function installPageNavigation(mountSite) {
       if (options.history !== 'pop') { clearTimeout(scrollTimer); remember(); }
       let retainPlaylist;
       if (partial && fresh.querySelector('[data-tube-player]') && fresh.body.dataset.locale === document.body.dataset.locale) {
-        const { replaceTube } = await import('../certitube/certitube.js?v=f6ce4d580193');
+        const { replaceTube } = await import('../certitube/certitube.js?v=b3b939609c94');
         if (signal.aborted) throw new DOMException('Navigation canceled', 'AbortError');
         viewScope.abort();
         retainPlaylist = replaceTube(fresh);

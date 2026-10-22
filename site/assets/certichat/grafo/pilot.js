@@ -1,6 +1,6 @@
-import { t, localizedURL, language } from '../../site/i18n.js?v=f6ce4d580193';
-import { readTrace, sourcePath } from '../trace.js?v=f6ce4d580193';
-import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=f6ce4d580193';
+import { t, localizedURL, language } from '../../site/i18n.js?v=b3b939609c94';
+import { readTrace, sourcePath } from '../trace.js?v=b3b939609c94';
+import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=b3b939609c94';
 
 let mounted;
 const instances = new WeakMap();
@@ -27,12 +27,16 @@ export function mountGraphPilot(scope = document) {
   const renderStatus = element('p'); renderStatus.className = 'graph-pilot-render-status'; renderStatus.setAttribute('role', 'status'); renderStatus.hidden = true; viewport.append(renderStatus);
   const concepts = root.querySelector('[data-pilot-concepts]'), relations = root.querySelector('[data-pilot-relations]');
   const card = root.querySelector('[data-pilot-card]'), connector = root.querySelector('[data-pilot-card-connector]');
+  const contactCards = new Map();
+  let contactSources, contactRevision;
   const activeFit = root.querySelector('[data-pilot-active-fit]'), zoom = root.querySelector('[data-pilot-zoom]');
   const replayButton = root.querySelector('[data-pilot-replay]'), reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const walk = root.querySelector('[data-pilot-walk]');
   const scrollButtons = [...root.querySelectorAll('[data-pilot-scroll]')];
+  const number = new Intl.NumberFormat(language, { useGrouping: 'always' });
   const timestamp = new Intl.DateTimeFormat(language, { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
   const sourceName = id => ({ certitips: 'tips', certiquiz: 'quiz', certitube: 'tube', certisearch: 'search', cognee: 'cognee' })[id] || 'unknown';
+  let discoveryCounts = { nodes: 0, edges: 0 };
   let follow = true, generatedAt, checkedAt, indexing = false, healthRequest;
   const freshness = element('span'); freshness.className = 'graph-pilot-freshness'; freshness.dataset.pilotFreshness = ''; freshness.hidden = true; freshness.setAttribute('role', 'img');
   const updating = element('span'); updating.className = 'certichat-spinner chat-graph-updating';
@@ -41,18 +45,75 @@ export function mountGraphPilot(scope = document) {
     scrollButtons[0].disabled = concepts.scrollLeft <= 4;
     scrollButtons[1].disabled = concepts.scrollLeft >= concepts.scrollWidth - concepts.clientWidth - 4;
   }
-  for (const button of scrollButtons) button.addEventListener('click', () => concepts.scrollBy({ left: Number(button.dataset.pilotScroll) * concepts.clientWidth * .8, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }), { signal });
+  let scrollFeedback;
+  /** Momentary feedback shared by wheel and native button activation, without moving focus. */
+  function scrollConcepts(delta, behavior) {
+    const available = delta > 0 ? concepts.scrollWidth - concepts.clientWidth - concepts.scrollLeft : concepts.scrollLeft;
+    if (!delta || available <= 1) return false;
+    concepts.scrollBy({ left: delta, behavior });
+    for (const button of scrollButtons) button.classList.toggle('is-scrolling', Number(button.dataset.pilotScroll) === Math.sign(delta));
+    clearTimeout(scrollFeedback);
+    scrollFeedback = setTimeout(() => scrollButtons.forEach(button => button.classList.remove('is-scrolling')), 200);
+    return true;
+  }
+  for (const button of scrollButtons) button.addEventListener('click', () => scrollConcepts(Number(button.dataset.pilotScroll) * concepts.clientWidth * .8, reducedMotion.matches ? 'instant' : 'smooth'), { signal });
+  concepts.closest('.chat-graph-evidence').addEventListener('wheel', event => {
+    if (event.ctrlKey || event.metaKey) return;
+    const unit = event.deltaMode === 1 ? parseFloat(getComputedStyle(concepts).lineHeight) || 16 : event.deltaMode === 2 ? concepts.clientWidth : 1;
+    const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+    if (scrollConcepts(delta * unit, 'instant')) event.preventDefault();
+  }, { signal, passive: false });
+  signal.addEventListener('abort', () => { clearTimeout(scrollFeedback); scrollButtons.forEach(button => button.classList.remove('is-scrolling')); }, { once: true });
   concepts.addEventListener('scroll', updateScroll, { signal, passive: true });
   const stripSize = new ResizeObserver(updateScroll); stripSize.observe(concepts);
-  function anchorCard(anchor) {
-    card.hidden = !anchor; connector.toggleAttribute('hidden', !anchor);
+  function anchorCard(anchor, target = card, lineLayer = connector, occupied = []) {
+    target.hidden = !anchor; lineLayer.toggleAttribute('hidden', !anchor);
     if (!anchor) return;
-    const left = Math.max(8, Math.min(anchor.x - card.offsetWidth / 2, anchor.width - card.offsetWidth - 54));
-    const top = Math.max(8, Math.min(anchor.y - card.offsetHeight - 18, anchor.height - card.offsetHeight - 54));
-    card.style.left = `${left}px`; card.style.top = `${top}px`;
-    const line = connector.querySelector('line');
-    line.setAttribute('x1', Math.max(left + 8, Math.min(anchor.x, left + card.offsetWidth - 8)));
-    line.setAttribute('y1', top + card.offsetHeight); line.setAttribute('x2', anchor.x); line.setAttribute('y2', anchor.y);
+    // Preserve fractional projection coordinates so slow camera motion never snaps to pixels.
+    const { width, height } = target.getBoundingClientRect();
+    const maxLeft = Math.max(8, anchor.width - width - 54), maxTop = Math.max(8, anchor.height - height - 54);
+    const clampX = x => Math.max(8, Math.min(x, maxLeft));
+    const clampY = y => Math.max(8, Math.min(y, maxTop));
+    const preferred = { left: clampX(anchor.x - width / 2), top: clampY(anchor.y - height - 18) };
+    // Try nearby free rectangles before moving to an edge; leave space for map controls.
+    const xs = [preferred.left, 8, maxLeft, ...occupied.flatMap(box => [box.left - width - 8, box.left + box.width + 8])].map(clampX);
+    const ys = [preferred.top, 8, maxTop, ...occupied.flatMap(box => [box.top - height - 8, box.top + box.height + 8])].map(clampY);
+    let placement = preferred, score = Infinity;
+    for (const left of xs) for (const top of ys) {
+      if (occupied.some(box => left < box.left + box.width + 8 && left + width + 8 > box.left && top < box.top + box.height + 8 && top + height + 8 > box.top)) continue;
+      const distance = (left - preferred.left) ** 2 + (top - preferred.top) ** 2;
+      if (distance < score) { placement = { left, top }; score = distance; }
+    }
+    const { left, top } = placement;
+    target.style.left = `${left}px`; target.style.top = `${top}px`;
+    const line = lineLayer.querySelector('line');
+    line.setAttribute('x1', Math.max(left + 8, Math.min(anchor.x, left + width - 8)));
+    line.setAttribute('y1', top + height); line.setAttribute('x2', anchor.x); line.setAttribute('y2', anchor.y);
+    return { left, top, width, height };
+  }
+  /** Reconcile all current contacts independently; retain their DOM until that foot leaves. */
+  function syncContactCards(anchors) {
+    const ids = new Set(anchors.map(anchor => anchor.id));
+    for (const [id, nodes] of contactCards) if (!ids.has(id)) { nodes.card.remove(); nodes.connector.remove(); contactCards.delete(id); }
+    const occupied = card.hidden ? [] : [{ left: parseFloat(card.style.left), top: parseFloat(card.style.top), width: card.getBoundingClientRect().width, height: card.getBoundingClientRect().height }];
+    const sourcesChanged = contactSources !== state?.sources || contactRevision !== state?.layoutRevision;
+    contactSources = state?.sources; contactRevision = state?.layoutRevision;
+    for (const anchor of anchors) {
+      let nodes = contactCards.get(anchor.id), created = false;
+      if (!nodes) {
+        const detail = card.cloneNode(true), line = connector.cloneNode(true);
+        detail.removeAttribute('data-pilot-card'); detail.dataset.pilotContactCard = anchor.id;
+        for (const part of ['title', 'sources']) {
+          const child = detail.querySelector(`[data-pilot-card-${part}]`);
+          child.removeAttribute(`data-pilot-card-${part}`); child.setAttribute(`data-pilot-contact-${part}`, '');
+        }
+        line.removeAttribute('data-pilot-card-connector'); line.dataset.pilotContactConnector = anchor.id;
+        viewport.insertBefore(line, card); viewport.insertBefore(detail, card);
+        nodes = { card: detail, connector: line }; contactCards.set(anchor.id, nodes); created = true;
+      }
+      if (created || sourcesChanged) renderCard(anchor.id, nodes.card, nodes.connector);
+      occupied.push(anchorCard(anchor, nodes.card, nodes.connector, occupied));
+    }
   }
   const compact = matchMedia('(max-width: 800px)');
   let state, banks, scene, serverLoaded = false, events = [], selectedId, sceneRevision = 0, bankRequest, snapshotRequest, lastBankCheck, nextSnapshotCheck = 0;
@@ -85,21 +146,21 @@ export function mountGraphPilot(scope = document) {
     scene?.clearSelection(); motionControl();
   }
   document.addEventListener('click', event => {
+    if (event.composedPath().some(node => node instanceof Element && node.hasAttribute('data-pilot-contact-card'))) return;
     if (![card, canvas, concepts, root.querySelector('.chat-graph-toolbar')].some(node => event.composedPath().includes(node))) dismiss();
   }, { signal });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') dismiss(); }, { signal });
-  function select(id, center = false) {
-    if (!id) { dismiss(); return; }
+  function renderCard(id, targetCard = card, targetConnector = connector) {
     const node = state?.graph.byId.get(id); if (!node) return;
-    selectedId = id;
     const bank = pilotNodeCollection(state, id);
-    root.style.setProperty('--pilot-color', bank === 'certiquiz' ? 'var(--quiz-accent)' : pilotColors[bank]); card.dataset.source = sourceName(bank);
-    const title = root.querySelector('[data-pilot-card-title]'); title.replaceChildren();
+    const color = bank === 'certiquiz' ? 'var(--quiz-accent)' : pilotColors[bank];
+    targetCard.style.setProperty('--pilot-color', color); targetConnector.style.setProperty('--pilot-color', color); targetCard.dataset.source = sourceName(bank);
+    const title = targetCard.querySelector('[data-pilot-card-title], [data-pilot-contact-title]'); title.replaceChildren();
     const tag = [...concepts.querySelectorAll('button')].find(button => button.dataset.nodeId === id);
     const ordinal = tag?.querySelector('.chat-graph-number')?.textContent;
     if (ordinal) { const number = element('span', ordinal); number.className = 'chat-graph-number'; title.append(number); }
     title.append(element('span', t(node.label)));
-    const target = root.querySelector('[data-pilot-card-sources]'); target.replaceChildren();
+    const target = targetCard.querySelector('[data-pilot-card-sources], [data-pilot-contact-sources]'); target.replaceChildren();
     const sources = state.sources.filter(source => source.nodeId === id);
     for (const source of sources) {
       const path = sourcePath(source.url, siteRoot); if (!path) continue;
@@ -107,6 +168,12 @@ export function mountGraphPilot(scope = document) {
       link.dataset.source = sourceName(pilotSourceCollection(source.url)); link.setAttribute('aria-label', t('Profundizar: {title}', { title: t(source.title) })); target.append(link);
     }
     target.hidden = target.childElementCount === 0;
+    targetCard.hidden = false;
+  }
+  function select(id, center = false) {
+    if (!id) { dismiss(); return; }
+    const node = state?.graph.byId.get(id); if (!node) return;
+    selectedId = id; renderCard(id);
     const count = state.edges.filter(edge => edge.source === id || edge.target === id).length;
     selection.textContent = t('{label}. {count} relaciones en la evidencia mostrada.', { label: t(node.label), count });
     for (const button of concepts.querySelectorAll('button')) button.setAttribute('aria-pressed', String(button.dataset.nodeId === id));
@@ -155,7 +222,8 @@ export function mountGraphPilot(scope = document) {
   function renderMeta() {
     const target = root.querySelector('[data-pilot-meta]'); target.replaceChildren();
     const processed = new Date(generatedAt), date = checkedAt || processed;
-    for (const [name, value] of [[t('Conceptos'), `${state.active.size}/${state.graph.nodes.length.toLocaleString(language)}`], [t('Relaciones'), `${state.edges.length}/${state.graph.edges.length.toLocaleString(language)}`], [t('Actualización'), Number.isFinite(date.getTime()) ? timestamp.format(date).replaceAll('/', '-').replace(',', '') : t('fecha no disponible')], [t('Versión'), state.graphVersion.slice(0, 12)]]) {
+    const counts = root.dataset.renderer !== 'fallback' && !reducedMotion.matches ? discoveryCounts : { nodes: state.active.size, edges: state.edges.length };
+    for (const [name, value] of [[t('Conceptos'), `${number.format(counts.nodes)}/${number.format(state.graph.nodes.length)}`], [t('Relaciones'), `${number.format(counts.edges)}/${number.format(state.graph.edges.length)}`], [t('Actualización'), Number.isFinite(date.getTime()) ? timestamp.format(date).replaceAll('/', '-').replace(',', '') : t('fecha no disponible')], [t('Versión'), state.graphVersion.slice(0, 12)]]) {
       const item = element('div'); item.append(element('dt', name), element('dd', value)); target.append(item);
     }
     const sync = target.children[2].querySelector('dd');
@@ -288,15 +356,17 @@ export function mountGraphPilot(scope = document) {
   }
   Promise.allSettled(tasks).then(() => { if (!signal.aborted && !state) loadFailure(); });
   function availability(available) {
+    if (!available) syncContactCards([]);
     root.dataset.renderer = available ? 'webgl2' : 'fallback'; if (!available) canvas.setAttribute('aria-busy', 'false'); canvas.hidden = !available; labels.hidden = !available; renderStatus.hidden = available || compact.matches;
+    if (state) renderMeta();
     if (loadFailed) { loadFailure(); return; }
     if (!available && !compact.matches) renderStatus.textContent = t('La vista 3D no está disponible. Selecciona un concepto para consultar sus fuentes.');
   }
   async function configureRenderer() {
-    const revision = ++sceneRevision; scene?.destroy(); scene = undefined;
+    const revision = ++sceneRevision; scene?.destroy(); scene = undefined; discoveryCounts = { nodes: 0, edges: 0 };
     if (compact.matches) { availability(false); return; }
     try {
-      const { createPilotScene } = await import('./scene.js?v=f6ce4d580193');
+      const { createPilotScene } = await import('./scene.js?v=b3b939609c94');
       if (signal.aborted || revision !== sceneRevision) return;
       availability(true); canvas.dataset.disposed = 'false';
       scene = createPilotScene(canvas, labels, select, () => { follow = false; root.dataset.followPaused = 'true'; }, availability, anchorCard, value => { zoom.textContent = `${Math.round(value * 100)}%`; }, (running, bank = '') => {
@@ -308,8 +378,8 @@ export function mountGraphPilot(scope = document) {
         walk.style.setProperty('--walk-color', activity.bank === 'certiquiz' ? 'var(--quiz-accent)' : pilotColors[activity.bank]);
         root.querySelector('[data-pilot-walk-bank]').textContent = state.collections.find(bank => bank.id === activity.bank)?.label || t('Conceptos');
         root.querySelector('[data-pilot-walk-concepts]').textContent = activity.nodes.map(node => t(node.label)).join('\n');
-      }, motionControl);
-      if (state) scene.update(state, follow, serverLoaded || serverSettled);
+      }, motionControl, syncContactCards, counts => { discoveryCounts = counts; renderMeta(); });
+      if (state) { scene.update(state, follow, serverLoaded || serverSettled); renderMeta(); }
       if (loadFailed) loadFailure();
       updateLegendSelection();
     } catch { if (!signal.aborted && revision === sceneRevision) availability(false); }
@@ -318,8 +388,8 @@ export function mountGraphPilot(scope = document) {
   const instance = {
     root,
     resetPerformance: () => scene?.resetPerformance(),
-    debug: () => ({ snapshot: { source: serverLoaded ? 'api' : 'local', refreshing: Boolean(snapshotRequest || bankRequest), retry: snapshotRetry }, phase: state?.phase || 'loading', graphVersion: state?.graphVersion, requestId: state?.requestId, seq: state?.seq, activeIds: [...(state?.active || [])], provisional: state?.provisional, sources: state?.sources.map(source => ({ ...source })), memberships: state ? [...state.memberships].map(([nodeId, values]) => ({ nodeId, banks: [...values] })) : [], renderer: scene?.stats(), follow, selectedId }),
-    destroy() { if (signal.aborted) return; abort.abort(); clearInterval(healthTimer); scene?.destroy(); stripSize.disconnect(); renderStatus.remove(); instances.delete(root); if (mounted === instance) mounted = undefined; },
+    debug: () => ({ snapshot: { source: serverLoaded ? 'api' : 'local', refreshing: Boolean(snapshotRequest || bankRequest), retry: snapshotRetry }, phase: state?.phase || 'loading', graphVersion: state?.graphVersion, requestId: state?.requestId, seq: state?.seq, activeIds: [...(state?.active || [])], provisional: state?.provisional, sources: state?.sources.map(source => ({ ...source })), memberships: state ? [...state.memberships].map(([nodeId, values]) => ({ nodeId, banks: [...values] })) : [], renderer: scene?.stats(), follow, selectedId, contactIds: [...contactCards.keys()] }),
+    destroy() { if (signal.aborted) return; abort.abort(); clearInterval(healthTimer); scene?.destroy(); syncContactCards([]); stripSize.disconnect(); renderStatus.remove(); instances.delete(root); if (mounted === instance) mounted = undefined; },
   };
   parentSignal?.addEventListener('abort', () => instance.destroy(), { once: true });
   instances.set(root, instance); mounted = instance; return instance;

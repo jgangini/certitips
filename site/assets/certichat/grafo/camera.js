@@ -9,9 +9,10 @@ export function pilotCameraStep(start, end, phase, retreat) {
   return { radius, phi: start.phi + (end.phi - start.phi) * eased, theta: start.theta + (end.theta - start.theta) * eased, targetPhase: retreat === undefined ? eased : approach };
 }
 
-export function pilotFrame(nodes, direction, fov, aspect, minimum = 45) {
+/** Fit every node around the supplied reference, or the bounds center for a local cluster. */
+export function pilotFrame(nodes, direction, fov, aspect, minimum = 45, reference) {
   if (!nodes.length) return { target: { x: 0, y: 0, z: 0 }, distance: minimum };
-  const target = Object.fromEntries(['x', 'y', 'z'].map(axis => [axis, (Math.min(...nodes.map(n => n[axis])) + Math.max(...nodes.map(n => n[axis]))) / 2]));
+  const target = reference || Object.fromEntries(['x', 'y', 'z'].map(axis => [axis, (Math.min(...nodes.map(n => n[axis])) + Math.max(...nodes.map(n => n[axis]))) / 2]));
   const length = Math.hypot(direction.x, direction.y, direction.z), d = { x: direction.x / length, y: direction.y / length, z: direction.z / length };
   const horizontal = Math.hypot(d.x, d.z) || 1;
   const right = { x: d.z / horizontal, y: 0, z: -d.x / horizontal };
