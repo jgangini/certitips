@@ -1,4 +1,4 @@
-import { t, siteBase, prepareLocale } from "./i18n.js?v=1201ff168136";
+import { t, siteBase, prepareLocale } from "./i18n.js?v=976aefb5a1b9";
 
 let navigate;
 export function navigateSite(url, options) { return navigate ? navigate(url, options) : Promise.resolve(false); }
@@ -11,20 +11,23 @@ function supportedURL(value) {
 }
 async function pageModules(doc) {
   const mounts = [];
-  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=1201ff168136')).mountQuiz);
-  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=1201ff168136')).mountTube);
-  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=1201ff168136')).mountGraphPilot);
-  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=1201ff168136')).mountSearch);
+  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=976aefb5a1b9')).mountQuiz);
+  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=976aefb5a1b9')).mountTube);
+  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=976aefb5a1b9')).mountGraphPilot);
+  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=976aefb5a1b9')).mountSearch);
   return mounts;
 }
 async function stylesFor(doc, signal) {
-  // These shared stylesheet nodes must outlive the body view that originally loaded them.
-  document.head.append(...document.body.querySelectorAll('link[rel="stylesheet"]'));
-  for (const source of doc.querySelectorAll('link[rel="stylesheet"]')) {
+  // Moving a loaded link can briefly detach its rules. Load its head copy before retiring the body link.
+  const sources = [...document.body.querySelectorAll('link[rel="stylesheet"]'), ...doc.querySelectorAll('link[rel="stylesheet"]')];
+  for (const source of sources) {
     if (signal.aborted) throw new DOMException('Navigation canceled', 'AbortError');
     const url = new URL(source.getAttribute('href'), location.href);
     if (url.origin !== location.origin || !url.pathname.startsWith(`${siteBase}assets/`) || !url.pathname.endsWith('.css')) throw new Error('Invalid page stylesheet');
-    if ([...document.querySelectorAll('link[rel="stylesheet"]')].some(link => link.href === url.href)) continue;
+    if ([...document.head.querySelectorAll('link[rel="stylesheet"]')].some(link => link.href === url.href)) {
+      if (source.ownerDocument === document) source.remove();
+      continue;
+    }
     await new Promise((resolve, reject) => {
       const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = url.href;
       const timer = setTimeout(() => done(new Error('Stylesheet unavailable')), 8000);
@@ -33,6 +36,7 @@ async function stylesFor(doc, signal) {
       link.onload = () => done(); link.onerror = () => done(new Error('Stylesheet unavailable'));
       signal.addEventListener('abort', abort, { once: true }); document.head.append(link);
     });
+    if (source.ownerDocument === document) source.remove();
   }
 }
 function staticChatLabels(fresh) {
@@ -44,6 +48,24 @@ function staticChatLabels(fresh) {
     const elements = [live, ...live.querySelectorAll('*')], sources = [next, ...next.querySelectorAll('*')];
     elements.forEach((element, i) => { for (const name of ['aria-label', 'title']) if (sources[i]?.hasAttribute(name)) element.setAttribute(name, sources[i].getAttribute(name)); });
   }
+}
+function pageMetadata(fresh) {
+  document.documentElement.lang = fresh.documentElement.lang;
+  document.title = fresh.title;
+  const selector = 'link[rel="canonical"], link[rel="alternate"], meta[name="description"], meta[property^="og:"]';
+  document.head.querySelectorAll(selector).forEach(node => node.remove());
+  document.head.append(...fresh.head.querySelectorAll(selector));
+}
+// Only same-language video changes retain the playlist and shared page shell.
+function tubeURL(url) {
+  return document.querySelector('[data-tube-player]') && url.pathname.startsWith(`${siteBase}${document.body.dataset.locale}/certitube/`);
+}
+function tubeScroll() {
+  return ['.tube-videos ol', '.tube-browse', '#main'].map(selector => document.querySelector(selector)?.scrollTop || 0);
+}
+function restoreTubeScroll(positions) {
+  if (!Array.isArray(positions) || positions.length !== 3 || !positions.every(Number.isFinite)) return;
+  ['.tube-videos ol', '.tube-browse', '#main'].forEach((selector, index) => document.querySelector(selector)?.scrollTo({ top: positions[index], behavior: 'instant' }));
 }
 function replacePage(fresh) {
   const keep = [...document.querySelectorAll('[data-certichat], [data-voice-edge], #diagram-viewer, #site-search')];
@@ -61,18 +83,14 @@ function replacePage(fresh) {
   for (const attribute of [...document.body.attributes]) document.body.removeAttribute(attribute.name);
   for (const attribute of fresh.body.attributes) document.body.setAttribute(attribute.name, attribute.value);
   try { if (sessionStorage.getItem('certitips:course-nav:compact') === 'true') document.body.classList.add('is-compact-nav'); } catch { /* Optional preference. */ }
-  document.documentElement.lang = fresh.documentElement.lang;
-  document.title = fresh.title;
-  const selector = 'link[rel="canonical"], link[rel="alternate"], meta[name="description"], meta[property^="og:"]';
-  document.head.querySelectorAll(selector).forEach(node => node.remove());
-  document.head.append(...fresh.head.querySelectorAll(selector));
+  pageMetadata(fresh);
 }
 
 export function installPageNavigation(mountSite) {
-  let enabled = false, pageScope = new AbortController(), request, currentURL = new URL(location.href), scrollTimer;
+  let enabled = false, pageScope = new AbortController(), viewScope = new AbortController(), request, currentURL = new URL(location.href), scrollTimer;
   const emit = (name, detail) => window.dispatchEvent(new CustomEvent(name, { detail }));
-  const remember = () => history.replaceState({ ...history.state, certitipsPage: { url: location.href, scroll: [scrollX, scrollY] } }, '', location.href);
-  const mount = async mounts => { const signal = pageScope.signal; mountSite(signal); await Promise.all(mounts.map(fn => fn(signal))); if (!signal.aborted) document.body.dataset.pageReady = 'true'; };
+  const remember = () => history.replaceState({ ...history.state, certitipsPage: { url: location.href, scroll: [scrollX, scrollY], tubeScroll: tubeScroll() } }, '', location.href);
+  const mount = async (mounts, partial = false) => { const signal = AbortSignal.any([pageScope.signal, viewScope.signal]); if (!partial) mountSite(pageScope.signal); await Promise.all(mounts.map(fn => fn(signal))); if (!signal.aborted) document.body.dataset.pageReady = 'true'; };
   void pageModules(document).then(mount);
   window.addEventListener('certivoice:state', event => {
     if (!event.detail?.active || enabled) return;
@@ -86,13 +104,15 @@ export function installPageNavigation(mountSite) {
   };
   navigate = async (value, options = {}) => {
     const target = supportedURL(value);
-    if (!enabled || !target) return false;
+    if (!target || !enabled && !tubeURL(target)) return false;
     request?.abort();
     if (target.pathname === currentURL.pathname && target.search === currentURL.search) {
       if (target.hash !== location.hash) location.hash = target.hash;
       else if (!target.hash) scrollTo(0, 0);
       currentURL = new URL(location.href); return true;
     }
+    const partial = Boolean(tubeURL(target));
+    if (partial) history.scrollRestoration = 'manual';
     const operation = request = new AbortController();
     const signal = operation.signal; let timedOut = false;
     const deadline = setTimeout(() => { timedOut = true; operation.abort(); }, 15000);
@@ -113,16 +133,28 @@ export function installPageNavigation(mountSite) {
       const [mounts, applyLocale] = await Promise.all([pageModules(fresh), prepareLocale(fresh, signal), stylesFor(fresh, signal)]);
       if (signal.aborted) throw new DOMException('Navigation canceled', 'AbortError');
       if (options.history !== 'pop') { clearTimeout(scrollTimer); remember(); }
-      pageScope.abort();
-      replacePage(fresh); applyLocale();
+      let retainPlaylist;
+      if (partial && fresh.querySelector('[data-tube-player]') && fresh.body.dataset.locale === document.body.dataset.locale) {
+        const { replaceTube } = await import('../certitube/certitube.js?v=976aefb5a1b9');
+        if (signal.aborted) throw new DOMException('Navigation canceled', 'AbortError');
+        viewScope.abort();
+        retainPlaylist = replaceTube(fresh);
+        Object.assign(document.body.dataset, fresh.body.dataset);
+        for (const link of document.querySelectorAll('[data-language-link]')) link.href = fresh.querySelector(`[data-language-link="${link.dataset.languageLink}"]`).href;
+        pageMetadata(fresh);
+      } else { pageScope.abort(); viewScope.abort(); replacePage(fresh); pageScope = new AbortController(); }
+      applyLocale();
       if (options.history !== 'pop') history.pushState({ certitipsPage: { url: target.href, scroll: [0, 0] } }, '', target);
-      currentURL = new URL(target); pageScope = new AbortController();
-      await mount(mounts);
+      currentURL = new URL(target); viewScope = new AbortController();
+      await mount(mounts, Boolean(retainPlaylist));
+      retainPlaylist?.();
+      if (options.history === 'pop') restoreTubeScroll(options.tubeScroll);
       if (signal.aborted || request !== operation) throw new DOMException('Navigation canceled', 'AbortError');
+      document.querySelector('[data-navigation-error]')?.remove();
       emit('site:page', detail);
       let fragment;
       try { fragment = target.hash && document.getElementById(decodeURIComponent(target.hash.slice(1))); } catch { /* An invalid fragment does not undo a valid page change. */ }
-      if (Array.isArray(options.scroll) && options.scroll.length === 2 && options.scroll.every(Number.isFinite)) scrollTo(...options.scroll); else if (fragment) fragment.scrollIntoView({ block: 'start' }); else scrollTo(0, 0);
+      if (Array.isArray(options.scroll) && options.scroll.length === 2 && options.scroll.every(Number.isFinite)) scrollTo(...options.scroll); else if (fragment) fragment.scrollIntoView({ block: 'start' }); else if (!retainPlaylist) scrollTo(0, 0);
       document.querySelector('#main').focus({ preventScroll: true }); remember();
       return true;
     } catch (error) {
@@ -134,11 +166,11 @@ export function installPageNavigation(mountSite) {
     }
   };
   document.addEventListener('click', event => {
-    if (!enabled || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     const link = event.composedPath().find(node => node.matches?.('a[href]'));
     if (!link || link.hasAttribute('download') || link.target && link.target.toLowerCase() !== '_self') return;
     const target = supportedURL(link.href);
-    if (!target) return;
+    if (!target || !enabled && !tubeURL(target)) return;
     if (target.pathname === currentURL.pathname && target.search === currentURL.search) {
       if (!target.hash) { event.preventDefault(); request?.abort(); history.replaceState(history.state, '', target); currentURL = new URL(target); scrollTo(0, 0); }
       return;
@@ -147,7 +179,7 @@ export function installPageNavigation(mountSite) {
     void navigate(target, { source: 'link' }).then(moved => { if (!moved) location.assign(target); }).catch(() => {});
   });
   window.addEventListener('popstate', event => {
-    if (!enabled) return;
+    if (!enabled && !tubeURL(new URL(location.href))) return;
     clearTimeout(scrollTimer);
     if (location.pathname === currentURL.pathname && location.search === currentURL.search) {
       currentURL = new URL(location.href);
@@ -155,7 +187,7 @@ export function installPageNavigation(mountSite) {
       if (Array.isArray(position) && position.length === 2 && position.every(Number.isFinite)) scrollTo(...position);
       return;
     }
-    void navigate(location.href, { history: 'pop', source: 'history', scroll: event.state?.certitipsPage?.scroll }).then(moved => { if (!moved) location.reload(); }).catch(() => history.replaceState(history.state, '', currentURL));
+    void navigate(location.href, { history: 'pop', source: 'history', scroll: event.state?.certitipsPage?.scroll, tubeScroll: event.state?.certitipsPage?.tubeScroll }).then(moved => { if (!moved) location.reload(); }).catch(() => history.replaceState(history.state, '', currentURL));
   });
-  window.addEventListener('scroll', () => { if (enabled && !request) { clearTimeout(scrollTimer); scrollTimer = setTimeout(remember, 120); } }, { passive: true });
+  document.addEventListener('scroll', () => { if ((enabled || tubeURL(currentURL)) && !request) { clearTimeout(scrollTimer); scrollTimer = setTimeout(remember, 120); } }, { passive: true, capture: true });
 }

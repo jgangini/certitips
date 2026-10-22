@@ -1,4 +1,4 @@
-import { t } from "../../site/i18n.js?v=1201ff168136";
+import { t } from "../../site/i18n.js?v=976aefb5a1b9";
 
 // A native rerender creates a new form/dialog: an old voice choice cannot authorize its replacement.
 const identities = new WeakMap(), selections = new WeakMap(), departures = new WeakMap();

@@ -1,5 +1,5 @@
-import * as THREE from '../../vendor/three/three.module.js?v=1201ff168136';
-import { pilotPreviewIds, pilotColors, pilotPreviewZone } from './state.js?v=1201ff168136';
+import * as THREE from '../../vendor/three/three.module.js?v=976aefb5a1b9';
+import { pilotPreviewIds, pilotColors, pilotPreviewZone } from './state.js?v=976aefb5a1b9';
 
 // The overlay contains only existing members/edges; it never strengthens grey context.
 export function createPilotHighlight(scene) {

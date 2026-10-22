@@ -1,7 +1,7 @@
-import { installPageNavigation, navigateSite } from "./navigation.js?v=1201ff168136";
-import { t, locale, localizedURL, siteBase } from "./i18n.js?v=1201ff168136";
-import { readStored, writeStored } from "./storage.js?v=1201ff168136";
-import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt } from "./content-search.js?v=1201ff168136";
+import { installPageNavigation, navigateSite } from "./navigation.js?v=976aefb5a1b9";
+import { t, locale, localizedURL, siteBase } from "./i18n.js?v=976aefb5a1b9";
+import { readStored, writeStored } from "./storage.js?v=976aefb5a1b9";
+import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, searchMatches } from "./content-search.js?v=976aefb5a1b9";
 
 // The root entry recalls a language; missing routes are handled by the 404 allowlist.
 if (/^(?:index\.html)?$/.test(location.pathname.slice(siteBase.length))) {
@@ -311,15 +311,24 @@ const searchIcons = new Map(searchEntries.map(row => [row.dataset.searchKind, ro
 searchIcons.set("video", searchDialog.querySelector("#search-video-icon").content.firstElementChild);
 let contentSearch = [], searchLoading, searchError = false;
 
-function contentResult(entry, query) {
+function contentResult(entry) {
   const row = searchEntries[0].cloneNode(true), link = row.querySelector("a");
   row.hidden = false; row.dataset.searchKind = entry.kind;
   link.href = entry.url; link.removeAttribute("target"); link.removeAttribute("rel");
-  row.querySelector("strong").textContent = entry.title;
   row.querySelector("small").textContent = entry.kind === "video" ? t("Video · CertiTube") : t("Contenido de la guía");
-  row.querySelector(".search-result-description").textContent = searchExcerpt(entry.text, query);
   row.querySelector(".search-result-icon").replaceWith(searchIcons.get(entry.kind).cloneNode(true));
   return row;
+}
+
+// Keep both catalog and corpus matches literal and rebuild marks when the query changes.
+function highlightSearch(node, text, query) {
+  const parts = []; let end = 0;
+  for (const match of searchMatches(text, query)) {
+    parts.push(document.createTextNode(text.slice(end, match.start)));
+    const mark = document.createElement('mark'); mark.textContent = text.slice(match.start, match.end);
+    parts.push(mark); end = match.end;
+  }
+  node.replaceChildren(...parts, document.createTextNode(text.slice(end)));
 }
 
 function updateSearch() {
@@ -327,8 +336,12 @@ function updateSearch() {
   const focusedLink = searchDialog.querySelector("a:focus")?.getAttribute("href");
   const results = searching ? searchContent([...catalogSearch, ...contentSearch], query) : catalogSearch.filter(entry => entry.kind !== "topic");
   const rows = results.map(entry => {
-    if (!entry.row) return contentResult(entry, query);
-    entry.row.hidden = false; return entry.row;
+    const row = entry.row || contentResult(entry);
+    row.hidden = false;
+    const title = entry.kind === 'video' ? entry.title.replace(/^CertiTube\s*·\s*/, '').replace(/( · \d+:\d{2}(?::\d{2})?) — /, '$1 · ') : entry.title;
+    highlightSearch(row.querySelector('strong'), title, query);
+    highlightSearch(row.querySelector('.search-result-description'), searchExcerpt(entry.text, query), query);
+    return row;
   });
   searchList.replaceChildren(...rows, searchEmpty);
   if (focusedLink) ([...searchList.querySelectorAll("a")].find(link => link.getAttribute("href") === focusedLink) ?? searchInput).focus();

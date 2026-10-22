@@ -1,5 +1,5 @@
-import { sourcePath } from "../certichat/trace.js?v=1201ff168136";
-import { locale, language } from './i18n.js?v=1201ff168136';
+import { sourcePath } from "../certichat/trace.js?v=976aefb5a1b9";
+import { locale, language } from './i18n.js?v=976aefb5a1b9';
 
 const normalize = value => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const words = value => new Set(normalize(value).split(/\s+/).filter(Boolean));
@@ -59,6 +59,16 @@ export function corpusSearchEntries(corpus, siteRoot) {
     if (!url) return [];
     return [indexSearchEntry({ title: doc.title, heading: doc.title.split(" · ").at(-1), terms: doc.title, text: doc.text, url, kind: url.startsWith(videoPrefix) ? "video" : "topic" })];
   });
+}
+
+/** Return original-text ranges for the same words, prefixes, accents and typos used by ranking.
+ * Offsets retain Unicode combining marks; callers render text nodes rather than interpreting HTML.
+ */
+export function searchMatches(text, query) {
+  const terms = [...words(query)].filter(term => !ignored.has(term));
+  return [...text.matchAll(/[\p{L}\p{N}][\p{L}\p{N}\p{M}]*/gu)]
+    .filter(token => terms.some(term => wordScore(term, words(token[0]))))
+    .map(token => ({ start: token.index, end: token.index + token[0].length }));
 }
 
 export function searchExcerpt(text, query) {

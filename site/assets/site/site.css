@@ -1507,6 +1507,7 @@ html:has(#language-transition[open]) { overflow: hidden; }
 }
 .search-results a:hover, .search-results a:focus-visible { background: var(--hover); }
 .search-results a:focus-visible { outline-offset: -3px; }
+.search-results mark { background: #ffe066; color: #20232b; border-radius: 2px; }
 .search-result-icon {
   display: grid;
   place-items: center;

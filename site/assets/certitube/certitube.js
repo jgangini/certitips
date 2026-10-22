@@ -1,5 +1,5 @@
-import { mountChapterScroll } from '../site/chapter-scroll.js?v=1201ff168136';
-import { t, language } from '../site/i18n.js?v=1201ff168136';
+import { mountChapterScroll } from '../site/chapter-scroll.js?v=976aefb5a1b9';
+import { t, language } from '../site/i18n.js?v=976aefb5a1b9';
 let youtubeReady;
 
 function loadYouTube() {
@@ -201,7 +201,7 @@ function mountMobileLayout(root, signal) {
       browse.append(...content, videos);
     } else {
       root.append(...content);
-      root.after(videos);
+      if (root.nextElementSibling !== videos) root.after(videos);
       browse.remove();
     }
   }
@@ -211,5 +211,33 @@ function mountMobileLayout(root, signal) {
 
 export function mountTube(signal) {
   const root = document.querySelector("[data-tube-player]");
-  if (root) { mountMobileLayout(root, signal); mountChapterScroll(root, signal); mountPlayer(root, signal); }
+  if (root) {
+    mountMobileLayout(root, signal); mountChapterScroll(root, signal); mountPlayer(root, signal);
+    const list = root.parentElement.querySelector('.tube-videos ol');
+    window.addEventListener('site:will-navigate', () => list.scrollTo({ top: list.scrollTop, behavior: 'instant' }), { signal });
+  }
+}
+
+/** Swap the player and changed playlist rows, preserving a visible recommendation as the scroll anchor.
+ * Returns a callback for the mounted layout: smooth in the desktop list, immediate for reduced motion or page scrolling.
+ */
+export function replaceTube(fresh) {
+  const player = document.querySelector('[data-tube-player]'), next = fresh.querySelector('[data-tube-player]');
+  const videos = document.querySelector('.tube-videos'), list = videos.querySelector('ol');
+  const rows = [...list.children], incoming = [...fresh.querySelector('.tube-videos ol').children];
+  const changed = rows.filter((row, index) => row.matches('.tube-video-current') || incoming[index].matches('.tube-video-current'));
+  const scroller = matchMedia('(min-width: 1001px)').matches ? list : matchMedia('(min-width: 801px)').matches ? document.scrollingElement : matchMedia('(max-height: 540px)').matches ? document.querySelector('#main') : player.querySelector('.tube-browse');
+  const edge = scroller === document.scrollingElement ? 0 : scroller.getBoundingClientRect().top;
+  const anchor = rows.find(row => !changed.includes(row) && row.getBoundingClientRect().bottom > edge);
+  const top = anchor?.getBoundingClientRect().top;
+  const scroll = scroller.scrollTop;
+  // On small screens the playlist is nested inside the outgoing player.
+  if (player.contains(videos)) player.after(videos);
+  changed.forEach(row => row.replaceWith(incoming[rows.indexOf(row)]));
+  player.replaceWith(next);
+  return () => {
+    const target = scroller.classList?.contains('tube-browse') ? next.querySelector('.tube-browse') : scroller;
+    const position = anchor ? target.scrollTop + anchor.getBoundingClientRect().top - top : scroll;
+    target.scrollTo({ top: position, behavior: target === list && !matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'instant' });
+  };
 }

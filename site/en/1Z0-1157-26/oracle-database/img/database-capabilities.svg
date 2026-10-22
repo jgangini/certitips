@@ -44,7 +44,7 @@
   <text x="56" y="604" class="body">Test agents</text><text x="56" y="632" class="body">and visual flows.</text>
   <g transform="translate(870 563)"><circle r="55" fill="#ebe8f9"/><g transform="translate(-30 -30) scale(2.5)" fill="none" stroke="#4f46b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5M15 8V2M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1zM9 8V2"/></g></g>
   <text x="946" y="492" class="meta indigo" font-weight="700">CONECTING</text>
-  <text x="946" y="527" class="label">MCP Server</text><text x="946" y="555" class="meta">Autonomy</text>
+  <text x="946" y="527" class="label">MCP Server</text><text x="946" y="555" class="meta">Autonomous</text>
   <text x="946" y="604" class="body">Expones tools to</text><text x="946" y="632" class="body">AI customers.</text>
   </g>
 </svg>
