@@ -1409,7 +1409,7 @@ dialog {
   background: var(--paper);
   color: var(--ink);
 }
-dialog::backdrop, .course-page::after, #diagram-viewer::after {
+dialog::backdrop, .course-page::after {
   background: #18191f66;
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
@@ -1586,7 +1586,7 @@ html:not([data-theme="dark"]) :is(.dialog-content, .dialog-content img) { backgr
 #diagram-viewer.is-closing::backdrop { animation: diagram-backdrop-out 300ms ease-in both; }
 @keyframes diagram-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes diagram-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
-.diagram-presentation-nav, .diagram-slide-count { display: none; }
+.diagram-presentation-nav, .diagram-slide-count, .diagram-direction-controls { display: none; }
 #diagram-viewer[open].is-presenting {
   width: 100vw;
   height: 100dvh;
@@ -1596,6 +1596,9 @@ html:not([data-theme="dark"]) :is(.dialog-content, .dialog-content img) { backgr
   border-width: 4px 0 0;
   border-radius: 0;
   display: grid;
+  --diagram-control-width: 98px;
+  --diagram-control-height: 36px;
+  --diagram-control-bottom: 20px;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
   overflow: hidden;
@@ -1636,12 +1639,24 @@ html:not([data-theme="dark"]) :is(.dialog-content, .dialog-content img) { backgr
 .diagram-presentation-nav button[aria-current="true"] { border: 2px solid var(--accent); }
 .diagram-presentation-nav img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; }
 #diagram-viewer.is-presenting .dialog-content { grid-column: 1; grid-row: 2; display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; min-width: 0; min-height: 0; max-height: none; overflow: hidden; padding: 0; cursor: pointer; }
-#diagram-viewer.is-presenting::after { content: ""; grid-column: 1; grid-row: 2 / -1; z-index: 1; opacity: 0; pointer-events: none; transition: opacity 220ms ease; }
+#diagram-viewer.is-presenting::after { content: ""; grid-column: 1; grid-row: 2 / -1; z-index: 1; background: #18191f66; opacity: 0; pointer-events: none; transition: opacity 220ms ease; }
+/* Blur the stable content layers; sampling the animated SVG through a backdrop can leave a rectangular seam. */
+#diagram-viewer.is-presenting:has(.diagram-presentation-nav.is-open) :is(.dialog-content, #diagram-description) { filter: blur(3px); }
+#diagram-viewer.is-presenting:has(.diagram-presentation-nav.is-open) :is(.dialog-content, .dialog-content img) { background: var(--diagram-paper, var(--paper)); }
 #diagram-viewer.is-presenting:has(.diagram-presentation-nav.is-open)::after { opacity: 1; pointer-events: auto; }
 #diagram-viewer.is-presenting .dialog-content img { width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; }
 #diagram-viewer.is-presenting #diagram-description { grid-column: 1; grid-row: 3; max-height: 22dvh; overflow-y: auto; }
-#diagram-viewer.is-presenting .diagram-slide-count { display: grid; place-items: center; grid-column: 1; grid-row: 2; justify-self: end; align-self: end; position: relative; margin: 0 20px 20px 0; width: 98px; height: 36px; border: 1px solid #111; border-radius: 6px; background: #111; color: #fff; font-size: 1.1rem; font-weight: 700; font-variant-numeric: tabular-nums; opacity: 0; visibility: hidden; transition: opacity 250ms, visibility 250ms; pointer-events: none; }
+#diagram-viewer.is-presenting .diagram-slide-count { display: grid; place-items: center; grid-column: 1; grid-row: 2; justify-self: end; align-self: end; position: relative; margin: 0 20px var(--diagram-control-bottom) 0; width: var(--diagram-control-width); height: var(--diagram-control-height); border: 1px solid #111; border-radius: 6px; background: #111; color: #fff; font-size: 1.1rem; font-weight: 700; font-variant-numeric: tabular-nums; opacity: 0; visibility: hidden; transition: opacity 250ms, visibility 250ms; pointer-events: none; }
 #diagram-viewer.is-presenting .diagram-slide-count.is-visible { opacity: 1; visibility: visible; }
+#diagram-viewer.is-presenting .diagram-direction-controls { display: flex; grid-column: 1; grid-row: 2; justify-self: start; align-self: end; position: relative; margin: 0 0 var(--diagram-control-bottom) 20px; width: var(--diagram-control-width); height: var(--diagram-control-height); padding: 3px; border: 1px solid #111; border-radius: 6px; background: #111; opacity: 1; visibility: visible; transition: opacity 250ms, visibility 250ms; }
+#diagram-viewer.is-presenting[data-slide-direction] .diagram-direction-controls, #diagram-viewer.is-presenting .diagram-direction-controls:is(:hover, :has(button:focus-visible)) { opacity: 1; visibility: visible; pointer-events: auto; }
+#diagram-viewer.is-presenting .diagram-direction-controls button { display: grid; place-items: center; flex: 1; min-width: 0; padding: 0; border: 0; border-radius: 3px; background: transparent; color: #fff; cursor: pointer; }
+#diagram-viewer.is-presenting[data-slide-direction="-1"] [data-slide-step="-1"], #diagram-viewer.is-presenting[data-slide-direction="1"] [data-slide-step="1"], #diagram-viewer.is-presenting .diagram-direction-controls button:focus-visible { background: #fff; color: #111; }
+/* Mouse controls follow the image area; keep keyboard focus and touch navigation available. */
+@media (hover: hover) and (pointer: fine) {
+  #diagram-viewer.is-presenting .diagram-direction-controls { opacity: 0; pointer-events: none; }
+}
+
 @media (max-width: 700px) { .dialog-toolbar #diagram-caption { font-size: .85rem; } }
 html.is-resizing :is(.course-page, .site-header, .home-main, .hero-ambient, .course-groups, .sidebar, .course-main, .site-footer) { transition: none !important; }
 html.is-chat-layout-transition :is(.course-page, .site-header, .sidebar, .course-main) { transition: none !important; }
@@ -1657,7 +1672,7 @@ html.is-chat-layout-transition #diagram-viewer.is-presenting .certichat-panel { 
 ::view-transition-group(course-reading), ::view-transition-group(course-diagram), ::view-transition-group(course-chat-launcher), ::view-transition-group(course-chat-panel), ::view-transition-group(course-header), ::view-transition-group(course-footer) { animation-duration: 360ms; animation-timing-function: ease; }
 @media (prefers-reduced-motion: reduce) {
   #diagram-viewer::backdrop { animation: none; }
-  .diagram-slide-count, .diagram-presentation-nav, #diagram-viewer::after { transition: none !important; }
+  .diagram-slide-count, .diagram-direction-controls, .diagram-presentation-nav, #diagram-viewer::after { transition: none !important; }
   .site-header, .home-main, .course-groups, .sidebar, .course-main, .course-page .site-footer, .course-page::after { transition: none !important; }
   .course-groups details::details-content, .nav-branch::details-content { transition: none !important; }
 }

@@ -1,5 +1,5 @@
-@import url("./deck.css?v=976aefb5a1b9");
-@import url("./stages.css?v=976aefb5a1b9");
+@import url("./deck.css?v=f6ce4d580193");
+@import url("./stages.css?v=f6ce4d580193");
 
 .home-main.certisearch-main{margin-inline:auto;padding-block:20px;flex:1;min-height:0}
 .certisearch{--workspace-control-size:32px;display:grid;grid-template-columns:minmax(0,1fr) var(--dock-width);gap:var(--layout-gap);min-height:0;align-items:start}

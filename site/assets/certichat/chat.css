@@ -71,8 +71,9 @@ html[data-theme="dark"] .certichat { --chat-glass-surface: rgba(20, 18, 28, .97)
 #diagram-viewer.is-presenting:has(.certichat-panel:not([hidden]):not([data-voice-mode="true"])) .dialog-toolbar { grid-column: 1; }
 #diagram-viewer.is-presenting > .certichat:has(.certichat-panel:not([hidden]):not([data-voice-mode="true"])) { grid-column: 2; grid-row: 1 / -1; justify-self: stretch; align-self: stretch; margin: 0; min-width: 0; min-height: 0; }
 #diagram-viewer.is-presenting:has(.certichat-panel[hidden]) .diagram-slide-count { margin-right: 66px; }
-#diagram-viewer.is-presenting:has([data-voice-mode="true"]) .diagram-slide-count { margin-right: 270px; margin-bottom: 26px; }
-@media (max-width: 380px) { #diagram-viewer.is-presenting:has([data-voice-mode="true"]) .diagram-slide-count { margin-right: 20px; margin-bottom: 78px; } }
+#diagram-viewer.is-presenting:has([data-voice-mode="true"]) { --diagram-control-bottom: 26px; }
+#diagram-viewer.is-presenting:has([data-voice-mode="true"]) .diagram-slide-count { margin-right: 270px; }
+@media (max-width: 380px) { #diagram-viewer.is-presenting:has([data-voice-mode="true"]) { --diagram-control-bottom: 78px; } #diagram-viewer.is-presenting:has([data-voice-mode="true"]) .diagram-slide-count { margin-right: 20px; } }
 #diagram-viewer.is-presenting .certichat-panel { position: static; inset: auto; width: 100%; height: 100%; min-height: 0; border-top: 0; border-bottom: 0; border-radius: 0; box-shadow: none; padding-bottom: env(safe-area-inset-bottom); }
 @media (min-width: 801px) {
   #diagram-viewer.is-presenting:has(.certichat-panel:not([hidden]):not([data-voice-mode="true"])) .dialog-toolbar { box-sizing: border-box; height: var(--presentation-heading-height, 64px); padding-block: 0; }
@@ -119,7 +120,8 @@ html[data-theme="dark"] .certichat #certichat-panel[data-voice-mode="true"] { --
   :where(body:not(.certichat-page)) .certichat #certichat-panel[data-voice-mode="true"], #diagram-viewer.is-presenting .certichat #certichat-panel[data-voice-mode="true"] { --voice-control-size: 44px; position: fixed; inset: auto 0 0; translate: none; width: 100%; height: calc(52px + env(safe-area-inset-bottom)); box-sizing: border-box; border: 0; border-radius: 0; background: var(--paper); box-shadow: none; animation: none; }
   #diagram-viewer.is-presenting > .certichat:has(#certichat-panel[data-voice-mode="true"]) { margin: 0; z-index: 10001; }
   #diagram-viewer.is-presenting:has(.certichat-panel:not([hidden])[data-voice-mode="true"]) { padding-bottom: calc(52px + env(safe-area-inset-bottom)); }
-  #diagram-viewer.is-presenting:has([data-voice-mode="true"]) .diagram-slide-count { margin-right: 20px; margin-bottom: 20px; }
+  #diagram-viewer.is-presenting:has([data-voice-mode="true"]) { --diagram-control-bottom: 20px; }
+  #diagram-viewer.is-presenting:has([data-voice-mode="true"]) .diagram-slide-count { margin-right: 20px; }
 }
 
 @media (max-width: 480px) { .certichat #certichat-panel[data-voice-mode="true"], #diagram-viewer.is-presenting .certichat #certichat-panel[data-voice-mode="true"] { --voice-control-size: 31px; } }

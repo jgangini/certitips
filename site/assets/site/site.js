@@ -1,7 +1,7 @@
-import { installPageNavigation, navigateSite } from "./navigation.js?v=976aefb5a1b9";
-import { t, locale, localizedURL, siteBase } from "./i18n.js?v=976aefb5a1b9";
-import { readStored, writeStored } from "./storage.js?v=976aefb5a1b9";
-import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, searchMatches } from "./content-search.js?v=976aefb5a1b9";
+import { installPageNavigation, navigateSite } from "./navigation.js?v=f6ce4d580193";
+import { t, locale, localizedURL, siteBase } from "./i18n.js?v=f6ce4d580193";
+import { readStored, writeStored } from "./storage.js?v=f6ce4d580193";
+import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, searchMatches } from "./content-search.js?v=f6ce4d580193";
 
 // The root entry recalls a language; missing routes are handled by the 404 allowlist.
 if (/^(?:index\.html)?$/.test(location.pathname.slice(siteBase.length))) {
@@ -482,6 +482,9 @@ const present = dialog.querySelector("[data-diagram-present]");
 const filmstrip = dialog.querySelector(".diagram-presentation-nav");
 const menu = dialog.querySelector("[data-diagram-menu]");
 const slideCount = dialog.querySelector(".diagram-slide-count");
+const stage = dialog.querySelector(".dialog-content");
+const directionControls = dialog.querySelector(".diagram-direction-controls");
+let pressOrigin;
 let galleryPromise, gallery = [], slideIndex = 0, slideToken = 0, countTimer;
 const moduleLinkForImage = src => [...document.querySelectorAll(".sidebar .nav-link")].find(link => new URL(src, location.href).pathname.startsWith(`${link.pathname}img/`));
 const moduleCaptionForImage = (src, fallback) => {
@@ -492,16 +495,23 @@ const diagramIdForImage = src => `diagram-${new URL(src, location.href).pathname
 function setPresentationMenu(open) {
   filmstrip.classList.toggle("is-open", open);
   filmstrip.inert = !open;
+  if (open) delete dialog.dataset.slideDirection;
   menu.setAttribute("aria-expanded", String(open));
   menu.setAttribute("aria-label", open ? t("Ocultar imágenes") : t("Mostrar imágenes"));
-  if (dialog.classList.contains("is-presenting")) dialog.querySelector(".dialog-content").setAttribute("aria-label", open ? t("Diagrama en presentación; haz clic para ocultar imágenes") : t("Diagrama en presentación; haz clic para avanzar"));
+  if (dialog.classList.contains("is-presenting")) dialog.querySelector(".dialog-content").setAttribute("aria-label", open ? t("Diagrama en presentación; haz clic para ocultar imágenes") : t("Diagrama en presentación; izquierda para retroceder, derecha para avanzar"));
 }
 menu.addEventListener("click", () => setPresentationMenu(!filmstrip.classList.contains("is-open")), { signal });
+/** Match only the opened filmstrip's letterboxes to the current SVG's validated paper metadata. */
+function setDiagramPaper(paper) {
+  if (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(paper || '')) dialog.style.setProperty('--diagram-paper', paper);
+  else dialog.style.removeProperty('--diagram-paper');
+}
 function restoreDiagram() {
   dialog.dataset.sourceId = opener.dataset.sourceId || "";
   const image = opener.querySelector("img"), enlarged = dialog.querySelector(".dialog-content img");
   enlarged.src = image.src;
   enlarged.alt = image.alt;
+  setDiagramPaper(opener.dataset.diagramPaper);
   document.querySelector("#diagram-group").textContent = moduleCaptionForImage(image.getAttribute("src"), "");
   document.querySelector("#diagram-caption").textContent = opener.dataset.diagramHeading || image.alt;
   const description = dialog.querySelector("#diagram-description");
@@ -510,6 +520,8 @@ function restoreDiagram() {
 function leavePresentation() {
   if (!dialog.classList.contains("is-presenting")) return;
   slideToken++;
+  delete dialog.dataset.slideDirection;
+  pressOrigin = undefined;
   clearTimeout(countTimer);
   slideCount.classList.remove("is-visible");
   setPresentationMenu(false);
@@ -531,6 +543,7 @@ async function showSlide(index) {
   const image = dialog.querySelector(".dialog-content img");
   image.src = item.src;
   image.alt = item.alt;
+  setDiagramPaper(item.paper);
   document.querySelector("#diagram-group").textContent = moduleCaptionForImage(item.src, item.module);
   document.querySelector("#diagram-caption").textContent = typeof item.heading === "string" ? item.heading : item.alt;
   const description = dialog.querySelector("#diagram-description");
@@ -596,7 +609,7 @@ async function togglePresentation() {
   setPresentationMenu(false);
   viewerAnimation?.cancel();
   dialog.classList.add("is-presenting");
-  dialog.querySelector(".dialog-content").setAttribute("aria-label", t("Diagrama en presentación; haz clic para avanzar"));
+  dialog.querySelector(".dialog-content").setAttribute("aria-label", t("Diagrama en presentación; izquierda para retroceder, derecha para avanzar"));
   present.setAttribute("aria-pressed", "true");
   present.setAttribute("aria-label", t("Salir del modo presentación"));
   const current = gallery.findIndex(item => new URL(item.src, location.href).href === dialog.querySelector(".dialog-content img").src);
@@ -615,13 +628,40 @@ dialog.addEventListener("certivoice:visibility", event => {
     dialog.showModal(); request.completion = togglePresentation();
   }
 }, { signal });
-dialog.querySelector(".dialog-content").addEventListener("click", () => {
+/** Uses the image region's current width, including after the chat changes the layout. */
+function directionAt(clientX) {
+  const box = stage.getBoundingClientRect();
+  return clientX < box.left + box.width / 2 ? -1 : 1;
+}
+function showDirection(step) {
+  if (dialog.classList.contains("is-presenting") && !filmstrip.classList.contains("is-open")) dialog.dataset.slideDirection = String(step);
+}
+stage.addEventListener("pointermove", event => { if (event.pointerType !== "touch") showDirection(directionAt(event.clientX)); }, { signal });
+stage.addEventListener("pointerleave", () => { delete dialog.dataset.slideDirection; }, { signal });
+stage.addEventListener("pointerdown", event => { pressOrigin = { x: event.clientX, y: event.clientY }; }, { signal });
+stage.addEventListener("pointercancel", () => { pressOrigin = undefined; }, { signal });
+stage.addEventListener("dragstart", event => event.preventDefault(), { signal });
+stage.addEventListener("click", event => {
+  const start = pressOrigin;
+  pressOrigin = undefined;
+  const modified = ["ctrlKey", "metaKey", "altKey", "shiftKey"].some(key => event[key]);
+  const dragged = start && Math.hypot(event.clientX - start.x, event.clientY - start.y) > 8;
+  if (event.button || modified || dragged || !getSelection().isCollapsed) return;
   if (dialog.classList.contains("is-presenting")) {
     if (filmstrip.classList.contains("is-open")) { slideToken++; setPresentationMenu(false); }
-    else showSlide(slideIndex + 1);
+    else showSlide(slideIndex + directionAt(event.clientX));
   }
   else if (!present.hidden) present.click();
 }, { signal });
+for (const button of directionControls.querySelectorAll("button")) {
+  const step = Number(button.dataset.slideStep);
+  button.addEventListener("pointerenter", () => showDirection(step), { signal });
+  button.addEventListener("focus", () => showDirection(step), { signal });
+  button.addEventListener("click", () => showSlide(slideIndex + step), { signal });
+}
+directionControls.addEventListener("pointerleave", () => { delete dialog.dataset.slideDirection; }, { signal });
+directionControls.addEventListener("focusout", event => { if (!directionControls.contains(event.relatedTarget)) delete dialog.dataset.slideDirection; }, { signal });
+
 dialog.addEventListener("keydown", event => {
   if (!dialog.classList.contains("is-presenting") || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
   if (event.defaultPrevented || event.composedPath().some(node => node.matches?.("[data-certichat], .certivoice, input, textarea, [contenteditable]"))) return;
