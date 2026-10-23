@@ -108,6 +108,19 @@
       "normalizedSha256": "93f10a1b78ec1cec3c6fde92514f7be3b2ff5162e2d5ccc132fa95b2d511d2e2",
       "viewBox": "0 0 720 720",
       "modifications": []
+    },
+    {
+      "serviceId": "object-storage",
+      "catalogServiceId": "object-storage",
+      "catalogName": "Object Storage",
+      "localFile": "assets/oci/object-storage.svg",
+      "sourceFile": "assets/oci-icons/object-storage.svg",
+      "originalLibraryFile": "Object Storage.svg",
+      "iconSource": "local-svg",
+      "sourceSha256": "bfb7166ce0bb3b2fb46db2f8f89b1eef7754c3759190d3dc3eb0b6647fdf8ab2",
+      "sha256": "bfb7166ce0bb3b2fb46db2f8f89b1eef7754c3759190d3dc3eb0b6647fdf8ab2",
+      "normalizedSha256": "096b66c0a7e614afe563e323b143406d0cfd4dede84b5056943d8d8dcfb8f698",
+      "viewBox": "0 0 42 42"
     }
   ]
 }

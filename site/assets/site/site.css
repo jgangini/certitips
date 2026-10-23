@@ -415,7 +415,7 @@ html[data-theme="dark"] .theme-moon { display: none; }
 .search-toggle kbd {
   margin-left: auto;
 }
-.course-page #diagram-viewer kbd,
+#diagram-viewer kbd,
 .search-toggle kbd {
   display: inline-flex;
   align-items: center;
@@ -1650,6 +1650,7 @@ html:not([data-theme="dark"]) :is(.dialog-content, .dialog-content img) { backgr
 #diagram-viewer.is-presenting .diagram-slide-count { display: grid; place-items: center; grid-column: 1; grid-row: 2; justify-self: end; align-self: end; position: relative; margin: 0 20px var(--diagram-control-bottom) 0; width: var(--diagram-control-width); height: var(--diagram-control-height); border: 1px solid #111; border-radius: 6px; background: #111; color: #fff; font-size: 1.1rem; font-weight: 700; font-variant-numeric: tabular-nums; opacity: 0; visibility: hidden; transition: opacity 250ms, visibility 250ms; pointer-events: none; }
 #diagram-viewer.is-presenting .diagram-slide-count.is-visible { opacity: 1; visibility: visible; }
 #diagram-viewer.is-presenting .diagram-direction-controls { display: flex; grid-column: 1; grid-row: 2; justify-self: start; align-self: end; position: relative; margin: 0 0 var(--diagram-control-bottom) 20px; width: var(--diagram-control-width); height: var(--diagram-control-height); padding: 3px; border: 1px solid #111; border-radius: 6px; background: #111; opacity: 1; visibility: visible; transition: opacity 250ms, visibility 250ms; }
+#diagram-viewer[data-case-presentation] .diagram-direction-controls { display: none; }
 #diagram-viewer.is-presenting[data-slide-direction] .diagram-direction-controls, #diagram-viewer.is-presenting .diagram-direction-controls:is(:hover, :has(button:focus-visible)) { opacity: 1; visibility: visible; pointer-events: auto; }
 #diagram-viewer.is-presenting .diagram-direction-controls button { display: grid; place-items: center; flex: 1; min-width: 0; padding: 0; border: 0; border-radius: 3px; background: transparent; color: #fff; cursor: pointer; }
 #diagram-viewer.is-presenting[data-slide-direction="-1"] [data-slide-step="-1"], #diagram-viewer.is-presenting[data-slide-direction="1"] [data-slide-step="1"], #diagram-viewer.is-presenting .diagram-direction-controls button:focus-visible { background: #fff; color: #111; }
@@ -2453,12 +2454,12 @@ html[data-theme="dark"] .quiz-heading .eyebrow {
 @media (prefers-reduced-motion: reduce) { .status-page .loading-full h1 svg { animation: none; } }
 
 /* Barra de metadatos compartida por Cognee y CertiRSS. */
-.rss-app .chat-graph-footer { flex-shrink: 0; min-height: 46px; display: flex; border-top: 1px solid var(--line); background: var(--white); container-type: inline-size; }
-.rss-app .chat-graph-meta { display: grid; grid-template-columns: repeat(4, max-content); justify-content: start; width: 100%; color: var(--muted); font-size: 12px; line-height: 1.5; margin: 0; }
-.rss-app .chat-graph-meta > div { display: flex; min-height: 23px; }
-.rss-app .chat-graph-meta > div + div, .rss-app .chat-graph-meta dd { border-left: 1px solid var(--line); }
-.rss-app .chat-graph-meta > div:nth-child(2) { border-right: 1px solid var(--line); }
-.rss-app .chat-graph-meta dt, .rss-app .chat-graph-meta dd { display: flex; align-items: center; padding: 2px 8px; margin: 0; }
-.rss-app .chat-graph-meta dd { flex: 1; justify-content: flex-end; color: var(--ink); white-space: nowrap; }
-@container (max-width: 660px) { .rss-app .chat-graph-meta { grid-template-columns: 1fr 1fr; } .rss-app .chat-graph-stamp { justify-self: stretch; } }
-@container (max-width: 430px) { .rss-app .chat-graph-meta { grid-template-columns: 1fr; } }
+.chat-graph-footer { flex-shrink: 0; min-height: 46px; display: flex; border-top: 1px solid var(--line); background: var(--white); container-type: inline-size; }
+.chat-graph-meta { display: grid; grid-template-columns: repeat(4, max-content); justify-content: start; width: 100%; color: var(--muted); font-size: 12px; line-height: 1.5; margin: 0; }
+.chat-graph-meta > div { display: flex; min-height: 23px; }
+.chat-graph-meta > div + div, .chat-graph-meta dd { border-left: 1px solid var(--line); }
+.chat-graph-meta > div:nth-child(2) { border-right: 1px solid var(--line); }
+.chat-graph-meta dt, .chat-graph-meta dd { display: flex; align-items: center; padding: 2px 8px; margin: 0; }
+.chat-graph-meta dd { flex: 1; justify-content: flex-end; color: var(--ink); white-space: nowrap; }
+@container (max-width: 660px) { .chat-graph-meta { grid-template-columns: 1fr 1fr; } .chat-graph-stamp { justify-self: stretch; } }
+@container (max-width: 430px) { .chat-graph-meta { grid-template-columns: 1fr; } }

@@ -1,5 +1,10 @@
 export const CASE_LIMIT = 128 * 1024;
 const sectionLimits = { requirements: 100, assumptions: 100, decisions: 100, alternatives: 30, sizing: 100, estimates: 30, stages: 30, sources: 200, history: 300 };
+
+/** Old archives inherit their saved timestamp once; editing must not renew old dialogue. */
+export function migrateDialogue(value) {
+  return { ...value, history: value.history.map(item => item.createdAt ? item : { ...item, createdAt: value.updatedAt }) };
+}
 const sections = Object.keys(sectionLimits);
 const editable = new Set(['title', 'mode', 'region', 'currency', 'hoursPerMonth', 'answers', 'requirements', 'assumptions', 'decisions', 'alternatives', 'architecture', 'sizing', 'stages', 'imagePrompt']);
 const idPattern = /^[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,95}$/;
@@ -7,7 +12,6 @@ const fail = () => { throw new Error('El expediente no es válido o utiliza una 
 const record = value => value !== null && typeof value === 'object' && !Array.isArray(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value));
 const text = (value, maximum, minimum = 0) => typeof value === 'string' && [...value].length >= minimum && [...value].length <= maximum;
 const fields = (value, allowed) => { if (!record(value) || Object.keys(value).some(key => !allowed.includes(key))) fail(); };
-const stages = ['discover', 'compare', 'design', 'estimate', 'present'];
 const services = ['aidp', 'lakehouse', 'oac', 'oke', 'api-gateway', 'generative-ai'];
 
 export function createCase(catalog, locale = 'es') {
@@ -15,6 +19,11 @@ export function createCase(catalog, locale = 'es') {
     bankVersion: catalog.version, methodologyVersion: catalog.methodologyVersion, answers: {}, requirements: [], assumptions: [], decisions: [], alternatives: [],
     architecture: { nodes: [], edges: [] }, sizing: [], estimates: [], stages: catalog.stages.map(stage => ({ id: stage.id, status: 'pending' })),
     sources: [], history: [], oracleDocument: null, oraclePrevious: null, updatedAt: new Date().toISOString() };
+}
+
+/** Prefer the proposed case-specific label; catalog names remain a legacy fallback. */
+export function stageName(stage,catalog) {
+  return stage?.title||stage?.label||stage?.name||catalog.stages.find(item=>item.id===stage?.id)?.name||stage?.id||'';
 }
 
 function validateTree(value, depth = 0) {
@@ -58,6 +67,7 @@ function validRegionReview(value) {
 }
 
 function validEstimate(value) {
+  if (Object.hasOwn(value, 'requiresSizingReview') && typeof value.requiresSizingReview !== 'boolean') fail();
   displayFields(value, ['status', 'currency', 'region', 'pricingPolicy', 'availability', 'availabilityStatus', 'oracleStatus']);
   if (Object.hasOwn(value, 'currency') && !/^[A-Z]{3}$/.test(value.currency)) fail();
   for (const name of ['totals', 'knownSubtotal', 'forecast', 'source']) if (Object.hasOwn(value, name) && !record(value[name])) fail();
@@ -115,8 +125,9 @@ export function validateCase(value) {
   for (const section of sections) if (!Array.isArray(value[section]) || value[section].length > sectionLimits[section] || value[section].some(item => !record(item))) fail();
   for (const section of sections.filter(name => !['history', 'sources'].includes(name))) uniqueIDs(value[section]);
   for (const item of value.history) {
-    fields(item, ['role', 'text']);
+    fields(item, ['role', 'text', 'createdAt']);
     if (!['user', 'ai'].includes(item.role) || !text(item.text, 12000)) fail();
+    if (item.createdAt !== undefined && (!text(item.createdAt, 40, 1) || !Number.isFinite(Date.parse(item.createdAt)) || !/(?:Z|[+-]\d{2}:\d{2})$/.test(item.createdAt))) fail();
   }
   fields(value.architecture, ['nodes', 'edges']);
   uniqueIDs(value.architecture.nodes); uniqueIDs(value.architecture.edges);
@@ -153,8 +164,9 @@ export function savedQuestion(question, current) {
   return result;
 }
 
-export function canRetryRequest(pending, current, message, action, selection, locale) {
-  return Boolean(pending?.requestId && pending.case?.id === current.id && pending.case?.revision === current.revision && pending.message === message && pending.action === action && pending.locale === locale && (pending.selection?.kind ?? null) === (selection?.kind ?? null) && (pending.selection?.id ?? null) === (selection?.id ?? null));
+export function canRetryRequest(pending, current, message, action, selection, locale, context) {
+  return Boolean(pending?.requestId && pending.case?.id === current.id && pending.case?.revision === current.revision && pending.message === message && pending.action === action && pending.locale === locale && (pending.selection?.kind ?? null) === (selection?.kind ?? null) && (pending.selection?.id ?? null) === (selection?.id ?? null)
+    && (!context || pending.pageUrl === context.pageUrl && pending.activeView === context.activeView));
 }
 
 export function assertCurrentResponse(current, response, request) {
@@ -226,7 +238,7 @@ export function applyEstimate(current, response, action = 'estimate') {
     next.decisions = next.decisions.map(item => item.kind === 'regional-availability' ? { ...item, status: 'needs-review' } : item);
     next.stages = next.stages.map(({ clientAcceptedAt, ...stage }) => ({ ...stage, status: stage.status === 'reviewed' ? 'needs-review' : stage.status }));
   } else next.stages = next.stages.map(stage => {
-    if (!['estimate', 'present'].includes(stage.id)) return stage;
+    if (['discover', 'compare', 'design'].includes(stage.id)) return stage;
     const { clientAcceptedAt, ...state } = stage;
     return { ...state, status: state.status === 'reviewed' ? 'needs-review' : state.status };
   });
@@ -234,7 +246,8 @@ export function applyEstimate(current, response, action = 'estimate') {
 }
 
 export function stageIssues(current, id) {
-  if (!stages.includes(id)) fail();
+  const selected=current.stages.find(stage=>stage.id===id);
+  if (!selected) fail();
   const meaningful = item => ['text', 'title', 'label', 'purpose', 'description'].some(key => typeof item?.[key] === 'string' && item[key].trim());
   const answered = id => { const answer = current.answers[id]; return answer && ['answered', 'confirmed'].includes(answer.status) && answer.value !== null && (typeof answer.value !== 'string' || answer.value.trim()) && (!Array.isArray(answer.value) || answer.value.length); };
   const estimate = current.estimates.at(-1);
@@ -251,9 +264,16 @@ export function stageIssues(current, id) {
       [regionReviewed, 'Revisa la disponibilidad regional de todos los servicios y registra una fuente oficial antes de cerrar la estimación.'],
       [estimate?.status === 'complete' && !estimate.stale && estimate.lines?.length && ['targetMonthly', 'transitionMonthly', 'firstYear'].every(key => estimate.totals?.[key] !== null && estimate.totals?.[key] !== '' && Number.isFinite(Number(estimate.totals?.[key])) && Number(estimate.totals[key]) >= 0), 'Completa y actualiza la estimación antes de revisar esta etapa.']],
   };
-  const required = id === 'present' ? Object.values(checks).flat() : checks[id];
+  const items=value=>Array.isArray(value)?value:typeof value==='string'?[value]:[];
+  const described=value=>items(value).some(item=>typeof item==='string'?item.trim():meaningful(item));
+  const required = id === 'present' ? Object.values(checks).flat() : checks[id]||[
+    [described(selected.deliverables),'Registra los entregables de la etapa antes de revisarla.'],
+    [described(selected.responsibles||selected.responsible),'Registra los responsables de la etapa antes de revisarla.'],
+    [described(selected.advanceCriteria||selected.sufficiency),'Registra los criterios de avance de la etapa antes de revisarla.'],
+  ];
   const issues = required.filter(([valid]) => !valid).map(([, message]) => message);
-  if (stages.slice(0, stages.indexOf(id)).some(previous => current.stages.find(stage => stage.id === previous)?.status !== 'reviewed')) issues.unshift('Revisa las etapas anteriores antes de cerrar esta etapa.');
+  const prerequisites=new Set([...current.stages.slice(0,current.stages.indexOf(selected)).map(stage=>stage.id),...(selected.dependencies||[])]);
+  if ([...prerequisites].some(previous=>current.stages.find(stage=>stage.id===previous)?.status!=='reviewed')) issues.unshift('Revisa las etapas anteriores antes de cerrar esta etapa.');
   return issues;
 }
 
@@ -273,7 +293,19 @@ export function questionText(question, current) {
   return savedQuestion(question, current).text;
 }
 
-export async function caseStorage(operation, value, key = 'case', expected) {
+/** A verified server snapshot can catch up another tab, but cannot resurrect or roll back its case. */
+export function assertCanonicalMirror(stored, next, expected) {
+  if (!stored && !expected) return;
+  const equalRevision = stored?.revision === next.revision;
+  const core = value => JSON.stringify({...value,history:[]},(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.keys(item).sort().map(key=>[key,item[key]])):item);
+  if (!stored || stored.id !== next.id || expected && expected.id !== next.id || stored.revision > next.revision
+    || equalRevision && core(stored) !== core(next)) throw new Error('El caso cambió. Solicita una propuesta actualizada.');
+}
+
+/** Isolate optional named workspaces; explicit edits use CAS, verified server snapshots use monotonic mirror. */
+export async function caseStorage(operation, value, key = 'case', expected, workspace = '') {
+  if (workspace && !/^[a-zA-Z0-9_-]{1,64}$/.test(workspace)) throw new Error('El expediente no es válido o utiliza una versión no compatible.');
+  const storageKey = workspace ? `workspace:${workspace}:${key}` : key;
   const db = await new Promise((resolve, reject) => {
     const request = indexedDB.open('certisearch', 1);
     request.onupgradeneeded = () => request.result.createObjectStore('cases');
@@ -284,17 +316,22 @@ export async function caseStorage(operation, value, key = 'case', expected) {
     return await new Promise((resolve, reject) => {
       const tx = db.transaction('cases', operation === 'get' ? 'readonly' : 'readwrite');
       const store = tx.objectStore('cases');
-      const request = operation === 'get' || expected ? store.get(key) : operation === 'delete' ? store.delete(key) : store.put(structuredClone(value), key);
+      const request = operation === 'get' || operation === 'mirror' || expected ? store.get(storageKey) : operation === 'delete' ? store.delete(storageKey) : store.put(structuredClone(value), storageKey);
       let result;
       request.onsuccess = () => {
         result = request.result;
+        if(operation==='mirror'){
+          try { assertCanonicalMirror(result,value,expected); }
+          catch(error){reject(error);tx.abort();return;}
+          store.put(structuredClone(value),storageKey);result=key;return;
+        }
         if(expected){
           if(key==='pending'||key==='pending-image'){
             if(result?.requestId!==expected.requestId){result=false;return;}
-            if(operation==='delete'){store.delete(key);result=true;return;}
+            if(operation==='delete'){store.delete(storageKey);result=true;return;}
           }
           if(result && ['id','revision','updatedAt'].some(field=>result[field]!==expected[field])){reject(new Error('El caso cambió. Solicita una propuesta actualizada.'));tx.abort();return;}
-          store.put(structuredClone(value),key);result=key;
+          store.put(structuredClone(value),storageKey);result=key;
         }
       };
       tx.oncomplete = () => resolve(result);

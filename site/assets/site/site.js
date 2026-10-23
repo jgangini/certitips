@@ -1,8 +1,9 @@
-import { readSnapshot } from '../certirss/certirss.js?v=2e73772e0e66';
-import { installPageNavigation, navigateSite } from "./navigation.js?v=2e73772e0e66";
-import { t, locale, localizedURL, siteBase } from "./i18n.js?v=2e73772e0e66";
-import { readStored, writeStored } from "./storage.js?v=2e73772e0e66";
-import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, highlightSearch } from "./content-search.js?v=2e73772e0e66";
+import { readSnapshot } from '../certirss/certirss.js?v=c6c63c136710';
+import { installPageNavigation, navigateSite } from "./navigation.js?v=c6c63c136710";
+import { mountCasePresentation } from '../certisearch/presentation.js?v=c6c63c136710';
+import { t, locale, localizedURL, siteBase } from "./i18n.js?v=c6c63c136710";
+import { readStored, writeStored } from "./storage.js?v=c6c63c136710";
+import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, highlightSearch } from "./content-search.js?v=c6c63c136710";
 
 // The root entry recalls a language; missing routes are handled by the 404 allowlist.
 if (/^(?:index\.html)?$/.test(location.pathname.slice(siteBase.length))) {
@@ -482,6 +483,7 @@ const present = dialog.querySelector("[data-diagram-present]");
 const filmstrip = dialog.querySelector(".diagram-presentation-nav");
 const menu = dialog.querySelector("[data-diagram-menu]");
 const slideCount = dialog.querySelector(".diagram-slide-count");
+const casePresentation = mountCasePresentation(dialog, setPresentationMenu, signal, (closing,origin)=>animateViewer(closing,origin));
 const stage = dialog.querySelector(".dialog-content");
 const directionControls = dialog.querySelector(".diagram-direction-controls");
 let pressOrigin;
@@ -497,8 +499,8 @@ function setPresentationMenu(open) {
   filmstrip.inert = !open;
   if (open) delete dialog.dataset.slideDirection;
   menu.setAttribute("aria-expanded", String(open));
-  menu.setAttribute("aria-label", open ? t("Ocultar imágenes") : t("Mostrar imágenes"));
-  if (dialog.classList.contains("is-presenting")) dialog.querySelector(".dialog-content").setAttribute("aria-label", open ? t("Diagrama en presentación; haz clic para ocultar imágenes") : t("Diagrama en presentación; izquierda para retroceder, derecha para avanzar"));
+  menu.setAttribute("aria-label", casePresentation.active ? t('Vistas del caso') : open ? t("Ocultar imágenes") : t("Mostrar imágenes"));
+  if (dialog.classList.contains("is-presenting")) dialog.querySelector(".dialog-content").setAttribute("aria-label", casePresentation.active ? t('Vistas del caso') : open ? t("Diagrama en presentación; haz clic para ocultar imágenes") : t("Diagrama en presentación; izquierda para retroceder, derecha para avanzar"));
 }
 menu.addEventListener("click", () => setPresentationMenu(!filmstrip.classList.contains("is-open")), { signal });
 /** Match only the opened filmstrip's letterboxes to the current SVG's validated paper metadata. */
@@ -531,6 +533,7 @@ function leavePresentation() {
   present.setAttribute("aria-label", t("Activar modo presentación"));
 }
 async function showSlide(index) {
+  if(casePresentation.active)return casePresentation.show(index);
   if (!gallery.length) return;
   const token = ++slideToken;
   index = (index + gallery.length) % gallery.length;
@@ -634,14 +637,15 @@ function directionAt(clientX) {
   return clientX < box.left + box.width / 2 ? -1 : 1;
 }
 function showDirection(step) {
-  if (dialog.classList.contains("is-presenting") && !filmstrip.classList.contains("is-open")) dialog.dataset.slideDirection = String(step);
+  if (!casePresentation.active && dialog.classList.contains("is-presenting") && !filmstrip.classList.contains("is-open")) dialog.dataset.slideDirection = String(step);
 }
 stage.addEventListener("pointermove", event => { if (event.pointerType !== "touch") showDirection(directionAt(event.clientX)); }, { signal });
 stage.addEventListener("pointerleave", () => { delete dialog.dataset.slideDirection; }, { signal });
 stage.addEventListener("pointerdown", event => { pressOrigin = { x: event.clientX, y: event.clientY }; }, { signal });
 stage.addEventListener("pointercancel", () => { pressOrigin = undefined; }, { signal });
-stage.addEventListener("dragstart", event => event.preventDefault(), { signal });
+stage.addEventListener("dragstart", event => { if (!casePresentation.active) event.preventDefault(); }, { signal });
 stage.addEventListener("click", event => {
+  if(casePresentation.active){if(filmstrip.classList.contains('is-open'))setPresentationMenu(false);return;}
   const start = pressOrigin;
   pressOrigin = undefined;
   const modified = ["ctrlKey", "metaKey", "altKey", "shiftKey"].some(key => event[key]);
@@ -664,9 +668,9 @@ directionControls.addEventListener("focusout", event => { if (!directionControls
 
 dialog.addEventListener("keydown", event => {
   if (!dialog.classList.contains("is-presenting") || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
-  if (event.defaultPrevented || event.composedPath().some(node => node.matches?.("[data-certichat], .certivoice, input, textarea, [contenteditable]"))) return;
+  if (event.defaultPrevented || event.composedPath().some(node => node.matches?.("[data-certichat], .certivoice, .gantt-scroll, .case-narrative, input, textarea, [contenteditable]"))) return;
   event.preventDefault();
-  showSlide(slideIndex + (event.key === "ArrowRight" ? 1 : -1));
+  showSlide((casePresentation.active?casePresentation.index:slideIndex) + (event.key === "ArrowRight" ? 1 : -1));
 }, { signal });
 function animateViewer(closing = false, from) {
   if (reduceViewerMotion.matches || !dialog.animate || !from && !opener?.getBoundingClientRect) return;
@@ -682,6 +686,7 @@ function animateViewer(closing = false, from) {
 }
 function closeViewer() {
   if (!dialog.open || dialog.classList.contains("is-closing")) return;
+  if(casePresentation.active){casePresentation.close();return;}
   if (dialog.classList.contains("is-presenting") && !matchMedia("(max-width: 800px)").matches) {
     const from = dialog.getBoundingClientRect();
     leavePresentation(); animateViewer(false, from); return;

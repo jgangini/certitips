@@ -37,7 +37,7 @@
   <g class="comparison-row" transform="translate(0 270)">
     <g class="mistake">
       <rect x="56" width="480" height="96" rx="16"/>
-      <text x="82" y="57">Save only the final answer</text>
+      <text x="82" y="57">Save only final response</text>
     </g>
     <path d="M553 48h50m-13-9 13 9-13 9" class="arrow"/>
     <g class="correction">

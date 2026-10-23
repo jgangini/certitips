@@ -1,15 +1,17 @@
-import { navigateSite } from "../site/navigation.js?v=2e73772e0e66";
-import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=2e73772e0e66";
-import { readStored, writeStored } from "../site/storage.js?v=2e73772e0e66";
-import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=2e73772e0e66";
-import { installVoiceChatControls } from "./voz/chat.js?v=2e73772e0e66";
-import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=2e73772e0e66";
-import { activityTrail, validActivityTrail } from "./activity.js?v=2e73772e0e66";
-import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=2e73772e0e66";
-import { readChatStream } from "./stream.js?v=2e73772e0e66";
-import { watchChatPresentation } from './presentation.js?v=2e73772e0e66';
-import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=2e73772e0e66';
-export { safeSourceURL } from "./trace.js?v=2e73772e0e66";
+import { navigateSite } from "../site/navigation.js?v=c6c63c136710";
+import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=c6c63c136710";
+import { readStored, writeStored } from "../site/storage.js?v=c6c63c136710";
+import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=c6c63c136710";
+import { installVoiceChatControls } from "./voz/chat.js?v=c6c63c136710";
+import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=c6c63c136710";
+import { activityTrail, validActivityTrail } from "./activity.js?v=c6c63c136710";
+import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=c6c63c136710";
+import { runtimeClient, runtimeCapability, runtimeOperation } from './runtime.js?v=c6c63c136710';
+import { watchChatPresentation } from './presentation.js?v=c6c63c136710';
+import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=c6c63c136710';
+import { chatRoom, latestCaseScope, mergeCaseHistory, mergeServerHistory, retainMessageMetadata, sameTurnContext } from './conversation.js?v=c6c63c136710';
+import { voiceDiagnostics } from './voz/telemetry.js?v=c6c63c136710';
+export { safeSourceURL } from "./trace.js?v=c6c63c136710";
 
 const escapeChat = text => String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const responseIdPattern = /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -18,9 +20,9 @@ export function chatNavigationAction(text) {
   if (typeof text !== "string") return null;
   const command = text.normalize("NFD").replace(/\p{M}/gu, "").trim().replace(/\s+/g, " ").toLowerCase();
   // ponytail: only complete navigation imperatives; questions and compound requests stay with the tutor.
-  const match = /^(?:abre|abrir|abra|open|apri|aprire|navega(?:r)?(?: a| hasta| para)?|navegue(?: a| ate| para)?|navigate to|ir (?:a|para)|ve a|llevame a|go(?: to)?|va para|vai (?:a|al|alla)|naviga (?:a|al|alla)) (?:(?:el|la|o|a|il|the) )?(certitips|certiquiz|certitube|certichat|inicio|home(?: page)?|pagina principal(?: de inicio)?|pagina inicial|pagina iniziale)[.!]?$/.exec(command);
+  const match = /^(?:abre|abrir|abra|open|apri|aprire|navega(?:r)?(?: a| hasta| para)?|navegue(?: a| ate| para)?|navigate to|ir (?:a|para)|ve a|llevame a|go(?: to)?|va para|vai (?:a|al|alla)|naviga (?:a|al|alla)) (?:(?:el|la|o|a|il|the) )?(certitips|certiquiz|certitube|certichat|certisearch|inicio|home(?: page)?|pagina principal(?: de inicio)?|pagina inicial|pagina iniziale)[.!]?$/.exec(command);
   if (!match) return null;
-  return { name: ({ certitips: "catalog", certiquiz: "quiz", certitube: "videos", certichat: "chat" })[match[1]] || "home" };
+  return { name: ({ certitips: "catalog", certiquiz: "quiz", certitube: "videos", certichat: "chat", certisearch: "certisearch" })[match[1]] || "home" };
 }
 
 export function configureChatMarkdown(markdown, siteRoot) {
@@ -78,12 +80,13 @@ export function restoreChat(value, siteRoot, now = Date.now()) {
   // Remove the operational notice stored by the earlier voice preview; retain user text and educational replies.
   const voiceNotice = "El modo voz todavía no está habilitado. Puedes seguir usando el chat.";
   let traceBytes = 0;
-  const messages = (Array.isArray(value.messages) ? value.messages : []).filter(item => item && ["user", "ai"].includes(item.role) && typeof item.text === "string" && item.text.trim() && item.text.length <= (item.role === "user" ? 1500 : 12000) && !(item.role === "ai" && [voiceNotice, t(voiceNotice)].includes(item.text))).slice(-100).reverse().map(({ role, text, graphTrace, requestId, rating }) => {
+  const messages = (Array.isArray(value.messages) ? value.messages : []).filter(item => item && ["user", "ai"].includes(item.role) && typeof item.text === "string" && item.text.trim() && item.text.length <= (item.role === "user" ? 1500 : 12000) && Number.isFinite(item.at ?? value.updatedAt) && (item.at ?? value.updatedAt) <= now && now - (item.at ?? value.updatedAt) < 86400000 && !(item.role === "ai" && [voiceNotice, t(voiceNotice)].includes(item.text))).reverse().map(({ role, text, graphTrace, requestId, rating, at, caseId, caseIndex }) => {
     const trace = role === "ai" && normalizeTrace(graphTrace, siteRoot);
     // ponytail: retain newest graph evidence up to 500 KiB; older answer text remains available.
-    return { role, text,
+    return { role, text, ...(at === undefined ? {} : { at }),
+      ...(typeof caseId === 'string' && caseId.length <= 96 && Number.isInteger(caseIndex) && caseIndex >= 0 ? { caseId, caseIndex } : {}),
       ...(trace && (traceBytes += JSON.stringify(trace).length * 2) <= 512000 ? { graphTrace: trace } : {}),
-      ...(role === "ai" && responseIdPattern.test(requestId) ? { requestId } : {}),
+      ...(responseIdPattern.test(requestId) ? { requestId } : {}),
       ...(role === "ai" && [1, -1].includes(rating) ? { rating } : {}) };
   }).reverse();
   const pending = value.pendingRequest;
@@ -105,9 +108,9 @@ if (root) {
     root.querySelector('.certichat-actions a').hidden = true;
   }
   const viewer = document.querySelector("#diagram-viewer"), homeParent = document.body;
-  let presenting = false, launcherVoiceState = {};
+  let presenting = false, launcherVoiceState = {}, caseChatReturn;
   const mobileChat = matchMedia("(max-width: 800px)");
-  let launcherContent = document.querySelector(".tube-detail, [data-group-carousel]") || document.querySelector(".course-page .course-main");
+  let launcherContent = document.querySelector(".tube-detail, .rss-columns, [data-group-carousel]") || document.querySelector(".course-page .course-main");
   // Move the same instance between its dock and local icon control, preserving chat/case state.
   function positionDockLauncher() {
     launcher.setAttribute('aria-label', 'CertiChat'); launcher.title = 'CertiChat';
@@ -117,16 +120,17 @@ if (root) {
     if (root.parentNode !== parent) parent.insertBefore(root, parent === controls ? controls.querySelector('[data-pilot-active-fit]') : null);
   }
   function positionLauncher() {
+    if (presenting) return;
     if (dock) return positionDockLauncher();
-    if (presenting || !launcherContent || !panel.hidden) return;
-    const content = launcherContent.querySelector(".path-section.is-active, .tube-player") || launcherContent;
+    if (!launcherContent || !panel.hidden) return;
+    const content = launcherContent.querySelector(".path-section.is-active, .tube-player, .rss-detail") || launcherContent;
     const box = launcherContent.getBoundingClientRect(), gap = parseFloat(getComputedStyle(root).getPropertyValue("--layout-gap"));
     const beside = !mobileChat.matches && box.right + launcher.offsetWidth + 20 + gap <= document.documentElement.clientWidth;
     root.classList.toggle("is-beside-content", beside);
     const navigation = content.querySelector(".page-navigation a:last-of-type")?.getBoundingClientRect();
     const last = navigation || content.getBoundingClientRect();
     const headerBottom = document.querySelector(".site-header").getBoundingClientRect().bottom;
-    if (beside && (navigation || content.matches(".tube-player")) && last.bottom > headerBottom && last.top < innerHeight) {
+    if (beside && (navigation || content.matches(".tube-player, .rss-detail")) && last.bottom > headerBottom && last.top < innerHeight) {
       const origin = root.getBoundingClientRect();
       const target = last.bottom - launcher.offsetHeight / 2;
       const center = Math.max(headerBottom + 20 + launcher.offsetHeight / 2, target);
@@ -140,7 +144,7 @@ if (root) {
   const launcherSize = new ResizeObserver(scheduleLauncher);
   function observeLauncher() {
     launcherSize.disconnect();
-    launcherContent = document.querySelector(".tube-detail, [data-group-carousel]") || document.querySelector(".course-page .course-main");
+    launcherContent = document.querySelector(".tube-detail, .rss-columns, [data-group-carousel]") || document.querySelector(".course-page .course-main");
     if (launcherContent) launcherSize.observe(launcherContent);
     const footer = document.querySelector(".site-footer"); if (footer) launcherSize.observe(footer);
     root.classList.remove("is-beside-content"); launcher.style.removeProperty("top"); scheduleLauncher();
@@ -167,6 +171,17 @@ if (root) {
   const confirmation = root.querySelector("[data-chat-confirm]"), confirmClear = confirmation.querySelector("[data-chat-confirm-yes]"), cancelClear = confirmation.querySelector("[data-chat-confirm-no]");
   const clearError = root.querySelector("[data-chat-clear-error]"), closeClearError = root.querySelector("[data-chat-clear-error-close]");
   const storageKey = `certichat:${root.dataset.siteRoot}`;
+  let clearedAt = Number(readStored(`${storageKey}:clearedAt`, 0)) || 0;
+  if (clearedAt > Date.now()) clearedAt = 0;
+  const diagnostics = voiceDiagnostics(root);
+  function syncRoom() {
+    const room = chatRoom(location.href, root.dataset.siteRoot);
+    root.dataset.profile = room.profile;
+    root.querySelector('[data-chat-role]').textContent = t(room.label);
+
+  }
+  syncRoom();
+  window.addEventListener('certisearch:proposal', event => diagnostics.record('action', event.detail));
   let openPreference = null;
   try { openPreference = sessionStorage.getItem(`${storageKey}:open`); } catch { /* Keep the current document preference without storage. */ }
   /** Preserve an explicit close across navigation; automatic layout closes remain temporary. */
@@ -192,10 +207,13 @@ if (root) {
   }
   let quizCode = readQuizLock();
   if (quizCode) root.hidden = true;
-  const saved = restoreChat(readStored(storageKey, null), root.dataset.siteRoot);
+  const stored = readStored(storageKey, null);
+  const saved = restoreChat(stored, root.dataset.siteRoot);
+  saved.messages.forEach(item => { item.at ??= stored.updatedAt; });
   restoreHistoryTrace(root.dataset.siteRoot, saved.messages);
   const preview = isChatPreview(location.href, root.dataset.api);
-  let chat, presentation, opening, verifying = false, verified = false, available = false, busy = false, voiceBusy = false, turnstileId, turnstileLoad, refreshVoice = () => {};
+  let chat, presentation, opening, verifying = false, verified = false, available = false, busy = false, voiceBusy = false, turnstileId, turnstileLoad, accessEpoch = 0, refreshVoice = () => {};
+  const syncClear=()=>{clear.disabled=!chat||busy||voiceBusy||Boolean(isSearchPage()&&getSearchAdvisor()?.changingCase);};
   addEventListener("pagehide", () => {
     presentation?.cancel(); presentation = undefined;
     if (dock && !textNavigating && !referenceNavigation) {
@@ -208,6 +226,101 @@ if (root) {
     }
   });
   let pendingRequest = saved.pendingRequest, accessError = "", completedRequest, completedTrace, quota, textNavigation, textNavigating = false, referenceNavigation;
+  const waitingTurns = [];
+  let queuedDispatch, queueTimer,conversationEpoch=0,inputVersion=0;
+  const queueView = document.createElement('ol'); queueView.dataset.chatQueue = ''; queueView.setAttribute('aria-live', 'polite'); queueView.hidden = true;
+  queueView.style.cssText = 'margin:0;padding:8px 24px;max-height:120px;overflow:auto;font-size:12px';
+  panel.append(queueView);
+  function renderWaitingTurns() {
+    queueView.replaceChildren(); queueView.hidden = !waitingTurns.length;
+    for (const turn of waitingTurns) {
+      const item = document.createElement('li'), label = document.createElement('span'), cancel = document.createElement('button');
+      label.textContent = `${t('Solicitud en curso')}: ${turn.message}`;
+      cancel.type = 'button'; cancel.textContent = t('Cancelar'); cancel.onclick = () => { waitingTurns.splice(waitingTurns.indexOf(turn), 1);void runtimeClient(root,diagnostics).cancel(turn.requestId).catch(error=>setStatus(error.message,true));renderWaitingTurns(); };
+      item.append(label, cancel); queueView.append(item);
+    }
+  }
+  function queueInput() {
+    const input = chat?.shadowRoot?.querySelector('[role=textbox]'), message = input?.innerText.trim();
+    if (!message || message.length > 1500 || waitingTurns.length >= 10 || quotaText(quota)) return;
+    const context = voiceContext(document);
+    const turn={requestId:crypto.randomUUID(),message,advisor:getSearchAdvisor(),search:isSearchPage(),context:{pageUrl:voicePageURL(document),locale,contextIds:[context.diagramId,context.sectionId].filter(Boolean),context,activityTrail:activityTrail()}};
+    if(turn.search&&(!turn.advisor||turn.advisor.changingCase))return;
+    turn.caseId=turn.search?turn.advisor.id:undefined;
+    turn.inputVersion=++inputVersion;
+    window.dispatchEvent(new CustomEvent('certichat:activity'));
+    turn.result=(turn.search?turn.advisor.enqueue(message,{...turn.context,requestId:turn.requestId}):api('chat',{requestId:turn.requestId,message,...turn.context})).then(value=>({value}),error=>({error}));
+    waitingTurns.push(turn);
+    input.innerText = ''; input.dispatchEvent(new Event('input', { bubbles: true })); renderWaitingTurns(); scheduleWaitingTurn();
+  }
+  function scheduleWaitingTurn() {
+    clearTimeout(queueTimer);
+    if (!waitingTurns.length) return;
+    queueTimer = setTimeout(() => {
+      const next=waitingTurns[0];
+      if(next.search&&(next.advisor!==getSearchAdvisor()||next.caseId!==getSearchAdvisor()?.id)){waitingTurns.shift();renderWaitingTurns();scheduleWaitingTurn();return;}
+      if (busy || voiceBusy || document.documentElement.classList.contains('is-page-loading') || !chat?.validateInput(waitingTurns[0].message)) { scheduleWaitingTurn(); return; }
+      const control = chat.shadowRoot?.querySelector('.input-button.inside-end:not(.custom-button)');
+      if (control && !control.classList.contains('submit-button') && !control.classList.contains('disabled-button')) { scheduleWaitingTurn(); return; }
+      queuedDispatch = waitingTurns.shift(); renderWaitingTurns();
+      chat.submitUserMessage({ text: queuedDispatch.message });
+    }, 250);
+  }
+  const progressView=document.createElement('div'),activeRuns=new Map();
+  progressView.dataset.runtimeProgress='';progressView.setAttribute('role','status');progressView.setAttribute('aria-live','polite');progressView.hidden=true;
+  progressView.style.cssText='padding:6px 12px;font-size:12px';panel.append(progressView);
+  function renderRuntimeProgress(){
+    progressView.replaceChildren();progressView.hidden=!activeRuns.size;
+    for(const run of activeRuns.values()){
+      const row=document.createElement('div'),label=document.createElement('span'),cancel=document.createElement('button');
+      label.textContent=t(run.type==='queued'?'Solicitud en cola.':'El agente está trabajando.');
+      cancel.type='button';cancel.textContent=t('Cancelar');cancel.disabled=run.canceling===true;
+      cancel.onclick=async()=>{cancel.disabled=true;run.canceling=true;try{await runtimeClient(root,diagnostics).cancel(run.requestId);}catch(error){run.canceling=false;setStatus(error.message,true);renderRuntimeProgress();}};
+      row.append(label,cancel);progressView.append(row);
+    }
+  }
+  window.addEventListener('certichat:runtime', event => {
+    const detail = event.detail;
+    // Keep verified retrieval events observable by the existing knowledge map through the shared transport.
+    if(detail?.kind==='chat'){
+      const type=detail.type==='queued'?'accepted':detail.type==='cancelled'?'error':detail.type;
+      if(['accepted','search.started','search.completed','search.failed','candidates','context.selected','answer.started','complete','error'].includes(type))window.dispatchEvent(new CustomEvent('certichat:progress',{detail:{...detail,type}}));
+    }
+    if (!detail || !['queued', 'running', 'progress', 'complete', 'error', 'cancelled', 'disconnected'].includes(detail.type)) return;
+    root.dataset.runtimePhase = detail.type;
+    if (['complete', 'error', 'cancelled', 'disconnected'].includes(detail.type)){activeRuns.delete(detail.requestId);scheduleWaitingTurn();}
+    else activeRuns.set(detail.requestId,detail);
+    renderRuntimeProgress();
+  });
+  window.addEventListener('certichat:stop',()=>{
+    for(const run of activeRuns.values())if(['chat','case'].includes(run.kind))void runtimeClient(root,diagnostics).cancel(run.requestId).catch(error=>setStatus(error.message,true));
+  });
+  const recoveringRuns=new Set();
+  let conversationEvents;
+  function watchConversation(){
+    if(conversationEvents)return;
+    const controller=conversationEvents=new AbortController();
+    void runtimeClient(root,diagnostics).watchConversation(controller.signal,event=>{
+      if(['case.updated','case.approved'].includes(event.type))window.dispatchEvent(new CustomEvent('certichat:case-update',{detail:event.data||event}));
+    }).catch(error=>setStatus(error.message,true)).finally(()=>{if(conversationEvents===controller)conversationEvents=null;});
+  }
+  window.addEventListener('pagehide',()=>{conversationEvents?.abort();conversationEvents=null;});
+  async function recoverRuntime(){
+    const runtime=runtimeClient(root,diagnostics);
+    for(const run of runtime.pending()){
+      if(recoveringRuns.has(run.requestId)||activeRuns.has(run.requestId))continue;
+      const advisor=getSearchAdvisor();
+      if(run.kind==='image'&&(!advisor||advisor.busy||run.caseId&&advisor.id!==run.caseId))continue;
+      recoveringRuns.add(run.requestId);
+      void runtime.resume(run.requestId).then(async result=>{
+        if(run.kind==='image'){await advisor.recoverImage(run.requestId,result);return;}
+        if(result.case&&getSearchAdvisor()?.id===result.case.id)await getSearchAdvisor().refreshCase(run.requestId);
+        await hydrateConversation();
+        if(pendingRequest?.requestId===run.requestId){pendingRequest=undefined;persist();}
+        syncAdvisor(true);
+      }).catch(error=>{if(error.code!=='runtime_cancelled')setStatus(error.message,true);}).finally(()=>recoveringRuns.delete(run.requestId));
+    }
+  }
   const responseTraces = saved.messages.filter(message => message.role === "ai").map(message => message.graphTrace);
   const responseRequests = saved.messages.filter(message => message.role === "ai").map(message => message.requestId);
   const responseRatings = saved.messages.filter(message => message.role === "ai").map(message => message.rating || 0);
@@ -222,30 +335,38 @@ if (root) {
     if (!chat) return;
     const advisor = getSearchAdvisor();
     if (!force && advisor === displayedAdvisor && displayedSearch === isSearchPage()) return;
-    if (busy) { profileRefreshPending = true; return; }
-    const study = restoreChat(readStored(storageKey, null), root.dataset.siteRoot);
-    const history = advisor?.history || (isSearchPage() ? [] : study.messages);
-    // Deep Chat defers history rendering; clear the previous profile synchronously.
-    if (advisor !== displayedAdvisor || displayedSearch !== isSearchPage()) chat.clearMessages(false);
+    if (busy || chat.shadowRoot?.querySelector('[role=textbox]')?.innerText.trim()) { profileRefreshPending = true; return; }
+    const study = restoreChat(readStored(storageKey, {updatedAt:Date.now(),messages:saved.messages,pendingRequest}), root.dataset.siteRoot);
+    const history = mergeCaseHistory(study.messages, advisor, Date.now(), clearedAt);
+    saved.messages = history;
+    writeStored(storageKey, { updatedAt: Date.now(), messages: history, pendingRequest });
+    // The history setter replaces the rendered conversation. Clearing it first races the
+    // library's queued auto-scroll callback, which still refers to the previous message.
     displayedAdvisor = advisor;
     displayedSearch = isSearchPage();
     responseTraces.splice(0, responseTraces.length, ...history.filter(item => item.role === "ai").map(item => item.graphTrace));
     responseRequests.splice(0, responseRequests.length, ...history.filter(item => item.role === "ai").map(item => item.requestId));
     responseRatings.splice(0, responseRatings.length, ...history.filter(item => item.role === "ai").map(item => item.rating || 0));
-    chat.introMessage = isSearchPage() ? undefined : { text: t("Hola. Resuelve tus dudas sobre las guías y prácticas del sitio.") };
-    chat.history = history.map(({ role, text }) => ({ role, text }));
+    const intro = history.length || isSearchPage() ? undefined : { text: t("Hola. Resuelve tus dudas sobre las guías y prácticas del sitio.") };
+    const rendered = history.map(({ role, text }) => ({ role, text }));
+    const visible = (chat.getMessages?.() || chat.history || []).map(({ role, text }) => ({ role, text }));
+    // Assigning identical properties still replaces the composer and discards its draft.
+    if (JSON.stringify(visible) !== JSON.stringify(rendered) || JSON.stringify(chat.introMessage) !== JSON.stringify(intro)) {
+      chat.introMessage = intro;
+      chat.history = rendered;
+    }
     restoreHistoryTrace(root.dataset.siteRoot, history);
     profileRefreshPending = false;
   }
-  window.addEventListener("certisearch:profile", () => syncAdvisor(true));
-  registerChatTransport(async (route, body) => {
+  window.addEventListener("certisearch:profile", () => {syncAdvisor(true);syncClear();chat?.shadowRoot?.querySelector('[role=textbox]')?.dispatchEvent(new Event('input',{bubbles:true}));scheduleWaitingTurn();if(verified&&available)void recoverRuntime();});
+  registerChatTransport(async (route, body, method = 'POST') => {
     if (opening) await opening;
     if (preview) throw new Error(t("Esta vista previa no admite consultas."));
     if (!verified || !available) throw new Error(accessError || t("Verifica tu acceso para continuar."));
-    const result = await api(route, body);
+    const result = await api(route, body, method);
     if (result.quota) updateQuota(result.quota);
     return result;
-  });
+  },runtimeClient(root,diagnostics));
   const responseSelector = ".outer-message-container:not(.deep-chat-intro) .ai-message:not(.deep-chat-loading-message-bubble)";
   const quotaNotice = document.createElement("div");
   quotaNotice.id = "certichat-quota"; quotaNotice.setAttribute("role", "status");
@@ -279,11 +400,35 @@ if (root) {
   setInterval(() => updateQuota(), 1000);
 
   function persist() {
-    if (getSearchAdvisor() || isSearchPage() || displayedAdvisor || displayedSearch) return;
     // Deep Chat's simulated stream drops custom metadata; keep evidence aligned by response position.
     let index = 0;
-    const messages = chat.getMessages().map(message => message.role === "ai" ? { ...message, graphTrace: responseTraces[index], requestId: responseRequests[index], rating: responseRatings[index++] || undefined } : message);
+    const advisor = getSearchAdvisor(), visible = chat.getMessages(), lastUser = visible.findLastIndex(item => item.role === 'user');
+    const messages = visible.map((message, position) => {
+      const retained = retainMessageMetadata(message, saved.messages[position]);
+      if (!retained.caseId && position >= lastUser) Object.assign(retained, latestCaseScope(message, advisor));
+      if (position === lastUser) retained.requestId = pendingRequest?.requestId || completedRequest || retained.requestId;
+      if (message.role === 'ai') {
+        retained.requestId = responseRequests[index];
+        retained.graphTrace = responseTraces[index];
+        retained.rating = responseRatings[index++] || undefined;
+      }
+      return retained;
+    });
+    saved.messages = messages;
     writeStored(storageKey, { updatedAt: Date.now(), ...restoreChat({ updatedAt: Date.now(), messages, pendingRequest }, root.dataset.siteRoot) });
+  }
+
+  /** Restore the complete retained session; HTTP metadata never changes a case or renews a turn. */
+  async function hydrateConversation() {
+    try {
+      const response = await api('conversation', undefined, 'GET');
+      if (!Array.isArray(response.turns) || busy) return;
+      const merged = mergeServerHistory(saved.messages, response.turns,
+        (answer, sources) => answerWithReferences(answer, sources, root.dataset.siteRoot), Date.now(), clearedAt);
+      saved.messages = restoreChat({ updatedAt: Date.now(), messages: merged }, root.dataset.siteRoot).messages;
+      writeStored(storageKey, { updatedAt: Date.now(), messages: saved.messages, pendingRequest });
+      syncAdvisor(true);
+    } catch { /* An older or temporarily unavailable API leaves the local conversation intact. */ }
   }
 
   // Las fuentes validadas del chat y del grafo conservan la conversación al abrir una guía.
@@ -311,9 +456,17 @@ if (root) {
       try { sessionStorage.setItem(`${storageKey}:reference`, result.navigation); } catch { /* Navigation also works without storage. */ }
     }
     textNavigating = true;
-    try { if (!await navigateSite(result.navigation, { source: "text" })) location.assign(result.navigation); }
-    catch { setStatus(t("Sin conexión. Vuelve a intentarlo."), true); }
+    try {
+      if (!await navigateSite(result.navigation, { source: "text" })) {location.assign(result.navigation);return;}
+      await acknowledgeAction(pending.requestId,pending.action,true);
+    }
+    catch { setStatus(t("Sin conexión. Vuelve a intentarlo."), true);await acknowledgeAction(pending.requestId,pending.action,false); }
     finally { textNavigating = false; }
+  }
+  async function acknowledgeAction(requestId,action,executed){
+    if(!requestId||!action)return;
+    try{await runtimeClient(root,diagnostics).acknowledge(requestId,action,executed);}
+    catch(error){setStatus(error.message,true);}
   }
   window.addEventListener("certivoice:state", event => { if (event.detail?.active) textNavigation = undefined; });
   window.addEventListener("certivoice:practice-followup", event => {
@@ -404,34 +557,21 @@ if (root) {
   function apiError(status, code, seconds = 0, detail, search = false) {
     const error = new Error(status === 429 ? seconds ? t("Se alcanzó un límite de uso. Vuelve a intentarlo en {seconds} segundos.", {seconds: Math.ceil(seconds)}) : t("Se alcanzó un límite de uso. Inténtalo más tarde.") : status === 401 || status === 403 ? t("Verifica tu acceso para continuar.") : t("El servicio no está disponible en este momento. Vuelve a intentarlo más tarde."));
     if (search && typeof detail === "string") error.message = t(detail);
-    error.status = status; error.code = code;
+    error.status = status; error.code = code; error.retryAfter = Math.max(0, Number(seconds) || 0);
     if (status === 409) error.message = ["request_failed", "request_expired"].includes(code) ? t("La consulta anterior no tiene un resultado disponible. Puedes enviarla nuevamente.") : t("Esta consulta ya fue recibida. Espera unos segundos antes de intentar recuperar su resultado.");
     return error;
   }
 
   async function api(route, body, method = "POST") {
-    const pilot = route === "chat" && document.querySelector('[data-graph-pilot]');
-    const canceled = new AbortController();
-    const leave = () => { if (!pilot?.isConnected) canceled.abort(); };
-    const hide = () => canceled.abort();
-    if (pilot) { window.addEventListener('site:page', leave); window.addEventListener('pagehide', hide); }
-    let response, data, progressSeq = -1;
-    try {
-      response = await fetch(`${root.dataset.api}/api/${route}`, {
-        method, credentials: "include", headers: { "X-CertiChat": "1", ...(body === undefined ? {} : { "Content-Type": "application/json" }), ...(pilot ? { Accept: 'text/event-stream' } : {}) },
-        ...(body === undefined ? {} : { body: JSON.stringify(body) }), signal: AbortSignal.any([canceled.signal, AbortSignal.timeout(route === "certisearch/image" ? 200000 : route.startsWith("certisearch/") ? 140000 : 55000)]),
-      });
-      data = response.status === 204 ? {} : response.ok && pilot ? await readChatStream(response, body.requestId, detail => {
-        progressSeq = detail.seq;
-        window.dispatchEvent(new CustomEvent('certichat:progress', { detail }));
-      }) : await response.json();
-    } catch (error) {
-      if (pilot) window.dispatchEvent(new CustomEvent('certichat:progress', { detail: { type: 'error', requestId: body.requestId, seq: progressSeq + 1, transport: true } }));
-      if (error.status) throw apiError(error.status, error.code, error.retryAfter);
-      throw error;
-    } finally {
-      window.removeEventListener('site:page', leave); window.removeEventListener('pagehide', hide);
+    if (method === 'POST' && (runtimeCapability(route, body) || runtimeOperation(route))) {
+      try{return await runtimeClient(root, diagnostics).request(route, body);}
+      catch(error){if(!error.status||error.code==='runtime_cancelled')throw error;throw apiError(error.status,error.code,error.retryAfter,error.message,route.startsWith('certisearch/'));}
     }
+    const response = await fetch(`${root.dataset.api}/api/${route}`, {
+      method, credentials: "include", headers: { "X-CertiChat": "1", ...diagnostics.headers(body?.requestId), ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }), signal: AbortSignal.timeout(110000),
+    });
+    const data = response.status === 204 ? {} : await response.json();
     if (!response.ok) {
       const seconds = Number(response.headers.get("Retry-After")) || 0;
       throw apiError(response.status, data.code, seconds, data.detail, route.startsWith("certisearch/"));
@@ -440,11 +580,12 @@ if (root) {
   }
 
   function updateAccess(session, publish = true) {
+    accessEpoch++;
     verified = Boolean(session.authenticated && !session.verificationRequired);
     available = session.available !== false;
     updateQuota(session.quota);
     setStatus(session.available === false ? t("El servicio está actualizando su contenido o alcanzó su límite de uso. Inténtalo más tarde.") : "", session.available === false);
-    clear.disabled = busy || voiceBusy;
+    syncClear();
     if (publish) window.dispatchEvent(new CustomEvent("certichat:session", { detail: session }));
   }
 
@@ -487,8 +628,9 @@ if (root) {
   }
 
   async function initialize() {
+    const epoch = accessEpoch;
     if (!chat) {
-      await import("../deep-chat.js?v=2e73772e0e66");
+      await import("../deep-chat.js?v=c6c63c136710");
       window.remarkable_plugins = [{ plugin: markdown => configureChatMarkdown(markdown, root.dataset.siteRoot) }];
       chat = document.createElement("deep-chat");
       chat.chatStyle = { border: "none", width: "100%", height: "100%", backgroundColor: "var(--paper)", color: "var(--ink)", fontFamily: "inherit" };
@@ -545,12 +687,26 @@ if (root) {
         .certichat-feedback-down { mask-image: url("${new URL("../icons/lucide-thumbs-down.svg", import.meta.url).href}"); }`;
       chat.auxiliaryStyle += `:host([data-graph-dock="true"]) ${responseSelector}:not(.streamed-message) { border: 1px solid transparent; cursor: pointer; } :host([data-graph-dock="true"]) ${responseSelector}:not(.streamed-message):hover { border-color: var(--red); } :host([data-graph-dock="true"]) ${responseSelector}:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }`;
       chat.dataset.graphDock = String(Boolean(dock) && !isSearchPage());
-      refreshVoice = installVoiceChatControls(chat);
+      const updateVoiceControls = installVoiceChatControls(chat);
+      refreshVoice = value => {
+        updateVoiceControls(value);
+        const composer = chat.shadowRoot?.querySelector('#text-input-container');
+        if (!composer) return;
+        let enqueue = composer.querySelector('[data-enqueue-turn]');
+        if (!enqueue) {
+          enqueue = document.createElement('button'); enqueue.type = 'button'; enqueue.dataset.enqueueTurn = '';
+          enqueue.textContent = t('Enviar a la cola'); enqueue.setAttribute('aria-label', t('Enviar a la cola'));
+          enqueue.style.cssText = 'position:absolute;right:58px;bottom:6px;max-width:140px;font:inherit;font-size:12px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px;z-index:3';
+          enqueue.onclick = queueInput; composer.append(enqueue);
+        }
+        enqueue.hidden = !(value || voiceBusy); enqueue.disabled = waitingTurns.length >= 10;
+      };
       chat.onInput = () => refreshVoice(busy);
       displayedAdvisor = getSearchAdvisor();
       displayedSearch = isSearchPage();
-      chat.introMessage = isSearchPage() ? undefined : { text: t("Hola. Resuelve tus dudas sobre las guías y prácticas del sitio.") };
-      chat.history = (displayedAdvisor?.history || (isSearchPage() ? [] : saved.messages)).map(({ role, text }) => ({ role, text }));
+      chat.introMessage = saved.messages.length || isSearchPage() ? undefined : { text: t("Hola. Resuelve tus dudas sobre las guías y prácticas del sitio.") };
+      saved.messages = mergeCaseHistory(saved.messages, displayedAdvisor, Date.now(), clearedAt);
+      chat.history = saved.messages.map(({ role, text }) => ({ role, text }));
       chat.onMessage = ({ isHistory, message }) => {
         if (isHistory) return;
         if (message.role === "ai") {
@@ -559,18 +715,19 @@ if (root) {
           responseRequests.push(completedRequest); responseRatings.push(0);
           chat.shadowRoot.querySelectorAll(responseSelector).forEach(bindResponse);
           if (pendingRequest?.requestId === completedRequest) pendingRequest = undefined;
-          completedRequest = undefined;
-          busy = false; clear.disabled = false;
+          busy = false; syncClear();
           chat.shadowRoot.querySelector('.input-button.inside-end:not(.custom-button)')?.setAttribute("aria-label", t("Enviar consulta"));
           refreshVoice(busy);
+          scheduleWaitingTurn();
           if (profileRefreshPending) queueMicrotask(() => syncAdvisor(true));
         }
         persist();
+        if (message.role === 'ai') completedRequest = undefined;
         finishTextNavigation();
       };
       chat.errorMessages = { displayServiceErrorMessages: true };
       chat.requestBodyLimits = { maxMessages: 1 };
-      chat.validateInput = text => !busy && !voiceBusy && (!isSearchPage() || Boolean(getSearchAdvisor())) && !quotaText(quota) && Boolean(text?.trim()) && text.length <= 1500;
+      chat.validateInput = text => !busy && !voiceBusy && !document.documentElement.classList.contains('is-page-loading') && (!isSearchPage() || Boolean(getSearchAdvisor())&&!getSearchAdvisor().changingCase) && !quotaText(quota) && Boolean(text?.trim()) && text.length <= 1500;
       const composerSize = viewer && new ResizeObserver(entries => {
         for (const entry of entries) {
           const element = entry.target === chat ? chat.shadowRoot.querySelector("#text-input-container") : entry.target;
@@ -578,7 +735,7 @@ if (root) {
           if (height) viewer.style.setProperty(element.classList.contains("certichat-heading") ? "--presentation-heading-height" : "--presentation-composer-height", `${height}px`);
         }
       });
-      chat.onComponentRender = () => {
+      const mountChatView = () => {
         syncAnnotation();
         const composer = chat.shadowRoot.querySelector("#text-input-container");
         if (composerSize) { composerSize.disconnect(); composerSize.observe(chat); if (composer) composerSize.observe(composer); composerSize.observe(root.querySelector(".certichat-heading")); }
@@ -593,49 +750,57 @@ if (root) {
           chat.shadowRoot.querySelectorAll(responseSelector).forEach(bindResponse);
         }
         updateQuota();
-        clear.disabled = busy;
+        syncClear();
+      };
+      chat.onComponentRender = () => {
+        mountChatView();
+        // History replaces the chat view after the component's one-time render event.
+        // Watch only that replacement, not message or streaming mutations.
+        new MutationObserver(mountChatView).observe(chat.shadowRoot.querySelector('#container'), { childList: true });
       };
       chat.addEventListener("keydown", event => {
         const input = event.composedPath()[0];
         if (input.getAttribute?.("role") !== "textbox" || event.key !== "Enter" || event.shiftKey || event.ctrlKey || event.altKey || event.metaKey || event.isComposing) return;
         event.preventDefault(); event.stopImmediatePropagation();
-        if (chat.validateInput(input.innerText)) chat.submitUserMessage({ text: input.innerText });
+        if (busy || voiceBusy) queueInput();
+        else if (chat.validateInput(input.innerText)) chat.submitUserMessage({ text: input.innerText });
       }, { capture: true });
       chat.addEventListener("input", event => {
-        if (event.composedPath()[0]?.getAttribute?.("role") === "textbox") window.dispatchEvent(new CustomEvent("certichat:activity"));
+        if (event.composedPath()[0]?.getAttribute?.("role") === "textbox") {
+          if (!busy && !voiceBusy) window.dispatchEvent(new CustomEvent("certichat:typing"));
+          if (profileRefreshPending && !event.composedPath()[0].innerText.trim()) syncAdvisor(true);
+        }
       });
       chat.addEventListener("click", event => {
         if (event.composedPath().some(node => node.id === 'stop-icon' || node.classList?.contains('input-button') && node.querySelector('#stop-icon'))) window.dispatchEvent(new CustomEvent('certichat:stop'));
       }, { capture: true });
-      // ponytail: reveal the validated answer progressively; raw model tokens cannot bypass source validation.
-      chat.connect = { stream: matchMedia("(prefers-reduced-motion: reduce)").matches ? undefined : { simulation: 6 }, handler: async (body, signals) => {
+      // Publish only validated answers; runtime events describe actual work separately.
+      chat.connect = { handler: async (body, signals) => {
         presentation?.cancel(); presentation = undefined;
         window.dispatchEvent(new CustomEvent("certichat:activity"));
-        busy = true; clear.disabled = true;
+        busy = true; syncClear();
         refreshVoice(busy);
         completedTrace = undefined;
         completedRequest = undefined;
         publishTrace(root.dataset.siteRoot, "loading");
-        let answer, localNavigation;
-        const requestedAdvisor = getSearchAdvisor(), requestedSearch = isSearchPage();
+        let answer, localNavigation, responseRequest, responseTrace;
+        const queued = queuedDispatch; queuedDispatch = undefined;
+        const requestedAdvisor = queued ? queued.advisor : getSearchAdvisor(), requestedSearch = queued?.search ?? isSearchPage();
+        const requestedCaseId=requestedSearch?(queued?.caseId??requestedAdvisor?.id):undefined;
+        const requestedConversation=conversationEpoch,requestedPage=queued?.context.pageUrl||voicePageURL(document),requestedInput=queued?.inputVersion||++inputVersion;
+        const requestIsCurrent=()=>requestedConversation===conversationEpoch&&requestedAdvisor===getSearchAdvisor()&&requestedSearch===isSearchPage()&&(!requestedSearch||requestedCaseId===requestedAdvisor?.id);
         textNavigation = undefined;
         try {
           const message = body.messages?.at(-1)?.text?.trim() || "";
-          const action = chatNavigationAction(message);
+          let resolvedAction;
           if (requestedSearch) {
             if (!requestedAdvisor) throw new Error(t("Cargando el banco de preguntas…"));
-            const result = await requestedAdvisor.send(message);
-            answer = result.answer; completedRequest = result.requestId; updateQuota(result.quota); setStatus("");
-          } else if (action) {
-            const previous = document.querySelector('#quiz dialog.confirmation[open]');
-            const result = await performVoiceAction(action);
-            answer = result.error || result.confirmation || t("Abriendo la página…");
-            const dialog = document.querySelector('#quiz dialog.confirmation[open][data-finish-confirm]');
-            if (result.navigation || (dialog && dialog !== previous)) {
-              textNavigation = localNavigation = { action, navigation: result.navigation, approved: Boolean(result.navigation), ready: false };
-              dialog?.addEventListener("close", () => { if (dialog.returnValue !== "finish" && textNavigation === localNavigation) textNavigation = undefined; }, { once: true });
-            }
-            publishTrace(root.dataset.siteRoot, "idle");
+            const queuedResult=queued?.result&&await queued.result;if(queuedResult?.error)throw queuedResult.error;
+            const result = queuedResult?.value||await requestedAdvisor.send(message);
+            const userIndex=chat.getMessages().findLastIndex(item=>item.role==='user'&&item.text===message);
+            if(requestIsCurrent()&&userIndex>=0&&typeof result.submittedMessage==='string'&&result.submittedMessage!==message)chat.updateMessage({text:result.submittedMessage},userIndex);
+            answer = result.answer; responseRequest = result.requestId; updateQuota(result.quota); if(requestIsCurrent())setStatus("");
+            resolvedAction=result.action;
           } else if (!verified || !available) {
             answer = accessError || (available ? t("Completa la verificación de acceso para enviar tu consulta.") : t("El servicio no está disponible. Pulsa Reintentar conexión."));
             setStatus(answer, true);
@@ -643,31 +808,43 @@ if (root) {
           } else {
             setStatus("");
             // A transport retry reuses the UUID; the server deduplicates any paid generation.
-            if (pendingRequest?.message !== message) {
-              const context = voiceContext(document);
-              pendingRequest = { requestId: crypto.randomUUID(), message, pageUrl: voicePageURL(document), locale, contextIds: [context.diagramId, context.sectionId].filter(Boolean), activityTrail: activityTrail() };
+            const context = voiceContext(document), turnContext = queued?.context || { pageUrl: voicePageURL(document), locale, contextIds: [context.diagramId, context.sectionId].filter(Boolean), context };
+            if (!queued&&!sameTurnContext(pendingRequest, message, turnContext)) {
+              pendingRequest = { requestId: crypto.randomUUID(), message, ...turnContext, activityTrail: turnContext.activityTrail || activityTrail() };
             }
             persist();
-            const result = await api("chat", pendingRequest);
-            completedRequest = pendingRequest.requestId;
-            completedTrace = normalizeTrace(result.graphTrace, root.dataset.siteRoot);
+            const queuedResult=queued?.result&&await queued.result;if(queuedResult?.error)throw queuedResult.error;
+            const result = queuedResult?.value||await api("chat", pendingRequest);
+            responseRequest = queued?.requestId||pendingRequest.requestId;
+            responseTrace = normalizeTrace(result.graphTrace, root.dataset.siteRoot);
             answer = answerWithReferences(String(result.answer || t("No encontré una respuesta en las guías disponibles.")), result.sources, root.dataset.siteRoot);
-            updateQuota(result.quota); setStatus("");
-            publishTrace(root.dataset.siteRoot, "ready", result.graphTrace);
+            updateQuota(result.quota);
+            if(requestIsCurrent()){setStatus("");publishTrace(root.dataset.siteRoot, "ready", result.graphTrace);}
+            resolvedAction=result.action;
           }
+          if(resolvedAction&&requestedInput===inputVersion&&requestIsCurrent()&&requestedPage===voicePageURL(document)){
+            const previous=document.querySelector('#quiz dialog.confirmation[open]'),action=await performVoiceAction(resolvedAction);
+            if(action.error||action.confirmation)answer=action.error||action.confirmation;
+            const dialog=document.querySelector('#quiz dialog.confirmation[open][data-finish-confirm]');
+            if(action.navigation||(dialog&&dialog!==previous)){
+              textNavigation=localNavigation={requestId:responseRequest,action:resolvedAction,navigation:action.navigation,approved:Boolean(action.navigation),ready:false};
+              dialog?.addEventListener('close',()=>{if(dialog.returnValue!=='finish'&&textNavigation===localNavigation){textNavigation=undefined;void acknowledgeAction(localNavigation.requestId,resolvedAction,false);}},{once:true});
+            }else await acknowledgeAction(responseRequest,resolvedAction,!action.error);
+          }else if(resolvedAction)await acknowledgeAction(responseRequest,resolvedAction,false);
         } catch (error) {
-          publishTrace(root.dataset.siteRoot, "error");
-          if (error.status && (error.status !== 409 || ["request_failed", "request_expired"].includes(error.code))) pendingRequest = undefined;
+          if (!requestedSearch && (!queued || queued.requestId===pendingRequest?.requestId) && error.code !== 'runtime_reconnect' && error.status && (error.status !== 409 || ["request_failed", "request_expired"].includes(error.code))) pendingRequest = undefined;
           answer = requestedSearch ? t(error.message) : error.name === "TimeoutError" ? t("La consulta tardó demasiado. Puedes repetirla para recuperar su resultado.") : error.status ? error.message : t("Sin conexión. Vuelve a intentarlo.");
-          setStatus(answer, true);
+          if(requestIsCurrent()){publishTrace(root.dataset.siteRoot, "error");setStatus(answer, true);}
           if ([401, 403].includes(error.status)) verified = false;
           if (error.status === 429) {
             try { updateQuota((await api("session", undefined, "GET")).quota); } catch { /* Keep the last known renewal time. */ }
           }
         }
-        if (requestedAdvisor !== getSearchAdvisor() || requestedSearch !== isSearchPage()) {
-          signals.onClose?.(); busy = false; clear.disabled = false; syncAdvisor(); return;
+        if (!requestIsCurrent()) {
+          // A non-streaming handler finishes via onResponse; [] releases Deep Chat without inserting a stale answer.
+          await signals.onResponse([]);busy = false; syncClear(); syncAdvisor();scheduleWaitingTurn(); return;
         }
+        completedRequest=responseRequest;completedTrace=responseTrace;
         chat.shadowRoot.querySelector('.input-button.inside-end:not(.custom-button)')?.setAttribute("aria-label", t("Detener respuesta"));
         if (completedRequest && document.querySelector('[data-graph-pilot]')) presentation = watchChatPresentation(chat, completedRequest, answer.length, detail => window.dispatchEvent(new CustomEvent('certichat:presentation', { detail })));
         await signals.onResponse({ text: answer });
@@ -686,8 +863,12 @@ if (root) {
       await api("session", {});
       session = await api("session", undefined, "GET");
     }
+    await hydrateConversation();
+    // A newer session notification may arrive while history is being restored.
+    if (epoch !== accessEpoch) return;
     updateAccess(session);
     if (!verified && available) await verify();
+    if(verified&&available){void recoverRuntime();watchConversation();}
   }
 
   async function connect() {
@@ -698,7 +879,7 @@ if (root) {
     try { await initialize(); }
     catch { setStatus(t("Sin conexión. Vuelve a intentarlo."), true); }
     finally {
-      connecting.hidden = true; messages.hidden = false; retry.disabled = false; clear.disabled = !chat || busy;
+      connecting.hidden = true; messages.hidden = false; retry.disabled = false; syncClear();
       requestAnimationFrame(() => {
         try {
           const key = `${storageKey}:scroll`, value = sessionStorage.getItem(key), scroller = chat?.shadowRoot?.querySelector("#messages");
@@ -768,6 +949,8 @@ if (root) {
         if (!presenting && !dock && !panel.hidden && !document.body.classList.contains('is-compact-nav') && main.getBoundingClientRect().width < panel.offsetWidth) document.querySelector('.menu-toggle')?.click();
       });
       layoutTransition = transition;
+      // Skipping a native transition rejects ready even though its state update still completes.
+      transition.ready.catch(() => {});
       transition.finished.catch(() => {}).finally(cleanup);
       await (workspaceDock ? transition.finished : transition.updateCallbackDone);
     } catch { if (!changed) change(); cleanup(); }
@@ -838,21 +1021,28 @@ if (root) {
   let syncPresentation = () => {};
   if (viewer) {
     syncPresentation = () => {
-      if (dock) { presenting = false; positionLauncher(); return; }
+      if (dock && !presenting && !viewer.hasAttribute('data-case-presentation')) { positionLauncher(); return; }
       const active = viewer.open && (viewer.classList.contains("is-presenting") || root.dataset.voiceMode === "true" || root.parentNode === viewer);
       const voiceLauncher = active && mobileChat.matches;
       launcher.setAttribute("aria-label", voiceLauncher ? t("Activar voz") : "CertiChat");
       launcher.disabled = voiceLauncher && (!launcherVoiceState.enabled || launcherVoiceState.quotaBlocked && !launcherVoiceState.retry);
       if (active === presenting) return;
+      if(active&&viewer.hasAttribute('data-case-presentation'))caseChatReturn={hidden:panel.hidden,preference:openPreference};
+      const restoreCaseChat=!active&&caseChatReturn;
       panelAnimation?.cancel(); panelAnimation = undefined; closing = false;
       presenting = active;
-      if (root.dataset.voiceMode !== "true") closePanel(false, false, false);
+      if (root.dataset.voiceMode !== "true"&&!restoreCaseChat) closePanel(false, false, false);
       root.classList.remove("is-beside-content"); launcher.style.removeProperty("top");
       for (const name of ["top", "left", "width", "height"]) panel.style.removeProperty(`--chat-${name}`);
       // ponytail: move the live instance; rebuilding Deep Chat would lose an in-flight response.
       if (active) viewer.append(root);
       else (dock || homeParent).append(root);
-      panel.setAttribute("role", active ? "region" : "dialog");
+      panel.setAttribute("role", active || dock ? "region" : "dialog");
+      if(restoreCaseChat){
+        cancelDockMotion();panel.hidden=restoreCaseChat.hidden;launcher.hidden=!restoreCaseChat.hidden;
+        launcher.style.removeProperty('visibility');launcher.setAttribute('aria-expanded',String(!restoreCaseChat.hidden));
+        rememberOpen(restoreCaseChat.preference);caseChatReturn=undefined;fitMobileViewport();
+      }
       if (!active && viewer.open) viewer.querySelector("[data-diagram-present]").focus({ preventScroll: true });
       positionLauncher();
     };
@@ -869,11 +1059,13 @@ if (root) {
     syncPresentation();
   }
   window.addEventListener("site:page", () => {
+    syncRoom();
     cancelDockMotion();
     const previousDock = dock;
     dock = document.querySelector("[data-explorer-chat-slot]");
     presenting = false;
-    (dock || homeParent).append(root);
+    const parent = dock || homeParent;
+    if (root.parentNode !== parent) parent.append(root);
     panel.setAttribute("role", dock ? "region" : "dialog");
     root.querySelector("[data-chat-close]").hidden = false;
     root.querySelector('.certichat-actions a').hidden = Boolean(dock);
@@ -965,7 +1157,7 @@ if (root) {
       if (operation && operation !== dockMotion) return;
       launcher.style.removeProperty('opacity');
       panel.hidden = false; launcher.hidden = true; launcher.setAttribute("aria-expanded", "true");
-      if (isSearchPage() && mobileChat.matches && event.isTrusted) document.querySelector("[data-certisearch]").dataset.mobile = "chat";
+      if (isSearchPage() && !presenting && mobileChat.matches && event.isTrusted) document.querySelector("[data-certisearch]").dataset.mobile = "chat";
       positionLauncher();
       rememberOpen("true");
       fitMobileViewport();
@@ -996,7 +1188,7 @@ if (root) {
   panel.addEventListener("keydown", event => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); closePanel(); } });
   retry.addEventListener("click", connect);
   clear.addEventListener("click", () => {
-    if (isSearchPage() && !getSearchAdvisor()) return;
+    if (isSearchPage() && (!getSearchAdvisor()||getSearchAdvisor().changingCase)) return;
     clearError.hidden = true;
     confirmation.showModal();
   });
@@ -1011,15 +1203,17 @@ if (root) {
   confirmation.addEventListener("close", () => (quizCode ? document.querySelector("#main") : clear)?.focus({ preventScroll: true }));
   confirmClear.addEventListener("click", async () => {
     const clearingAdvisor = getSearchAdvisor(), clearingSearch = isSearchPage();
-    busy = true; clear.disabled = true; confirmClear.disabled = true; cancelClear.disabled = true;
+    if(clearingSearch&&clearingAdvisor?.changingCase)return;
+    busy = true; syncClear(); confirmClear.disabled = true; cancelClear.disabled = true;
     confirmation.setAttribute("aria-busy", "true");
     try {
-      const result = clearingAdvisor ? (await clearingAdvisor.clear(), { quota }) : preview ? { quota } : await api("conversation", {}, "DELETE");
-      if (clearingAdvisor !== getSearchAdvisor() || clearingSearch !== isSearchPage()) {
-        if (!clearingAdvisor) writeStored(storageKey, { updatedAt: Date.now(), messages: [] });
-        profileRefreshPending = true; confirmation.close(); return;
-      }
-      chat.clearMessages(); responseTraces.length = 0; responseRequests.length = 0; responseRatings.length = 0; completedTrace = undefined; completedRequest = undefined; pendingRequest = undefined; textNavigation = undefined; persist();
+      const result = preview ? { quota } : await api("conversation", {}, "DELETE");
+      conversationEpoch++;waitingTurns.length=0;queuedDispatch=undefined;clearTimeout(queueTimer);renderWaitingTurns();
+      clearedAt = Date.now();
+      writeStored(`${storageKey}:clearedAt`, clearedAt);
+      if (clearingAdvisor && clearingAdvisor === getSearchAdvisor() && clearingSearch === isSearchPage()) await clearingAdvisor.clear();
+      profileRefreshPending = clearingSearch || isSearchPage();
+      chat.clearMessages(); saved.messages = []; responseTraces.length = 0; responseRequests.length = 0; responseRatings.length = 0; completedTrace = undefined; completedRequest = undefined; pendingRequest = undefined; textNavigation = undefined; persist();
       window.dispatchEvent(new CustomEvent("certichat:cleared"));
       publishTrace(root.dataset.siteRoot, "idle");
       updateQuota(result.quota); if (!preview) setStatus(""); confirmation.close();
@@ -1028,13 +1222,13 @@ if (root) {
       clearError.hidden = false;
       confirmation.close();
     } finally {
-      busy = false; clear.disabled = false; confirmClear.disabled = false; cancelClear.disabled = false;
+      busy = false; syncClear(); confirmClear.disabled = false; cancelClear.disabled = false;
       confirmation.setAttribute("aria-busy", "false");
       if (profileRefreshPending) syncAdvisor(true);
     }
   });
   const voiceResponses = new Set();
-  window.addEventListener("certivoice:busy", event => { voiceBusy = event.detail === true; clear.disabled = busy || voiceBusy || !chat; updateQuota(); });
+  window.addEventListener("certivoice:busy", event => { voiceBusy = event.detail === true; syncClear(); updateQuota(); refreshVoice(busy); scheduleWaitingTurn(); });
   window.addEventListener("certichat:session", event => { if (event.detail) updateAccess(event.detail, false); });
   window.addEventListener("certichat:voice-result", event => {
     const result = event.detail;
@@ -1042,8 +1236,8 @@ if (root) {
     if (result.profile === "certisearch" && !getSearchAdvisor() || result.profile !== "certisearch" && (getSearchAdvisor() || isSearchPage())) return;
     voiceResponses.add(result.requestId);
     const pair = [...(result.transcript.trim() ? [{ role: "user", text: result.transcript }] : []), ...(result.answer.trim() ? [{ role: "ai", text: result.profile === "certisearch" ? result.answer : answerWithReferences(result.answer, result.sources, root.dataset.siteRoot) }] : [])];
-    if (chat) { completedTrace = normalizeTrace(result.graphTrace, root.dataset.siteRoot); pair.forEach(message => chat.addMessage(message, true)); }
-    else if (result.profile !== "certisearch") {
+    if (chat) { completedRequest = result.requestId; completedTrace = normalizeTrace(result.graphTrace, root.dataset.siteRoot); pair.forEach(message => chat.addMessage(message, true)); }
+    else {
       saved.messages = restoreChat({ updatedAt: Date.now(), messages: [...saved.messages, ...pair] }, root.dataset.siteRoot).messages;
       responseTraces.splice(0, responseTraces.length, ...saved.messages.filter(message => message.role === "ai").map(message => message.graphTrace));
       responseRequests.splice(0, responseRequests.length, ...saved.messages.filter(message => message.role === "ai").map(message => message.requestId));

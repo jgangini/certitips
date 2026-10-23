@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "licenseFile": "assets/icons/LICENSE-lucide.txt",
+  "icons": [
+    {
+      "file": "assets/icons/document-thin.svg",
+      "sourceFile": "assets/icons/document.svg",
+      "sourceUrl": "https://raw.githubusercontent.com/lucide-icons/lucide/70562c1ee1c4fdcf736fe97bc893fb8511927934/icons/file-text.svg",
+      "sourceRevision": "70562c1ee1c4fdcf736fe97bc893fb8511927934",
+      "sourceSha256": "52ca55846c202335fb870c8aa23e9345630ec10489303756d62e750f7109605c",
+      "sha256": "6c7a3630ad4c68b3abd0071287511e1d8e00a5a3b5d2f9db89a0ebe3b9d8285e",
+      "adaptation": "Only root stroke-width 2 to 0.8 for architecture scale; geometry, viewBox and line caps unchanged."
+    },
+    {
+      "file": "assets/icons/database-thin.svg",
+      "sourceFile": "assets/icons/database.svg",
+      "sourceUrl": "https://raw.githubusercontent.com/lucide-icons/lucide/70562c1ee1c4fdcf736fe97bc893fb8511927934/icons/database.svg",
+      "sourceRevision": "70562c1ee1c4fdcf736fe97bc893fb8511927934",
+      "sourceSha256": "471eb14bc8d144896a82dfc4aa9daf350f769f0896f4bef33e50aabdbb51130d",
+      "sha256": "886f01ddb36f72a4d1fcbbe594d7bc0b36759daf3877df29d7596502b152afef",
+      "adaptation": "Only root stroke-width 2 to 0.8 for architecture scale; geometry, viewBox and line caps unchanged."
+    },
+    {
+      "file": "assets/icons/workflow-thin.svg",
+      "sourceFile": "assets/icons/workflow.svg",
+      "sourceUrl": "https://raw.githubusercontent.com/lucide-icons/lucide/70562c1ee1c4fdcf736fe97bc893fb8511927934/icons/workflow.svg",
+      "sourceRevision": "70562c1ee1c4fdcf736fe97bc893fb8511927934",
+      "sourceSha256": "ae99ea8f56a2835a2cca35b2fbb57643ab73443610970dba23e24bd9df75cfec",
+      "sha256": "c925505fac25e021b9efea713ec9693294caf7f328bb84f8865f9cd51c3cf3ef",
+      "adaptation": "Only root stroke-width 2 to 0.8 for architecture scale; geometry, viewBox and line caps unchanged."
+    }
+  ]
+}

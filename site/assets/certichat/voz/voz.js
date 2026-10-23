@@ -1,13 +1,14 @@
-import { navigateSite } from "../../site/navigation.js?v=2e73772e0e66";
-import { t, locale, language, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=2e73772e0e66";
-import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./audio.js?v=2e73772e0e66";
-import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./actions.js?v=2e73772e0e66";
-import { diagramPointer } from "./pointer.js?v=2e73772e0e66";
-import { clearVoiceHighlight } from "./study.js?v=2e73772e0e66";
-import { activityTrail } from "../activity.js?v=2e73772e0e66";
-import { voiceDiagnostics } from "./telemetry.js?v=2e73772e0e66";
-import { getSearchAdvisor } from "../../certisearch/api-client.js?v=2e73772e0e66";
-import { MeetingAudioBuffer, MEETING_DURATION, MEETING_REVIEW_INTERVAL } from "../../certisearch/meeting.js?v=2e73772e0e66";
+import { navigateSite } from "../../site/navigation.js?v=c6c63c136710";
+import { t, locale, language, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=c6c63c136710";
+import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./audio.js?v=c6c63c136710";
+import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./actions.js?v=c6c63c136710";
+import { diagramPointer } from "./pointer.js?v=c6c63c136710";
+import { clearVoiceHighlight } from "./study.js?v=c6c63c136710";
+import { activityTrail } from "../activity.js?v=c6c63c136710";
+import { voiceDiagnostics } from "./telemetry.js?v=c6c63c136710";
+import { runtimeClient, runtimeCapability } from '../runtime.js?v=c6c63c136710';
+import { getSearchAdvisor } from "../../certisearch/api-client.js?v=c6c63c136710";
+import { MeetingAudioBuffer, MEETING_DURATION } from "../../certisearch/meeting.js?v=c6c63c136710";
 
 const root = typeof document === "undefined" ? null : document.querySelector("[data-certivoice]");
 if (root) {
@@ -23,11 +24,22 @@ if (root) {
   let lecture, lectureTimer, nativeVoice, nativeVoiceLocale = locale, lastExplained, aside;
   let speechController, stopEdge, nativeStartTimer, followTimer, videoLocked = false, videoConfirmation, navigating = false;
   let meeting, meetingTimer, pendingResult;
+  const waitingVoice=[];
+  let speechInputVersion=0,pendingInputVersion=0;
+  let deferredAction;
+  async function acknowledgeAction(result,executed){
+    if(!result?.action)return;
+    try{await runtimeClient(config,diagnostics).acknowledge(result.requestId,result.action,executed);}
+    catch(error){setStatus(error.message,true);}
+  }
   const separateCapture = /iPhone|iPad|iPod/.test(navigator.userAgent) || navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
   const originalAudioType = navigator.audioSession?.type;
   const restoreVoiceHome = () => (document.querySelector("[data-explorer-chat-slot]") || document.body).append(config);
   const cloudSpeech = () => Boolean(session?.voice?.tts);
-  const quotaBlocked = () => Number.isFinite(session?.quota?.remaining) && session.quota.remaining <= 0;
+  // Meeting ingestion uses a separate server-confirmed budget; absent authorization remains blocked.
+  const quotaBlocked = (mode=meeting?'meeting':'conversation') => mode==='meeting'
+    ? session?.meeting?.enabled!==true||session?.meeting?.budgetAvailable!==true
+    : Number.isFinite(session?.quota?.remaining) && session.quota.remaining <= 0;
   const emit = (name, detail) => window.dispatchEvent(new CustomEvent(name, { detail }));
   function setStatus(text, error = false) {
     if (error && (active || starting)) { pause(text, true); return; }
@@ -46,7 +58,7 @@ if (root) {
       indicator.setAttribute("title", message); indicator.setAttribute("aria-label", message);
     }
     config.dataset.voiceMode = String(Boolean(active || starting || resume));
-    emit("certivoice:state", { enabled, quotaBlocked: quotaBlocked(), active: active || starting, phase, error: voiceError, muted, locked: videoLocked, retry: Boolean(pending && pendingSent), resume, meeting: Boolean(meeting) });
+    emit("certivoice:state", { enabled, meetingEnabled:enabled&&!quotaBlocked('meeting')&&Boolean(getSearchAdvisor()), quotaBlocked: quotaBlocked(), active: active || starting, phase, error: voiceError, muted, locked: videoLocked, retry: Boolean(pending && pendingSent || meeting?.admission), resume, meeting: Boolean(meeting) });
   }
   function interrupt(reason = "speech_replaced") {
     speechEpoch++;
@@ -70,7 +82,7 @@ if (root) {
     clearVoiceHighlight(); aside = null; clearTimeout(lectureTimer); if (lecture) lecture.running = false;
     if (!preserveMode) { clearNavigation(); dismissVideo(); lecture = null; }
     epoch++; active = false; starting = false; checkingSession = false; muted = false; interrupt(error ? "error_pause" : reason); controller?.abort(); controller = null;
-    if (!preserveMode && !meeting) clearPending();
+    if (!preserveMode && !meeting) { clearPending();waitingVoice.length=0; }
     rejectVerification?.(new Error("Cancelled")); rejectVerification = null; verification.hidden = true;
     if (widget !== undefined && window.turnstile) { window.turnstile.remove(widget); widget = undefined; }
     const capture = release; release = null; detector?.reset();
@@ -88,6 +100,7 @@ if (root) {
     setStatus(message, error);
   }
   async function api(route, body, method = "POST", signal) {
+    if (method === 'POST' && runtimeCapability(route, body)) return runtimeClient(config, diagnostics).request(route, body, signal);
     const started = performance.now();
     let response;
     try {
@@ -108,7 +121,7 @@ if (root) {
     return data;
   }
   function applySession(value) {
-    session = value; if (cloudSpeech()) nativeVoice = undefined; voiceError = ""; diagnostics.enable(value.authenticated && value.voice?.enabled);
+    session = value; if (cloudSpeech()) nativeVoice = undefined; voiceError = ""; diagnostics.enable(value.authenticated && value.available !== false);
     root.hidden = value.voice?.enabled !== true || value.available === false || config.hidden;
     if (root.hidden && (!checkingSession || config.hidden)) clearNavigation();
     if (root.hidden && (active || starting && (!checkingSession || config.hidden))) pause(t("La voz no está disponible en este momento."), false, false);
@@ -147,8 +160,8 @@ if (root) {
     videoLocked = true; setStatus(t("Micrófono silenciado durante el video."));
     try {
       if (!command.accepted || !await command.completion) throw new Error("Fullscreen gesture required");
-      dismissVideo();
-    } catch { videoLocked = false; setStatus(t("Pulsa Reproducir para abrir el video en pantalla completa.")); }
+      dismissVideo();return true;
+    } catch { videoLocked = false; setStatus(t("Pulsa Reproducir para abrir el video en pantalla completa."));return false; }
   }
   function offerVideo() {
     dismissVideo();
@@ -359,28 +372,77 @@ if (root) {
     });
     return preferredNativeVoice(speechSynthesis.getVoices(), language);
   }
+  function voiceRequest(chunks) {
+    const advisor = getSearchAdvisor();
+    return { requestId: crypto.randomUUID(), audio: encodeVoiceWav(chunks, context.sampleRate), pageUrl: voicePageURL(), locale, audioOutput: cloudSpeech() || nativeVoice ? "browser" : "provider", context: voiceContext(document, lastExplained?.id), activityTrail: activityTrail(), ...(advisor ? { advisor: advisor.voiceContext(meeting ? "meeting" : "conversation") } : {}), ...(meeting?{meetingId:meeting.id,sequence:++meeting.sequence}:{}), ...(!meeting && playback?.requestId ? { playback: { requestId: playback.requestId, heardCharacters: playback.heardCharacters } } : {}) };
+  }
   async function send(chunks) {
-    if (!active || controller) return;
-    expireMemory(); clearPending();
+    if (!active) return;
+    expireMemory();
     const token = epoch;
     // A failed transport retains its UUID and audio in memory only, until explicit retry or a new utterance.
-    const advisor = getSearchAdvisor();
-    pending = { requestId: crypto.randomUUID(), audio: encodeVoiceWav(chunks, context.sampleRate), pageUrl: voicePageURL(), locale, audioOutput: cloudSpeech() || nativeVoice ? "browser" : "provider", context: voiceContext(document, lastExplained?.id), activityTrail: activityTrail(), ...(advisor ? { advisor: advisor.voiceContext(meeting ? "meeting" : "conversation") } : {}), ...(!meeting && playback?.requestId ? { playback: { requestId: playback.requestId, heardCharacters: playback.heardCharacters } } : {}) };
-    pendingSince = Date.now(); pendingExpiry = setTimeout(expireMemory, 86400000);
+    const request = voiceRequest(chunks);
+    if(controller||pending){
+      if(waitingVoice.length>=3)throw new Error(t('La cola de voz está llena. Espera a que termine una consulta.'));
+      waitingVoice.push({request,inputVersion:speechInputVersion,at:Date.now()});setStatus(t('Consulta de voz pendiente de envío.'));return;
+    }
+    clearPending();pending=request;pendingInputVersion=speechInputVersion;
+    pendingSince = Date.now(); pendingExpiry = setTimeout(expireMemory, 60*60*1000);
     await submitPending(token);
   }
+  async function admitMeeting(current) {
+    if (current.admitting || !current.admission) return;
+    current.admitting = true;
+    const request = current.admission;
+    try {
+      await runtimeClient(config,diagnostics).admitSegment(current.id, {
+        requestId:request.requestId,sequence:request.sequence,audio:request.audio,
+        pageUrl:request.pageUrl,locale:request.locale,context:request.context,
+      }, AbortSignal.timeout(15000));
+      if (meeting !== current) return;
+      // The server owns the WAV after 202. Waiting results retain only their identity, never audio or case copies.
+      current.accepted.push({requestId:request.requestId,meetingId:current.id,sequence:request.sequence,
+        advisor:{mode:'meeting',case:{id:current.caseId}}});
+      current.admission = null;
+    } catch (error) { if (meeting === current && active) pause(t(error.message), true); }
+    finally {
+      current.admitting = false;
+      if (meeting === current && active) void drainMeeting();
+    }
+  }
+  function followMeeting(current) {
+    if (controller || pending || !current.accepted.length) return;
+    pending = current.accepted.shift(); pendingSent = true;
+    pendingSince = Date.now(); pendingInputVersion = speechInputVersion;
+    void submitPending(epoch);
+  }
   async function drainMeeting() {
-    if (!meeting || !active || starting || controller || pending || meeting.reviewing || meeting.stopping) return;
+    if (!meeting || !active || starting || meeting.reviewing || meeting.stopping) return;
     if (getSearchAdvisor()?.voiceContext("meeting").case.id !== meeting.caseId) { pause(t("El caso cambió. Revisa los cambios antes de continuar."), true); return; }
-    const chunks = meeting.buffer.take(meeting.ending);
-    if (chunks) { await send(chunks).catch(() => { meeting.buffer.restore(chunks); pause(t("No se pudo preparar el audio."), true); }); return; }
+    const current = meeting;
+    if (!current.admission && !current.admitting) {
+      const chunks = current.buffer.take(current.ending);
+      if (chunks) {
+        try { current.admission = voiceRequest(chunks); }
+        catch { current.buffer.restore(chunks); pause(t("No se pudo preparar el audio."), true); return; }
+      }
+    }
+    // Receipt of more audio is independent of STT/analysis/TTS and of the one serial result follower.
+    void admitMeeting(current);
+    followMeeting(current);
+    if (current.admission || current.admitting || current.accepted.length || controller || pending) return;
     if (meeting.ending) {
       const ended = meeting; ended.reviewing = true;
-      try { if (!quotaBlocked() && await getSearchAdvisor()?.reviewMeeting() === false) { pause(t("Reunión pausada. Los fragmentos pendientes se conservan mientras esta página siga abierta.")); return; } }
+      try {
+        ended.finishId ||= crypto.randomUUID();
+        const result=await runtimeClient(config,diagnostics).finishMeeting(ended.id,{requestId:ended.finishId,lastSequence:ended.sequence});
+        if(meeting!==ended)return;
+        await getSearchAdvisor()?.acceptMeeting(result);
+      }
       catch (error) { pause(error.message, true); return; }
       finally { ended.reviewing = false; }
       if (meeting === ended) { meeting = null; pause(ended.message || t("Sesión terminada. El texto permanece en el expediente."), false, false); }
-    } else setStatus(t("Escuchando la reunión. Cada fragmento usa la cuota compartida."));
+    } else setStatus(t("Escuchando la reunión. El borrador se actualiza automáticamente."));
   }
   async function finishMeeting(message) {
     if (!meeting || meeting.stopping) return;
@@ -397,17 +459,25 @@ if (root) {
   async function submitPending(token) {
     expireMemory();
     if (!pending || controller) return;
-    if (quotaBlocked() && !pendingSent) { if (!meeting) clearPending(); pause(t("Se alcanzó un límite de uso. Inténtalo más tarde.")); return; }
+    if (quotaBlocked() && !pendingSent) { if(!meeting)clearPending(); pause(t("Se alcanzó un límite de uso. Inténtalo más tarde.")); return; }
     voiceError = "";
-    controller = new AbortController(); const abort = controller, timer = setTimeout(() => abort.abort(), 130000);
-    setStatus(t("Preparando la respuesta…")); emit("certivoice:busy", true);
+    controller = new AbortController(); const abort = controller;
+    // Accepted meeting work is durable and may span several bounded server tasks; cancellation stays explicit.
+    const timer = pending.meetingId ? undefined : setTimeout(() => abort.abort(), 130000);
+    // Meeting intake owns its audio queue, while the shared composer admits independent text turns.
+    setStatus(t("Preparando la respuesta…")); emit("certivoice:busy", !pending.meetingId);
     try {
       if (pending.advisor && getSearchAdvisor()?.voiceContext(pending.advisor.mode).case.id !== pending.advisor.case.id) throw new Error(t("El caso cambió. Revisa los cambios antes de continuar."));
       pendingSent = true;
       let result = pendingResult;
       // Only replay a server-owned pending UUID; the total deadline and Exit still cancel recovery.
       while (!result) {
-        try { result = await api("voice", pending, "POST", abort.signal); break; }
+        try {
+          result = pending.meetingId
+            ? await runtimeClient(config,diagnostics).resume(pending.requestId,abort.signal)
+            : await api("voice", pending, "POST", abort.signal);
+          break;
+        }
         catch (error) {
           if (error.status !== 409 || error.code !== "request_pending") throw error;
           await new Promise(resolve => setTimeout(resolve, 1000));
@@ -415,21 +485,19 @@ if (root) {
         }
       }
       if (token !== epoch || !active) return;
-      if (result.requestId !== pending.requestId || typeof result.answer !== "string" || result.answer.length > 12000 || typeof result.transcript !== "string" || result.transcript.length > 1500) throw new Error(t("La respuesta de voz no es válida."));
+      if (result.requestId !== pending.requestId || typeof result.answer !== "string" || result.answer.length > 12000 || typeof result.transcript !== "string" || result.transcript.length > (pending.meetingId?12000:1500)) throw new Error(t("La respuesta de voz no es válida."));
       if (pending.advisor) {
         const advisor = getSearchAdvisor();
-        if (!advisor || advisor.voiceContext(pending.advisor.mode).case.id !== pending.advisor.case.id || result.profile !== "certisearch" || result.caseId !== pending.advisor.case.id || result.baseRevision !== pending.advisor.case.revision) throw new Error(t("El caso cambió. Revisa los cambios antes de continuar."));
+        if (!advisor || advisor.voiceContext(pending.advisor.mode).case.id !== pending.advisor.case.id || result.profile !== "certisearch" || result.caseId !== pending.advisor.case.id || !pending.meetingId&&result.baseRevision !== pending.advisor.case.revision) throw new Error(t("El caso cambió. Revisa los cambios antes de continuar."));
         pendingResult = result;
         if (pending.advisor.mode === "meeting") {
-          if (result.meeting !== true) throw new Error(t("La respuesta de voz no es válida."));
-          if (result.transcript.trim()) await advisor.appendMeeting(result.transcript);
-          clearPending(); emit("certichat:session", { ...session, quota: result.quota });
-          if (meeting && Date.now() - meeting.lastReview >= MEETING_REVIEW_INTERVAL && !quotaBlocked()) {
-            if (await advisor.reviewMeeting() !== false && meeting) meeting.lastReview = Date.now();
-          }
-          return;
+          if (result.meetingId!==pending.meetingId||result.sequence!==pending.sequence) throw new Error(t("La respuesta de voz no es válida."));
+          await advisor.acceptMeeting(result);
+          clearPending(); if(result.quota)emit("certichat:session", { ...session, quota: result.quota });
+          if(result.directed!==true)return;
+        } else {
+          await advisor.acceptVoice(result);
         }
-        await advisor.acceptVoice(result);
       }
       clearPending();
       if (result.lecture && lecture?.consent && Number.isInteger(result.lecture.step) && result.lecture.step > 0 && result.lecture.step <= 200) {
@@ -437,6 +505,8 @@ if (root) {
       }
       if (result.educational === true || result.profile === "certisearch") emit("certichat:voice-result", result);
       emit("certichat:session", { ...session, quota: result.quota });
+      // A later utterance supersedes playback and site actions, never the recorded answer.
+      if(!meeting&&pendingInputVersion!==speechInputVersion){await acknowledgeAction(result,false);return;}
       // Practice rerenders remove their dialogs; move the live chat instance out before that happens.
       if (result.action?.name?.startsWith("practice_") && config.closest("#quiz dialog")) {
         restoreVoiceHome(); if (edge) document.body.append(edge);
@@ -444,26 +514,32 @@ if (root) {
       diagnostics.record("action", { ...(result.action?.name ? { action: result.action.name } : {}), request_id: result.requestId });
       if (result.action) aside = null;
       const explanation = result.educational === true && !result.action ? await explainAside(result, token) : null;
+      const previousDialog=document.querySelector('#quiz dialog.confirmation[open]');
       const action = await performVoiceAction(result.action);
+      const dialog=document.querySelector('#quiz dialog.confirmation[open][data-finish-confirm]');
+      if(result.action&&dialog&&dialog!==previousDialog){
+        deferredAction=result;
+        dialog.addEventListener('close',()=>{if(dialog.returnValue!=='finish'&&deferredAction===result){deferredAction=null;void acknowledgeAction(result,false);}},{once:true});
+      }else if(!action.navigation&&!['play','close'].includes(action.video?.name))await acknowledgeAction(result,!action.error);
       if (token !== epoch || !active) return;
       if (action.error && lecture) lecture.running = false;
       if (action.control === "lecture_start" && result.lecture?.step === 0) { await offerLecture(result, token); return; }
       if (action.control === "continue" && lecture?.consent && result.playbackRequestId) lecture.running = true;
       if (action.video?.name === "chapter") offerVideo();
-      if (action.video?.name === "play") { await playVideo(); return; }
+      if (action.video?.name === "play") { await acknowledgeAction(result,await playVideo()===true); return; }
       if (action.video?.name === "close") {
         const command = { name: "close", accepted: false };
         document.querySelector("[data-tube-player]")?.dispatchEvent(new CustomEvent("certitube:command", { detail: command }));
         dismissVideo();
-        if (!command.accepted) throw new Error(t("No se pudo cerrar el video."));
+        await acknowledgeAction(result,command.accepted);if (!command.accepted) throw new Error(t("No se pudo cerrar el video."));
       }
-      if (action.navigation) { await navigate(action); return; }
+      if (action.navigation) { await navigate(action,result); return; }
       if (action.control === "stop") { emit("certichat:stop"); pause(undefined, false, false); return; }
       const text = action.error || action.confirmation || result.answer;
       if (result.audioError && !action.error && !action.confirmation) {
         if (lecture) lecture.running = false;
         if ((result.educational || result.profile === "certisearch") && (!lecture?.consent || result.lecture)) { playback = { requestId: result.requestId, answer: result.answer, heardCharacters: 0, createdAt: Date.now() }; savePlayback(); }
-        setStatus(t("La respuesta está disponible como texto. El audio no está disponible."), true); return;
+        setStatus(t("La respuesta está disponible como texto. El audio no está disponible."), !meeting); return;
       }
       if (result.playbackRequestId && (playback?.requestId !== result.playbackRequestId || !voiceMemoryFresh(playback.createdAt))) throw new Error(t("No se pudo completar la consulta de voz."));
       const progress = action.error || action.confirmation ? null : result.playbackRequestId ? { requestId: result.playbackRequestId, offset: result.playbackOffset, answer: playback.answer } : (result.educational || result.profile === "certisearch") && (!lecture?.consent || result.lecture) ? { requestId: result.requestId, answer: result.answer } : null;
@@ -475,7 +551,7 @@ if (root) {
     } catch (error) {
       if (token !== epoch) return;
       const wait = error.retryAfter ? t(" Vuelve a intentarlo en {seconds} segundos.", { seconds: Math.ceil(error.retryAfter) }) : "";
-      if (!pending?.advisor && error.status && !(error.status === 409 && error.code === "request_pending")) clearPending();
+      if (!pending?.advisor && error.status && error.code !== "runtime_reconnect" && !(error.status === 409 && error.code === "request_pending")) clearPending();
       if (error.code === "voice_contract") { voiceError = error.message; await say(error.message, null, undefined, token); return; }
       pause((error.name === "AbortError" ? t("La consulta tardó demasiado. Pulsa Reintentar para recuperar su resultado.") : error.message || t("Sin conexión. Vuelve a intentarlo.")) + wait, true);
       if (error.status === 429) {
@@ -487,20 +563,30 @@ if (root) {
       if (token === epoch) detector?.reset();
       if (!controller) { emit("certivoice:busy", false); if (active && quotaBlocked() && !output && !utterance) pause(t("Se alcanzó un límite de uso. Inténtalo más tarde.")); else setStatus(status.textContent); }
       if (meeting && active && !pending) void drainMeeting();
+      else if(active&&!pending&&waitingVoice.length){
+        const next=waitingVoice.shift();
+        if(Date.now()-next.at<60*60*1000&&next.request.pageUrl===voicePageURL()){
+          pending=next.request;pendingInputVersion=next.inputVersion;pendingSince=next.at;
+          pendingExpiry=setTimeout(expireMemory,Math.max(1,60*60*1000-(Date.now()-next.at)));
+          void submitPending(epoch);
+        }
+      }
     }
   }
-  async function navigate(action) {
+  async function navigate(action,receipt) {
     const token = epoch;
     const move = async () => {
       if (token !== epoch || !active) return;
       try {
         if (await navigateSite(action.navigation, { source: "voice" })) {
+          await acknowledgeAction(receipt,true);
           if (token !== epoch || !active) return;
           const next = action.afterNavigation && await performVoiceAction(action.afterNavigation);
           await say(next?.error || t("Página abierta: {title}", { title: document.querySelector("h1")?.textContent || document.title }), null, undefined, token);
           return;
         }
       } catch (error) {
+        await acknowledgeAction(receipt,false);
         if (token === epoch && active && error.name !== "AbortError") await say(t("Sin conexión. Vuelve a intentarlo."), null, undefined, token);
         return;
       }
@@ -546,8 +632,9 @@ if (root) {
     if (!active || !event.detail?.action) return;
     const token = epoch, action = await performVoiceAction(event.detail.action);
     if (token !== epoch || !active) return;
-    if (action.navigation) await navigate(action);
-    else await say(action.error || action.confirmation || "", null, undefined, token);
+    const receipt=deferredAction;deferredAction=null;
+    if (action.navigation) await navigate(action,receipt);
+    else {await acknowledgeAction(receipt,!action.error);await say(action.error || action.confirmation || "", null, undefined, token);}
   });
   function saveNavigation(url, afterNavigation) {
     const saved = pendingNavigation(readNavigation(), location.href, siteBase);
@@ -574,7 +661,7 @@ if (root) {
       const event = detector.push(chunk, Boolean(output || utterance));
       if (event.started) {
         diagnostics.record("action", { action: "speech_detected", phase: output || utterance ? "speaking" : controller ? "thinking" : "listening", muted });
-        if (controller || speechController) { pause(t("Consulta interrumpida. Pulsa Reintentar para recuperar su resultado."), false, true, "request_interrupted"); return; }
+        speechInputVersion++;
         if (lecture) { lecture.interrupted = lecture.running; lecture.running = false; } clearTimeout(lectureTimer);
         interrupt("microphone_interrupt"); lastActivity = Date.now(); setStatus(t("Te escucho…"));
       }
@@ -591,7 +678,7 @@ if (root) {
     expireMemory();
     const recovery = retry && pending && pendingSent;
     mode = pending?.advisor?.mode || (meeting ? "meeting" : mode);
-    if (quotaBlocked() && !recovery) return;
+    if (quotaBlocked(mode) && !recovery) return;
     starting = true; checkingSession = true; const token = ++epoch;
     let display, captureOpened = false;
     setStatus(t("Activando el micrófono…"));
@@ -622,17 +709,21 @@ if (root) {
       if (!automatic && (!session.authenticated || session.verificationRequired)) await verifyAccess();
       emit("certichat:session", session);
       diagnostics.record("navigation", { automatic });
-      if (quotaBlocked() && !recovery) throw new Error(t("Se alcanzó un límite de uso. Inténtalo más tarde."));
+      if (quotaBlocked(mode) && !recovery) throw new Error(t("Se alcanzó un límite de uso. Inténtalo más tarde."));
       if (!session.authenticated || session.verificationRequired) throw new Error(t("Verifica tu acceso para continuar."));
       if (token !== epoch) return;
       if (mode !== "meeting") nativeVoice ||= await selectNativeVoice();
       if (token !== epoch) return;
       // Recover retained audio or its server-owned UUID without opening another microphone session.
       if (retry && pending) { detector = new VoiceActivity(context.sampleRate); active = true; starting = false; await submitPending(token); return; }
-      if (quotaBlocked()) throw new Error(t("Se alcanzó un límite de uso. Inténtalo más tarde."));
+      if (quotaBlocked(mode)) throw new Error(t("Se alcanzó un límite de uso. Inténtalo más tarde."));
       if (meeting?.ending) { active = true; starting = false; muted = true; void drainMeeting(); return; }
       if (mode === "meeting") {
-        meeting = { caseId: getSearchAdvisor().voiceContext("meeting").case.id, buffer: new MeetingAudioBuffer(context.sampleRate), startedAt: performance.now(), lastReview: Date.now(), ending: false };
+        const advisor=getSearchAdvisor(),caseContext=await advisor.meetingContext();
+        const started=await runtimeClient(config,diagnostics).startMeeting({requestId:crypto.randomUUID(),...caseContext});
+        if(token!==epoch||getSearchAdvisor()?.id!==caseContext.caseId)return;
+        if(typeof started.meetingId!=='string'||!/^[-\w]{1,100}$/.test(started.meetingId))throw new Error(t("No se pudo iniciar la reunión."));
+        meeting = { id:started.meetingId,sequence:-1,caseId:caseContext.caseId,buffer:new MeetingAudioBuffer(context.sampleRate),accepted:[],admission:null,admitting:false,startedAt:performance.now(),ending:false };
         meetingTimer = setTimeout(() => finishMeeting(t("Sesión terminada. El texto permanece en el expediente.")), MEETING_DURATION);
       }
       detector = new VoiceActivity(context.sampleRate);
@@ -650,7 +741,7 @@ if (root) {
       const resume = pendingNavigation(readNavigation(), location.href, siteBase);
       try { sessionStorage.setItem(navigationKey, JSON.stringify({ url: location.href, createdAt: resume?.createdAt ?? Date.now(), session: true })); } catch { /* Voice remains usable without session continuity. */ }
       release = stopCapture; release.setMuted(muted); active = true; starting = false; lastActivity = Date.now();
-      setStatus(meeting ? t("Escuchando la reunión. Cada fragmento usa la cuota compartida.") : muted ? t("Micrófono silenciado.") : t("Te escucho…"));
+      setStatus(meeting ? t("Escuchando la reunión. El borrador se actualiza automáticamente.") : muted ? t("Micrófono silenciado.") : t("Te escucho…"));
       if (!meeting && resume && (resume.pending || !resume.session) && new URL(resume.url).pathname === location.pathname) await say(t("Página abierta: {title}", { title: document.querySelector("h1")?.textContent || document.title }), null, undefined, token);
       if (retry && pending) await submitPending(token);
     } catch (error) {
@@ -669,10 +760,12 @@ if (root) {
   function readPlayback() { try { const raw = sessionStorage.getItem(playbackKey); return raw?.length <= 26000 ? restoreVoicePlayback(JSON.parse(raw)) : null; } catch { return null; } }
   function savePlayback() { playback = restoreVoicePlayback(playback); try { if (playback) sessionStorage.setItem(playbackKey, JSON.stringify(playback)); else sessionStorage.removeItem(playbackKey); } catch { /* Playback also works without continuity storage. */ } }
   function clearPending() { pending = null; pendingResult = null; pendingSent = false; pendingSince = undefined; clearTimeout(pendingExpiry); setStatus(status.textContent); }
-  function expireMemory() { const saved = readNavigation(); if (saved && !voiceMemoryFresh(saved.createdAt)) pause(t("Voz pausada por inactividad."), false, false); if (pending && !voiceMemoryFresh(pendingSince)) clearPending(); if (playback && !voiceMemoryFresh(playback.createdAt)) { playback = null; savePlayback(); } }
+  function expireMemory() { const saved = readNavigation(); if (saved && !voiceMemoryFresh(saved.createdAt)) pause(t("Voz pausada por inactividad."), false, false); if (pending && (!voiceMemoryFresh(pendingSince)||Date.now()-pendingSince>=60*60*1000)) clearPending(); if (playback && !voiceMemoryFresh(playback.createdAt)) { playback = null; savePlayback(); } }
   function toggleMute() { if (videoLocked || !active && !starting) return; muted = !muted; diagnostics.record("action", { action: muted ? "microphone_muted" : "microphone_unmuted", muted }); release?.setMuted(muted); detector?.reset(); lastActivity = Date.now(); setStatus(muted ? t("Micrófono silenciado.") : t("Te escucho…")); }
-  window.addEventListener("certichat:activity", () => { if (active || starting || readNavigation()) pause(t("Voz pausada mientras usas el chat."), false, false); });
+  window.addEventListener("certichat:activity", () => { speechInputVersion++;interrupt('text_turn');if(lecture)lecture.running=false;clearTimeout(lectureTimer); });
+  window.addEventListener("certichat:typing", () => { if(output||utterance)interrupt('text_input'); });
   window.addEventListener("certichat:session", event => { if (event.detail) applySession(event.detail); });
+  window.addEventListener("certisearch:profile", () => setStatus(status.textContent));
   window.addEventListener("certichat:quota", event => {
     if (!session || !event.detail?.quota) return;
     const blocked = quotaBlocked();
@@ -686,7 +779,10 @@ if (root) {
     if (event.detail === "meeting") {
       if (meeting && active) finishMeeting();
       else if (!starting && !config.hidden) { if (active) pause(undefined, false, false); void start(Boolean(pending), false, "meeting"); }
-    } else if (event.detail === "exit") { if (meeting && active) finishMeeting(); else pause(undefined, false, false); }
+    } else if (event.detail === "exit") {
+      if (meeting && active) finishMeeting();
+      else {if(pending?.requestId)void runtimeClient(config,diagnostics).cancel(pending.requestId).catch(error=>setStatus(error.message,true));pause(undefined, false, false);}
+    }
     else if (event.detail === "mute") toggleMute();
     else if (event.detail === "interrupt" && active) { if (meeting) { toggleMute(); return; } if (lecture) lecture.running = false; clearTimeout(lectureTimer); interrupt("explicit_interrupt"); detector?.reset(); void finishSpeech(0, "", false); }
     else if (event.detail === "start" && !config.hidden && !active && !starting) void start(Boolean(pending));

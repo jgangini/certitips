@@ -1,5 +1,13 @@
-import { t } from "../../site/i18n.js?v=2e73772e0e66";
-import { voiceContext } from "./actions.js?v=2e73772e0e66";
+import { t } from "../../site/i18n.js?v=c6c63c136710";
+import { voiceContext } from "./actions.js?v=c6c63c136710";
+
+/** Commands recheck availability at activation, beyond Deep Chat's visual disabled state. */
+function voiceCommandBlocked(command, state, busy, quotaBlocked) {
+  if (command === "meeting") return !state.enabled || !state.meetingEnabled || state.active || state.resume;
+  if (command === "mute") return state.locked;
+  if (command === "start") return !state.enabled || busy || quotaBlocked && !state.retry;
+  return false;
+}
 
 export function installVoiceChatControls(chat) {
   let state = { enabled: false, active: false, muted: false }, requestBusy = false;
@@ -40,6 +48,7 @@ export function installVoiceChatControls(chat) {
     if (has("video_chapter")) examples.push(t("Resume este capítulo"), t("Explícame este video"));
     if (has("catalog_group")) examples.push(t("Muestra los grupos de cursos"));
     if (examples.length < 3 && has("open_course")) examples.push(t("Abre el catálogo de cursos"));
+    if (examples.length < 3 && document.querySelector('.header-app-link[href*="/certisearch/"]')) examples.push(t("Abre CertiSearch"));
     if (examples.length < 3 && document.querySelector('.header-app-link[href*="/certitube/"]')) examples.push(t("Abre CertiTube"));
     if (examples.length < 3 && document.querySelector('.header-app-link[href*="/certiquiz/"]')) examples.push(t("Abre CertiQuiz"));
     return [...new Set(examples)];
@@ -121,20 +130,20 @@ export function installVoiceChatControls(chat) {
   chat.addEventListener("focusin", event => { if (event.composedPath().some(node => node.matches?.(":focus-visible"))) showHints(event); });
   chat.addEventListener("focusout", () => queueMicrotask(() => { if (!chat.shadowRoot?.activeElement) { if (chat.matches(":hover")) rotateHints(); else drainHints(); } }));
   chat.addEventListener("keydown", event => { if (event.key === "Escape" && hints?.dataset.open === "true") { event.preventDefault(); event.stopPropagation(); hideHints(); } });
-  const icons = { start: "wave", mute: "mute", exit: "exit" };
+  const icons = { start: "voice-wave", mute: "voice-mute", exit: "voice-exit", meeting:"calendar" };
   const controls = Object.keys(icons).map(command => ({
     position: "inside-end", initialState: "disabled",
     styles: { button: {
       default: {
-        container: { default: { display: "flex", alignItems: "center", justifyContent: "center", width: "44px", height: "44px", boxSizing: "border-box", borderRadius: "0", border: "none", backgroundColor: "transparent", color: "#64748b", margin: "0", insetInlineEnd: command === "mute" ? "56px" : "8px", insetBlockEnd: "4px" } },
-        svg: { content: `<svg xmlns="http://www.w3.org/2000/svg" data-certivoice-icon="${command}" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" fill="currentColor"/></svg>`, styles: { default: { width: "24px", height: "24px", filter: "none", maskImage: `url("${new URL(`../../icons/voice-${icons[command]}.svg`, import.meta.url).href}")`, maskPosition: "center", maskSize: "contain", maskRepeat: "no-repeat" } } },
+        container: { default: { display: "flex", alignItems: "center", justifyContent: "center", width: "44px", height: "44px", boxSizing: "border-box", borderRadius: "0", border: "none", backgroundColor: "transparent", color: "#64748b", margin: "0", insetInlineEnd: ["mute","meeting"].includes(command) ? "56px" : "8px", insetBlockEnd: "4px" } },
+        svg: { content: `<svg xmlns="http://www.w3.org/2000/svg" data-certivoice-icon="${command}" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" fill="currentColor"/></svg>`, styles: { default: { width: "24px", height: "24px", filter: "none", maskImage: `url("${new URL(`../../icons/${icons[command]}.svg`, import.meta.url).href}")`, maskPosition: "center", maskSize: "contain", maskRepeat: "no-repeat" } } },
       },
       disabled: { container: { default: { display: "none" } } },
     } },
     onClick: current => {
       hideHints();
       // Deep Chat's visual disabled state still needs an availability and busy guard.
-      if (current === "disabled" || command === "mute" && state.locked || command === "start" && (!state.enabled || requestBusy || quotaBlocked() && !state.retry)) return;
+      if (current === "disabled" || voiceCommandBlocked(command, state, requestBusy, quotaBlocked())) return;
       const dispatch = () => window.dispatchEvent(new CustomEvent("certivoice:command", { detail: command }));
       const close = command === "exit" && !document.body.classList.contains("certisearch-page") && chat.closest?.(".certichat")?.querySelector("[data-chat-close]");
       if (close) close.click(); else dispatch();
@@ -151,6 +160,7 @@ export function installVoiceChatControls(chat) {
   chat.auxiliaryStyle = (chat.auxiliaryStyle || "") + ' :host([data-voice-mode]) { overflow: visible !important; } #certivoice-hints { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(6px); transition: opacity 180ms ease, transform 180ms ease, visibility 0s 180ms; } #certivoice-hints[data-open="true"] { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); transition-delay: 0s; } #certivoice-hints[data-focused="true"] [part~="voice-hint"] { animation: none !important; opacity: 1; } @media (prefers-reduced-motion: reduce) { #certivoice-hints { transform: none; transition: none; } }';
   chat.auxiliaryStyle = (chat.auxiliaryStyle || "") + ' :host([data-voice-mode]), :host([data-voice-mode]) :is(#chat-view, #input, #text-input-container) { background: transparent !important; } :host([data-voice-mode]) #input { height: 42px; min-height: 0; } :host([data-voice-mode]) #text-input-container { border-top: 0 !important; height: 100%; min-height: 0; } :host([data-voice-mode]) #text-input { box-sizing: border-box; height: 100%; min-height: 0; padding-block: 0 !important; } :host([data-voice-mode]) .custom-button { width: var(--voice-control-size, 32px) !important; height: var(--voice-control-size, 32px) !important; color: var(--voice-ink) !important; inset-block-end: 50% !important; transform: translateY(50%) !important; } :host([data-voice-mode]) [data-certivoice-icon] { width: var(--voice-icon-size, 18px) !important; height: var(--voice-icon-size, 18px) !important; } :host([data-voice-mode]) #certivoice-phase { left: 24px; color: var(--voice-ink, var(--ink)); }';
   chat.auxiliaryStyle = (chat.auxiliaryStyle || "") + ' :host([data-voice-resume="true"]) [data-voice-command="start"] { inset-inline-end: calc(20px + var(--voice-control-size, 32px)) !important; } [data-voice-command="mute"] { inset-inline-end: calc(20px + var(--voice-control-size, 32px)) !important; } [data-voice-command="exit"] { inset-inline-end: 8px !important; } #text-input-container { min-height: 52px; } .custom-button[aria-disabled="true"] { opacity: .45; cursor: not-allowed; } .custom-button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; } .custom-button:not([aria-disabled="true"]):is(:hover, :focus-visible) [data-certivoice-icon] { color: var(--red) !important; } :host([data-voice-mode]) [data-voice-command="exit"] { border-radius: 50% !important; background: var(--voice-exit-surface) !important; } :host([data-voice-mode]) [data-voice-command="exit"] [data-certivoice-icon] { color: var(--voice-exit-ink) !important; } :host([data-voice-mode]) [data-voice-command="mute"][aria-pressed="true"], :host([data-voice-mode]) .custom-button:not([aria-disabled="true"]):active { border-radius: 50% !important; background: var(--red) !important; } :host([data-voice-mode]) [data-voice-command="mute"][aria-pressed="true"] [data-certivoice-icon], :host([data-voice-mode]) .custom-button:not([aria-disabled="true"]):active [data-certivoice-icon] { color: #fff !important; } :host([data-voice-mode]) #messages, :host([data-voice-mode]) #certichat-quota { display: none; } :host([data-voice-mode]) #chat-view { grid-template-rows: auto; } :host([data-voice-mode]) #text-input { visibility: hidden; } #certivoice-phase { position: absolute; inset: 0 108px 0 12px; display: flex; align-items: center; justify-content: flex-start; color: var(--ink); pointer-events: none; } #certivoice-phase[hidden] { display: none; } #certivoice-phase .voice-dot { display: inline-block; animation: voice-dot-bounce 1.2s ease-in-out infinite; } #certivoice-phase .voice-dot:nth-child(2) { animation-delay: .15s; } #certivoice-phase .voice-dot:nth-child(3) { animation-delay: .3s; } #certivoice-phase[data-phase="paused"] .voice-dot { animation: none; } @keyframes voice-dot-bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-3px); } } @media (prefers-reduced-motion: reduce) { #certivoice-phase .voice-dot { animation: none; } }';
+  chat.auxiliaryStyle += ' :host([data-meeting="true"]) #certivoice-phase { inset: auto 12px 100% 12px; font-size: 12px; }';
   // Keep the existing renewal notice visible when the compact voice bar cannot resume.
   chat.auxiliaryStyle += ' :host([data-voice-phase="paused"]) #certichat-quota:not([hidden]) { display: block; position: absolute; inset: auto 8px calc(100% + 8px); box-sizing: border-box; margin: 0; padding: 8px 12px; border: 1px solid var(--red); border-radius: 8px; background: var(--paper); color: var(--ink); font-size: 13px; line-height: 1.4; text-align: center; }';
   const onKeyboard = event => {
@@ -172,19 +182,21 @@ export function installVoiceChatControls(chat) {
     if (!input) return;
     const label = (state.active || state.resume) && { connecting: "Connecting…", listening: "Listening…", thinking: "Thinking…", speaking: "Speaking…", paused: "Paused…" }[state.phase];
     const panel = chat.closest?.("#certichat-panel"), heading = panel?.querySelector(".certichat-heading");
-    const enteringVoice = label && panel && !panel.hasAttribute("data-voice-mode");
+    const compact = Boolean(label && !state.meeting);
+    const enteringVoice = compact && panel && !panel.hasAttribute("data-voice-mode");
     const messages = shadow.querySelector("#messages");
-    const moveFocus = label && (messages?.contains(shadow.activeElement) || heading?.contains(document.activeElement));
-    for (const element of [chat, panel].filter(Boolean)) {
-      if (label) element.setAttribute("data-voice-mode", "true"); else element.removeAttribute("data-voice-mode");
+    const moveFocus = compact && (messages?.contains(shadow.activeElement) || heading?.contains(document.activeElement));
+    for (const element of [chat,panel].filter(Boolean)) {
+      if (compact) element.setAttribute("data-voice-mode", "true"); else element.removeAttribute("data-voice-mode");
       element.dataset.voiceResume = String(state.resume);
       element.dataset.voicePhase = state.phase || "off";
     }
-    input.contentEditable = String(!label && input.getAttribute("aria-disabled") !== "true");
-    input.setAttribute("aria-readonly", String(Boolean(label)));
+    chat.dataset.meeting = String(state.meeting);
+    input.contentEditable = String(!compact && input.getAttribute("aria-disabled") !== "true");
+    input.setAttribute("aria-readonly", String(compact));
     if (heading) {
-      heading.inert = Boolean(label);
-      if (label) heading.setAttribute("aria-hidden", "true"); else heading.removeAttribute("aria-hidden");
+      heading.inert = compact;
+      if(compact)heading.setAttribute("aria-hidden","true");else heading.removeAttribute("aria-hidden");
     }
     if (messages) {
       let phase = shadow.querySelector("#certivoice-phase");
@@ -193,7 +205,7 @@ export function installVoiceChatControls(chat) {
         phase.setAttribute("role", "status"); phase.setAttribute("aria-live", "polite"); phase.setAttribute("lang", "en");
         shadow.querySelector("#text-input-container").append(phase);
       }
-      // The status overlays the readonly input without changing its draft or Deep Chat's live history.
+      // Status stays separate from the editable input and the shared transcript.
       phase.hidden = !label;
       if (phase.getAttribute("aria-label") !== (label || "")) {
         phase.setAttribute("aria-label", label || ""); phase.setAttribute("aria-atomic", "true");
@@ -204,17 +216,18 @@ export function installVoiceChatControls(chat) {
       const search = document.querySelector(".site-header .search-toggle"), reference = search?.querySelector("svg");
       phase.style.font = getComputedStyle(search || input).font;
       chat.style.setProperty("--voice-icon-size", reference ? getComputedStyle(reference).width : "18px");
-      messages.inert = Boolean(label);
-      if (label) messages.setAttribute("aria-hidden", "true"); else messages.removeAttribute("aria-hidden");
+      messages.inert = compact;
+      if(compact)messages.setAttribute("aria-hidden","true");else messages.removeAttribute("aria-hidden");
     }
     const empty = !input.textContent.trim(), show = state.enabled && (empty || label) && (!busy || state.active || state.resume);
+    const showMeeting=state.enabled&&state.meetingEnabled&&!state.active&&!state.resume&&empty;
     // ponytail: only the native submit is inside-end besides our custom controls in pinned Deep Chat 2.5.1.
     const submit = shadow.querySelector("#input .input-button.inside-end:not(.custom-button)");
-    if (submit) submit.style.display = show ? "none" : "";
-    input.style.paddingRight = show && (state.active || state.resume) ? "108px" : "56px";
-    const labels = { start: t(state.retry ? "Reintentar" : state.resume ? "Reanudar voz" : "Activar voz"), mute: t(state.muted ? "Activar micrófono" : "Silenciar micrófono"), exit: t("Salir del modo voz") };
+    if (submit) {submit.style.display = compact || (show||showMeeting) && empty ? "none" : "";submit.style.right=show&&!empty?"112px":"";}
+    input.style.paddingRight = show && (state.active || state.resume) ? empty?"108px":"156px" : "56px";
+    const labels = { start: t(state.retry ? "Reintentar" : state.resume ? "Reanudar voz" : "Activar voz"), mute: t(state.muted ? "Activar micrófono" : "Silenciar micrófono"), exit: t("Salir del modo voz"),meeting:t("Escuchar reunión") };
     Object.keys(icons).forEach((command, index) => {
-      const visible = show && (command === "start" ? !state.active : state.active || command === "exit" && state.resume);
+      const visible = command==='meeting'?showMeeting:show && (command === "start" ? !state.active : state.active || command === "exit" && state.resume);
       controls[index].setState?.(!visible ? "disabled" : command === "mute" && state.muted ? "active" : "default");
       const button = shadow.querySelector(`[data-certivoice-icon="${command}"]`)?.closest(".custom-button");
       if (!button) return;
@@ -229,11 +242,11 @@ export function installVoiceChatControls(chat) {
       button.addEventListener("keydown", onKeyboard);
     });
     if (enteringVoice && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) panel.animate([{ opacity: 0, translate: "0 8px" }, { opacity: 1, translate: "0 0" }], { duration: 280, easing: "ease-out" });
-    if (moveFocus) shadow.querySelector(`[data-certivoice-icon="${state.active ? "mute" : "start"}"]`)?.closest(".custom-button")?.focus();
+    if (moveFocus && !input.matches(":focus")) shadow.querySelector(`[data-certivoice-icon="${state.active ? "mute" : "start"}"]`)?.closest(".custom-button")?.focus();
   }
   window.addEventListener("certivoice:state", event => {
     const value = event.detail || {};
-    state = { quotaBlocked: value.quotaBlocked === true, enabled: value.enabled === true, active: value.active === true, phase: value.phase, error: typeof value.error === "string" ? value.error : "", muted: value.muted === true, locked: value.locked === true, retry: value.retry === true, resume: value.resume === true };
+    state = { quotaBlocked: value.quotaBlocked === true, enabled: value.enabled === true, meetingEnabled:value.meetingEnabled===true, active: value.active === true, phase: value.phase, error: typeof value.error === "string" ? value.error : "", muted: value.muted === true, locked: value.locked === true, retry: value.retry === true, resume: value.resume === true, meeting: value.meeting === true };
     refresh(requestBusy);
   });
   window.addEventListener("resize", () => refresh(requestBusy));

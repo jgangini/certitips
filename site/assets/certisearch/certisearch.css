@@ -1,5 +1,19 @@
-@import url("./deck.css?v=2e73772e0e66");
-@import url("./stages.css?v=2e73772e0e66");
+@import url("./deck.css?v=c6c63c136710");
+@import url("./stages.css?v=c6c63c136710");
+@import url("./report.css?v=c6c63c136710");
+
+#diagram-viewer[data-case-presentation] .dialog-content{cursor:default;background:var(--paper)}
+#diagram-viewer[data-case-presentation] .dialog-content>img{display:none}
+#diagram-viewer[data-case-presentation] .dialog-content>[data-certisearch]{display:block;width:100%;height:100%;max-width:none;padding:0;margin:0}
+#diagram-viewer[data-case-presentation] .search-workspace{height:100%;min-height:0;border:0;border-radius:0;box-shadow:none}
+#diagram-viewer[data-case-presentation] .search-workspace>header,
+#diagram-viewer[data-case-presentation] .search-workspace>.search-tabs,
+#diagram-viewer[data-case-presentation] .search-workspace>footer,
+#diagram-viewer[data-case-presentation] [data-explorer-chat-slot]{display:none}
+#diagram-viewer[data-case-presentation] .case-slide-preview{display:block;position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;pointer-events:none;--search-deck-scale:1}
+#diagram-viewer[data-case-presentation] .case-slide-preview .search-deck-host{width:100%;height:100%;box-shadow:none}
+#diagram-viewer[data-case-presentation] .case-slide-preview .search-deck.deck{top:0;left:0;transform:scale(var(--case-preview-scale,0));transform-origin:top left}
+#diagram-viewer[data-case-presentation] .case-slide-preview :is(.case-narrative,.gantt-scroll){overflow:hidden}
 
 .home-main.certisearch-main{margin-inline:auto;padding-block:20px;flex:1;min-height:0}
 .certisearch{--workspace-control-size:32px;display:grid;grid-template-columns:minmax(0,1fr) var(--dock-width);gap:var(--layout-gap);min-height:0;align-items:start}
@@ -68,13 +82,19 @@
 .certisearch:has(#certichat-panel[data-voice-mode])>.search-advisor>.search-mobile-switch{display:none}
 .search-deck .search-report{padding-top:4px}
 
-.search-confirm h2{text-transform:capitalize}
-.certisearch #search-view .service-card:is(:hover,:focus-visible,.is-active,.is-highlighted,.search-selected){outline:1px solid var(--deck-oci);outline-offset:-1px;box-shadow:none;background:transparent}
+.search-confirm h2{text-transform:none}
+.certisearch [data-case-review] .confirmation-body{max-height:75dvh;overflow:auto;overflow-wrap:anywhere}.certisearch [data-case-review] .search-svg{min-width:0}.certisearch [data-case-review] [data-review-content]{margin-block:20px}.certisearch [data-case-review] [data-review-version]{display:block;width:100%;margin-block:8px}
+@media(max-width:800px){.search-toolbar{height:auto;flex-wrap:wrap;overflow-x:visible;padding-block:4px}.search-sizing-actions{flex-wrap:wrap;max-width:100%}}
+.certisearch #search-view .service-card:is(:hover,:focus-visible){outline:none;box-shadow:none;background:transparent}
+.certisearch #search-view .service-card:is(.is-active,.is-highlighted,.search-selected){outline:none;box-shadow:inset 4px 0 0 var(--deck-oci);background:transparent}
+.search-deck .search-architecture-figure .node:is(:hover,:focus-visible) .node-card{stroke:#8a9099;stroke-width:2}
+.search-deck .search-architecture-figure .node:is(.is-active,.is-highlighted,.search-selected) .node-card{stroke:var(--deck-oci);stroke-width:3}
 
 .certisearch > [data-notice]{display:none}
 #certichat-panel > [data-notice]{flex-shrink:0;margin:8px 12px;padding:8px 10px;font-size:12px}
 #certichat-panel[data-voice-mode] > [data-notice]{display:none}
 .certisearch[data-annotating=true] #search-view [data-select]:is(.annotation-near,.search-selected){outline:calc(2px / var(--search-deck-scale,1)) solid #2997ff;outline-offset:calc(-2px / var(--search-deck-scale,1));box-shadow:none}
+.certisearch[data-annotating=true] #search-view .service-card:is(.annotation-near,.search-selected){outline:none;box-shadow:inset 4px 0 0 var(--deck-oci);background:transparent}
 .certisearch[data-annotating=true] #search-view .node:is(.annotation-near,.search-selected){outline:none}
 .certisearch[data-annotating=true] #search-view .node:is(.annotation-near,.search-selected) .node-card{stroke:#2997ff;stroke-width:2;vector-effect:non-scaling-stroke}
 .certisearch[data-annotating=true] #search-view .case-visual:is(.annotation-near,.search-selected,:focus-visible){position:relative;outline:none;border-color:#2997ff;box-shadow:none}
@@ -90,3 +110,6 @@
 .search-advisor .certichat-launcher{position:absolute}
 @media(min-width:801px) and (max-width:1023px){.certisearch{grid-template-columns:minmax(0,1fr);gap:16px}}
 @media(max-width:800px){.certisearch:has(#certichat-panel[hidden])>.search-workspace{margin-inline:auto}}
+
+/* Case identity changes leave the status outside the temporarily inert controls. */
+.search-workspace[aria-busy=true],body.certisearch-page deep-chat[aria-busy=true]{opacity:.55;cursor:progress}

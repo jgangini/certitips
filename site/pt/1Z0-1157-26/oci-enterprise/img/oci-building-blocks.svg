@@ -55,7 +55,7 @@
   <g class="icon-badge" data-icon="brain-circuit"><circle cx="662" cy="454" r="28" fill="#e9e6fa"/><use href="#brain-circuit" x="646" y="438" width="32" height="32" color="#4f46b8"/></g>
   <text x="708" y="463" class="label" text-anchor="start">Relatório</text>
   <text x="642" y="513" class="body" text-anchor="start">Conversa entre as sessões</text>
-  <text x="642" y="553" class="body" text-anchor="start">Contexto de Condenes Compacto</text>
+  <text x="642" y="553" class="body" text-anchor="start">Compact Condenes Contexto</text>
   <rect x="616" y="620" width="504" height="124" rx="18" fill="#e1f2ee"/>
   <g class="icon-badge" data-icon="boxes"><circle cx="662" cy="662" r="28" fill="#e1f2ee"/><use href="#boxes" x="646" y="646" width="32" height="32" color="#087f7a"/></g>
   <text x="708" y="671" class="label" text-anchor="start">Apoie o Apis.</text>

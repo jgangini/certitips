@@ -1,13 +1,13 @@
-import { indexGraph } from './model.js?v=2e73772e0e66';
-import { normalizeTrace } from '../trace.js?v=2e73772e0e66';
+import { indexGraph } from './model.js?v=c6c63c136710';
+import { normalizeTrace } from '../trace.js?v=c6c63c136710';
 
-export const collectionIds = ['certitips', 'certiquiz', 'certitube', 'certisearch'];
+export const collectionIds = ['certitips', 'certiquiz', 'certitube', 'certirss', 'certisearch'];
 export const pilotPreviewIds = [...collectionIds, 'cognee'];
-export const pilotColors = { certitips: '#c74634', certiquiz: '#b58a00', certitube: '#0d65ad', certisearch: '#2e7d32', unknown: '#747680' };
+export const pilotColors = { certitips: '#c74634', certiquiz: '#b58a00', certitube: '#0d65ad', certirss: '#b65a00', certisearch: '#2e7d32', unknown: '#747680' };
 /** Classify already validated public citations; indexed memberships remain authoritative. */
 export function pilotSourceCollection(url) {
   const path = new URL(url).pathname;
-  return path.includes('/certitube/') ? 'certitube' : path.includes('/certisearch/') ? 'certisearch' : /\/practice\/$/.test(path) ? 'certiquiz' : 'certitips';
+  return path.includes('/certirss/') ? 'certirss' : path.includes('/certitube/') ? 'certitube' : path.includes('/certisearch/') ? 'certisearch' : /\/practice\/$/.test(path) ? 'certiquiz' : 'certitips';
 }
 export function pilotNodeCollections(state, id) {
   const banks = new Set(state.memberships.get(id) || []);
@@ -16,7 +16,7 @@ export function pilotNodeCollections(state, id) {
 }
 export function pilotNodeCollection(state, id) {
   const banks = pilotNodeCollections(state, id);
-  return banks.includes('certitube') ? 'certitube' : banks.includes('certisearch') ? 'certisearch' : banks.includes('certiquiz') ? 'certiquiz' : banks[0] || 'unknown';
+  return banks.includes('certirss') ? 'certirss' : banks.includes('certitube') ? 'certitube' : banks.includes('certisearch') ? 'certisearch' : banks.includes('certiquiz') ? 'certiquiz' : banks[0] || 'unknown';
 }
 export function pilotSourceZone(state, bank) {
   const nodes = new Set(collectionIds.includes(bank) ? state.graph.nodes.filter(node => pilotNodeCollections(state, node.id).includes(bank)).map(node => node.id) : []);
@@ -29,7 +29,7 @@ export function pilotPreviewZone(state, bank) {
   return bank === 'cognee' ? { nodes: new Set(state.graph.nodes.map(node => node.id)), edges: new Set(state.graph.edges.map((_, index) => index)) } : pilotSourceZone(state, bank);
 }
 export const relationKey = edge => JSON.stringify([edge.source, edge.target, edge.label]);
-export const collectionCenters = { certitips: [-330, 30, 0], certiquiz: [40, 250, -60], certitube: [290, 75, 160], certisearch: [20, -120, -320], unknown: [0, 0, 50] };
+export const collectionCenters = { certitips: [-330, 30, 0], certiquiz: [40, 250, -60], certitube: [290, 75, 160], certirss: [-250, -180, 210], certisearch: [20, -120, -320], unknown: [0, 0, 50] };
 
 export function createPilotState(snapshot, banks, siteRoot) {
   if (!/^[a-f0-9]{64}$/.test(snapshot?.version)) throw new Error('Invalid graph version');

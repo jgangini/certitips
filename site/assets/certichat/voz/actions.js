@@ -1,6 +1,6 @@
-import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=2e73772e0e66";
-import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=2e73772e0e66";
-import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=2e73772e0e66";
+import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=c6c63c136710";
+import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=c6c63c136710";
+import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=c6c63c136710";
 
 function nextPresentationSlide(doc) {
   const slides = [...doc.querySelectorAll('#diagram-viewer[open].is-presenting .diagram-presentation-nav button[data-slide-number][data-source-id]')];
@@ -172,6 +172,10 @@ export function shouldResumeNavigation(value, current, base, now = Date.now()) {
 
 export async function performVoiceAction(action, doc = document) {
   if (!action) return {};
+  // Native practice dialogs remain in the DOM during their closing animation.
+  // Wait for their existing cleanup before invoking the same control again.
+  const closing=doc.querySelector('#quiz dialog.confirmation:not([open])');
+  if(closing?.getAnimations)await Promise.allSettled(closing.getAnimations().map(animation=>animation.finished));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (["stop", "continue"].includes(action.name)) return { control: action.name };
   if (action.name === "return_practice") {
@@ -218,8 +222,8 @@ export async function performVoiceAction(action, doc = document) {
     else { nav?.scrollIntoView({ block: "nearest" }); nav?.querySelector("summary")?.focus(); }
     return { confirmation: t("Grupos de cursos") };
   }
-  if (["home", "catalog", "videos", "quiz", "chat", "next_page", "previous_page"].includes(action.name)) {
-    const path = { home: siteBase, catalog: `${siteBase}courses/`, videos: `${siteBase}certitube/`, quiz: `${siteBase}certiquiz/`, chat: `${siteBase}certichat/` }[action.name];
+  if (["home", "catalog", "videos", "quiz", "chat", "certisearch", "next_page", "previous_page"].includes(action.name)) {
+    const path = { home: siteBase, catalog: `${siteBase}courses/`, videos: `${siteBase}certitube/`, quiz: `${siteBase}certiquiz/`, chat: `${siteBase}certichat/`, certisearch: `${siteBase}certisearch/` }[action.name];
     const current = validVoiceNavigation(location.href, location.href, siteBase);
     if (path && current && new URL(canonicalURL(current.href)).pathname === path) return { confirmation: t("Página abierta: {title}", { title: doc.querySelector("h1")?.textContent || doc.title }) };
     const link = path ? [...doc.querySelectorAll(action.name === "home" ? ".site-header a.brand[href]" : ".header-app-link[href]")].find(item => {

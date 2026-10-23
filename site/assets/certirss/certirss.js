@@ -1,5 +1,5 @@
-import { highlightSearch } from '../site/content-search.js?v=2e73772e0e66';
-import { t, locale } from '../site/i18n.js?v=2e73772e0e66';
+import { highlightSearch } from '../site/content-search.js?v=c6c63c136710';
+import { t, locale } from '../site/i18n.js?v=c6c63c136710';
 
 const snapshots = new WeakMap();
 
@@ -14,7 +14,7 @@ function sourceRecord(row) {
 }
 
 function expandedArticle(row) {
-  if (row.content !== undefined && (typeof row.content !== 'string' || row.content.length > 1200)) throw new Error('Invalid article excerpt');
+  if (row.content !== undefined && (typeof row.content !== 'string' || row.content.length > 5000)) throw new Error('Invalid article excerpt');
   if (row.relatedLinks !== undefined && (!Array.isArray(row.relatedLinks) || row.relatedLinks.length > 6)) throw new Error('Invalid related links');
   const relatedLinks = (row.relatedLinks || []).map(link => {
     const related = new URL(link.url);
@@ -42,7 +42,13 @@ function articleRecord(row, ids, urls, language) {
   if (!timestamp(row.firstSeenAt) || row.publishedAt !== null && !timestamp(row.publishedAt)) throw new Error('Invalid article date');
   urls.add(url.href);
   if (typeof row.id !== 'string' || !/^[a-f0-9]{24}$/.test(row.id)) throw new Error('Invalid article ID');
-  return { id: row.id, title: row.title, summary: row.summary, ...expandedArticle(row), ...translatedArticle(row, language), ...articleCover(row), url: url.href, sourceId: row.sourceId, sourceName: row.sourceName, publishedAt: row.publishedAt, firstSeenAt: row.firstSeenAt };
+  return { id: row.id, title: row.title, summary: row.summary, ...expandedArticle(row), ...translatedArticle(row, language), ...articleCover(row), ...articleAuthor(row.author), url: url.href, sourceId: row.sourceId, sourceName: row.sourceName, publishedAt: row.publishedAt, firstSeenAt: row.firstSeenAt };
+}
+
+function articleAuthor(author) {
+  if (author === undefined) return {};
+  if (typeof author !== 'string' || !author.trim() || author.length > 180 || /[<>\r\n]/.test(author)) throw new Error('Invalid article author');
+  return { author };
 }
 
 function articleCover(row) {
@@ -101,7 +107,7 @@ function drawLibrary(root, cards, query) {
     markCurrent(card, card.dataset.rssId === root.dataset.rssSelected, !query.value.trim());
     if (!card.hidden) count++;
   }
-  statusMessage(root, count ? '' : t('No hay recursos para estos filtros.'));
+  statusMessage(root, !cards.length ? t('Biblioteca pendiente.') : count ? '' : t('No hay recursos para estos filtros.'));
 }
 
 function drawSourceStatuses(container, sources) {
@@ -120,18 +126,24 @@ function newsDetail(root, item, ordinal) {
   title.textContent = item ? item.title : t('No hay novedades para estos filtros.'); title.translate = !item;
   const number = document.createElement('span'), copy = document.createElement('div');
   number.className = 'tube-video-number tube-player-number'; number.dataset.rssNumber = ''; number.setAttribute('aria-hidden', 'true'); number.textContent = ordinal || '';
+  number.hidden = !item;
   copy.append(title, origin); heading.replaceChildren(number, copy);
   content.replaceChildren();
-  if (!item) return;
+  if (!item) {
+    const empty = document.createElement('section'); empty.className = 'rss-detail-body rss-empty';
+    empty.append(title); content.append(empty); return;
+  }
   const cover = document.createElement('span'), image = document.createElement('img');
   cover.className = 'rss-cover rss-artwork'; image.src = item.cover?.wide || root.dataset.rssCover;
   image.alt = item.cover?.alt || ''; image.width = 1600; image.height = 400; cover.append(image);
-  const body = document.createElement('section'), published = document.createElement('p'), link = document.createElement('a');
+  const body = document.createElement('section'), published = document.createElement('time'), link = document.createElement('a');
   body.className = 'tube-summary rss-summary rss-detail-body';
-  const summaryHeading = document.createElement('h2'); summaryHeading.textContent = t('Resumen'); body.append(summaryHeading);
+  const summaryHeading = document.createElement('h2'), summaryHeader = document.createElement('div');
+  summaryHeading.textContent = t('Resumen'); summaryHeader.className = 'rss-summary-header';
   const label = item.publishedAt ? t('Publicado') : t('Detectado; publicación sin fecha');
   published.textContent = `${label} · ${formatDate(item.publishedAt || item.firstSeenAt)}`;
-  body.append(published);
+  published.dateTime = item.publishedAt || item.firstSeenAt;
+  published.dataset.rssPublished = ''; summaryHeader.append(summaryHeading, published); body.append(summaryHeader);
   for (const text of (item.content || item.summary).split(/\n\s*\n/)) {
     const paragraph = document.createElement('p'); paragraph.textContent = text; paragraph.translate = false; body.append(paragraph);
   }
@@ -140,7 +152,15 @@ function newsDetail(root, item, ordinal) {
   related.className = 'tube-resources'; related.dataset.rssOriginal = ''; resourceHeading.textContent = t('Recursos relacionados'); links.className = 'resource-list';
   const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg'), use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
   icon.setAttribute('viewBox', '0 0 16 16'); icon.setAttribute('aria-hidden', 'true'); use.setAttribute('href', new URL('../icons/resource-link.svg', import.meta.url).href + '#resource-link'); icon.append(use);
-  row.append(icon, link); links.append(row); related.append(resourceHeading, links); content.replaceChildren(cover, body, related);
+  row.append(icon, link); links.append(row); related.append(resourceHeading, links);
+  const metadata = document.createElement('div'); metadata.className = 'rss-article-meta'; metadata.append(related);
+  if (item.author) {
+    const author = document.createElement('section'), heading = document.createElement('h2'), name = document.createElement('p');
+    author.className = 'tube-resources rss-author'; author.dataset.rssAuthor = '';
+    heading.textContent = t('Autor'); name.textContent = item.author; name.translate = false;
+    author.append(heading, name); metadata.append(author);
+  }
+  content.replaceChildren(cover, body, metadata);
 }
 
 function newsCard(item, coverURL, selected, ordinal, query) {
@@ -175,7 +195,6 @@ function drawNews(root, snapshot, query) {
   keepListPosition(list, selected?.id, () => list.replaceChildren(...items.map(item => newsCard(item, root.dataset.rssCover, selected?.id, ordinals.get(item.id), query.value))));
   newsDetail(root, selected, ordinals.get(selected?.id));
   statusMessage(root, !snapshot.sources.length ? t('Todavía no hay fuentes disponibles.') : !items.length ? t('No hay novedades para estos filtros.') : '');
-  find('updated').textContent = snapshot.checkedAt ? new Intl.DateTimeFormat(locale, { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).format(new Date(snapshot.checkedAt)).replaceAll('/', '-').replace(',', '') : t('Pendiente de la primera actualización.');
   find('current-source').textContent = selected?.sourceName || 'CertiRSS';
   drawSourceStatuses(find('health'), snapshot.sources);
 }
@@ -229,8 +248,14 @@ function activateView(root, tabs, view) {
   }
   root.querySelector('#rss-library').hidden = view !== 'biblioteca';
   root.querySelector('#rss-news').hidden = view !== 'novedades';
-  root.querySelector('[data-rss-news-footer]').hidden = view !== 'novedades';
-  root.querySelector('[data-rss-editorial-footer]').hidden = view !== 'biblioteca';
+}
+
+/** La sincronización pertenece al lote completo, también al abrir directamente Biblioteca. */
+function drawSync(root, snapshot) {
+  const stamp = root.querySelector('[data-rss-updated]');
+  stamp.textContent = snapshot.checkedAt ? new Intl.DateTimeFormat(locale, { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).format(new Date(snapshot.checkedAt)).replaceAll('/', '-').replace(',', '') : t('Pendiente de la primera actualización.');
+  if (snapshot.checkedAt) stamp.dateTime = snapshot.checkedAt;
+  else stamp.removeAttribute('datetime');
 }
 
 async function loadNews(root, signal) {
@@ -255,10 +280,14 @@ export function mountRss(signal) {
   const editorial = ['article-heading', 'article-content'].map(name => find(name).cloneNode(true));
   const renderLibrary = () => {
     for (const node of editorial) find(node.hasAttribute('data-rss-article-heading') ? 'article-heading' : 'article-content').replaceChildren(...[...node.childNodes].map(child => child.cloneNode(true)));
+    find('current-source').textContent = root.dataset.rssSource || 'CertiRSS';
     drawLibrary(root, cards, query);
   };
   const renderNews = () => drawNews(root, snapshot, query);
-  const render = () => view === 'biblioteca' ? renderLibrary() : renderNews();
+  const render = () => {
+    find('clear').hidden = !query.value.trim();
+    if (view === 'biblioteca') renderLibrary(); else renderNews();
+  };
   const load = async () => {
     request?.abort(); request = new AbortController();
     const pending = request, combined = AbortSignal.any([signal, pending.signal]);
@@ -267,7 +296,8 @@ export function mountRss(signal) {
       const data = await loadNews(root, combined);
       if (combined.aborted) return;
       snapshot = data; snapshots.set(root, data);
-      if (view === 'novedades') renderNews();
+      drawSync(root, data);
+      render();
     } catch (error) {
       if (!signal.aborted && error.name !== 'AbortError' && view === 'novedades') statusMessage(root, t('No se pudieron cargar las novedades. Reintenta con Actualizar lista.'));
     }
@@ -276,7 +306,9 @@ export function mountRss(signal) {
     const requested = value.split('/')[0];
     view = ['biblioteca', 'novedades'].includes(requested) ? requested : root.dataset.rssInitial;
     activateView(root, tabs, view);
-    render(); if (view === 'novedades' && !snapshot) void load();
+    render();
+    if (snapshot) drawSync(root, snapshot);
+    else if (!request) void load();
   };
   root.querySelector('form').addEventListener('submit', event => event.preventDefault(), { signal });
   query.addEventListener('input', render, { signal });
@@ -294,6 +326,7 @@ export function replaceRss(fresh) {
   const list = root.querySelector('[data-rss-library]'), position = list.scrollTop;
   root.querySelector('[data-rss-detail]').replaceWith(next.querySelector('[data-rss-detail]'));
   root.dataset.rssSelected = next.dataset.rssSelected;
+  root.dataset.rssSource = next.dataset.rssSource;
   root.dataset.rssInitial = next.dataset.rssInitial;
   delete root.dataset.mounted;
   return () => list.scrollTo({ top: position, behavior: 'instant' });

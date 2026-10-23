@@ -1,30 +1,41 @@
 /* One slide: the inventory and declared flow share a wider editorial column. */
-.search-deck[data-deck-view="architecture"] .architecture-layout{grid-template-columns:30% minmax(0,1fr);gap:24px;height:100%;min-height:0;align-items:stretch}
-.search-deck[data-deck-view="architecture"] .service-band{display:flex;flex-direction:column;padding:0 10px 0 0;border:0;min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent}
-.search-deck[data-deck-view="architecture"] .service-heading{flex:none;margin:auto 0 12px;padding-left:6px;color:var(--deck-ink);font-size:var(--deck-copy-size);font-weight:700;line-height:1.5}
-.search-deck[data-deck-view="architecture"] .service-grid{flex:none;gap:0;margin-bottom:auto}
+.search-deck[data-deck-view="architecture"] .architecture-layout{position:relative;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);height:100%;min-height:0;align-items:stretch}
+.search-deck[data-deck-view="architecture"] .service-band{position:absolute;top:0;left:0;z-index:3;width:360px;max-width:45%;padding:0;border:0;min-width:0;min-height:0;background:transparent;overflow:hidden}
+.search-deck[data-deck-view="architecture"] .service-band[open]{bottom:0;background:var(--deck-paper);border-radius:6px;box-shadow:inset 0 0 0 1px var(--deck-line),4px 4px 16px #0002}
+.search-deck[data-deck-view="architecture"] .service-heading{position:sticky;top:0;z-index:1;margin:0;padding:4px 6px;background:transparent;color:var(--deck-ink);font-size:var(--deck-copy-size);font-weight:700;line-height:1.5;cursor:pointer;width:fit-content}
+.search-deck[data-deck-view="architecture"] .service-grid{position:absolute;top:calc(var(--deck-copy-size)*1.5 + 12px);bottom:6px;left:6px;right:6px;min-height:0;display:flex;flex-direction:column;gap:0;margin:0;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent}
+.search-deck[data-deck-view="architecture"] .service-band:not([open])>.service-grid{display:none}
 .search-deck[data-deck-view="architecture"] .service-card{padding:5px 6px;border:0;border-bottom:1px solid var(--deck-line);border-radius:0;box-shadow:none;overflow-wrap:anywhere;background:transparent;color:var(--deck-ink)}
-.search-deck[data-deck-view="architecture"] .service-card strong{display:block;font-size:var(--deck-copy-size);line-height:1.5;font-weight:700;color:var(--deck-muted)}
-.search-deck[data-deck-view="architecture"] .service-card p{margin:4px 0 0;font-size:var(--deck-copy-size);line-height:1.5;color:var(--deck-muted)}
-.search-deck[data-deck-view="architecture"] .architecture-canvas{--deck-canvas:#f0f1f3;display:flex;align-items:stretch;min-width:0;background:var(--deck-canvas);border:0;border-radius:8px;overflow:hidden}
-.search-deck .search-architecture-figure{--architecture-layer-paper:#fff;--architecture-layer-ink:#59616e;margin:0;width:100%;height:auto;aspect-ratio:16/9;flex:none}
-.search-deck[data-deck-view="architecture"] .search-architecture-figure{height:100%;aspect-ratio:auto}
-.search-deck .search-architecture-figure .search-diagram-scroll{height:100%;width:100%;overflow:hidden;border:0}
-.search-deck .search-architecture-figure .search-svg{display:block;width:100%;height:100%;min-width:0;background:var(--deck-canvas);font-family:inherit}
+.search-deck[data-deck-view="architecture"] .service-card{flex:none;transition:none}
+.search-deck[data-deck-view="architecture"] .service-card strong{display:block;font-size:var(--deck-copy-size);line-height:1.5;font-weight:700;color:var(--deck-muted);white-space:normal}
+.search-deck[data-deck-view="architecture"] .service-card p{display:block;margin:4px 0 0;font-size:var(--deck-copy-size);line-height:1.5;color:var(--deck-muted)}
+.search-deck[data-deck-view="architecture"] .architecture-canvas{--deck-canvas:var(--deck-paper);position:relative;grid-row:1;grid-column:1;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:stretch;min-width:0;min-height:0;background:transparent;border:0;border-radius:8px;overflow:hidden}
+.search-deck[data-deck-view="architecture"] .architecture-canvas:has(>.service-band[open]){grid-template-columns:min(360px,45%) minmax(0,1fr);column-gap:20px}
+.search-deck[data-deck-view="architecture"] .architecture-canvas:has(>.service-band[open])>.search-architecture-figure{grid-column:2}
+.search-deck .search-architecture-figure{--architecture-node-paper:#f4f5f7;--architecture-layer-paper:var(--deck-paper);--architecture-layer-ink:#59616e;--architecture-heading-size:20px;margin:0;width:100%;height:auto;aspect-ratio:16/9;flex:none}
+.search-deck .search-architecture-figure[data-physical=true]{--architecture-heading-size:16px}
+.search-deck[data-deck-view="architecture"] .search-architecture-figure{height:100%;min-height:0;min-width:0;aspect-ratio:auto}
+.search-deck .search-architecture-figure .search-diagram-scroll{height:100%;width:100%;display:flex;align-items:safe center;justify-content:safe center;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--scrollbar) transparent;border:0;background:transparent}
+.search-deck .architecture-svg-surface{flex:none;width:calc(100% * var(--architecture-width-scale,1));aspect-ratio:var(--architecture-ratio,16/9)}
+#diagram-viewer[data-case-presentation] .search-diagram-scroll,.case-slide-preview .search-diagram-scroll{overflow:hidden}
+#diagram-viewer[data-case-presentation] .architecture-svg-surface,.case-slide-preview .architecture-svg-surface{width:100%;height:100%;aspect-ratio:auto}
+.search-deck .search-architecture-figure .search-svg{display:block;width:100%;height:100%;min-width:0;background:transparent;font-family:inherit}
 .search-deck .search-architecture-figure .search-svg rect{filter:none;box-shadow:none}
-.search-deck .search-architecture-figure .node-card{fill:var(--deck-paper);stroke:#8a9099;stroke-width:2}
-.search-deck .search-architecture-figure .node-icon-paper{fill:var(--deck-paper);stroke:none}
-.search-deck .search-architecture-figure .node image{filter:grayscale(1)}
-.search-deck .search-architecture-figure .node-store-cap{fill:none;stroke:#8a9099;stroke-width:2}
-.search-deck .search-architecture-figure .node-service-name{font-weight:700;fill:var(--deck-muted)}
-.search-deck .search-architecture-figure .search-node-order{font-size:30px;font-weight:600;fill:var(--deck-muted)}
+.search-deck .search-architecture-figure .node-card{fill:var(--architecture-node-paper);stroke:#8a9099;stroke-width:2}
+.search-deck .search-architecture-figure .node-icon-paper{fill:var(--architecture-node-paper);stroke:none}
+.search-deck .search-architecture-figure .node image{filter:grayscale(1);mix-blend-mode:multiply}
+.search-deck .search-architecture-figure .node-service-name{font-weight:400;fill:var(--deck-muted)}
+.search-deck .search-architecture-figure .search-node-order{font-size:var(--architecture-heading-size);font-weight:400;fill:var(--deck-muted)}
 .search-deck .search-architecture-figure .architecture-layer rect{fill:var(--architecture-layer-paper);fill-opacity:1;stroke:#8a9099;stroke-width:2}
 .search-deck .search-architecture-figure .architecture-layer text,
-.search-deck .search-architecture-figure .architecture-layer-label{font-size:30px;letter-spacing:.5px;font-weight:600;fill:var(--deck-muted)}
+.search-deck .search-architecture-figure .architecture-layer-label{font-size:var(--architecture-heading-size);letter-spacing:.5px;font-weight:400;fill:var(--deck-muted)}
 .search-deck .search-architecture-figure .architecture-layer text{fill:var(--architecture-layer-ink)}
 .search-deck .architecture-phase path{fill:#59616e;stroke:var(--deck-canvas);stroke-width:5}
-.search-deck .architecture-phase text{fill:#fff;font-size:30px;font-weight:600}
+.search-deck .architecture-phase text{fill:#fff;font-size:var(--architecture-heading-size);font-weight:400}
 .search-deck .search-architecture-figure .search-edge{fill:none;stroke:#8a9099;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;color:#8a9099}
+.search-deck .architecture-column-guide{fill:none;stroke:#8a9099;stroke-width:1;stroke-dasharray:4 7;opacity:.55;pointer-events:none}
+.search-deck .architecture-connection[data-kind=response] .search-edge{stroke-dasharray:8 5}
+.search-deck .architecture-connection[data-kind=management] .search-edge{stroke-dasharray:3 5}
 .search-deck .search-architecture-figure .search-svg marker path{fill:#8a9099}
 .search-deck .search-architecture-figure .architecture-connection{pointer-events:none}
 .search-deck .search-architecture-figure .connection-label-mask{fill:var(--deck-paper);stroke:var(--deck-line);stroke-width:1}
@@ -44,6 +55,6 @@
 @media print{.search-deck .search-architecture-figure{break-inside:avoid}}
 @media screen{
   html[data-theme=dark] .search-deck[data-deck-view="architecture"] .architecture-canvas{--deck-canvas:var(--deck-paper)}
-  html[data-theme=dark] .search-deck .search-architecture-figure{--architecture-layer-paper:var(--deck-soft);--architecture-layer-ink:var(--deck-muted)}
-  html[data-theme=dark] .search-deck .search-architecture-figure .node image{filter:grayscale(1) invert(.85)}
+  html[data-theme=dark] .search-deck .search-architecture-figure{--architecture-node-paper:var(--deck-paper);--architecture-layer-ink:var(--deck-muted)}
+  html[data-theme=dark] .search-deck .search-architecture-figure .node image{filter:grayscale(1) invert(1) brightness(3);mix-blend-mode:screen}
 }

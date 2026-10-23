@@ -1,5 +1,5 @@
-import { t } from '../site/i18n.js?v=2e73772e0e66';
-import { captureVoice, encodeVoiceWav } from '../certichat/voz/audio.js?v=2e73772e0e66';
+import { t } from '../site/i18n.js?v=c6c63c136710';
+import { captureVoice, encodeVoiceWav } from '../certichat/voz/audio.js?v=c6c63c136710';
 
 /** Validate request/case correlation before an editable transcript can reach the current case. */
 function validateDictationResponse(current,pending,result){
@@ -108,7 +108,8 @@ function trackAnnotationProximity(root,signal,isEnabled){
       for(const candidate of root.querySelectorAll('#search-view [data-select]:not([aria-disabled=true])')){
         if(!candidate.getClientRects().length)continue;
         const box=candidate.getBoundingClientRect(),distance=Math.hypot(Math.max(box.left-event.clientX,0,event.clientX-box.right),Math.max(box.top-event.clientY,0,event.clientY-box.bottom));
-        if(distance<nearest){nearest=distance;next=candidate;}
+        // A nearby child is more specific than its selectable section, including the 12px proximity halo.
+        if(distance<13&&(!next||next.contains(candidate)||(!candidate.contains(next)&&distance<nearest))){nearest=distance;next=candidate;}
       }
     }
     if(next===nearby)return;

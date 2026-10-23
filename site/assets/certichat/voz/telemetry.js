@@ -1,5 +1,7 @@
 // Operational metadata only: never record status text, prompts, answers, audio or cookies.
+const instances = new WeakMap();
 export function voiceDiagnostics(config) {
+  if (instances.has(config)) return instances.get(config);
   const key = `certivoice:${config.dataset.siteRoot}:trace`, now = Date.now();
   let trace, createdAt = now;
   try {
@@ -30,13 +32,13 @@ export function voiceDiagnostics(config) {
     } catch { blocked = true; queue = []; } // No retries or diagnostic failures in the voice flow.
     finally { sending = false; if (queue.length && !blocked) timer = setTimeout(flush, 2000); }
   }
-  return {
+  const diagnostics = {
     headers,
     enable(value) { enabled = value === true; },
     record(name, fields = {}) {
       renewTrace();
       if (!enabled || blocked) return;
-      const allowed = ["phase", "active", "muted", "error", "context_state", "audio_session", "track_state", "track_muted", "native_event", "native_error", "operation", "audio_output", "duration_ms", "status", "request_id", "action", "automatic", "platform"];
+      const allowed = ["phase", "active", "muted", "error", "context_state", "audio_session", "track_state", "track_muted", "native_event", "native_error", "operation", "audio_output", "duration_ms", "status", "request_id", "action", "automatic", "platform", "profile", "revision"];
       queue.push({ name, at: Date.now(), page: location.pathname, ...Object.fromEntries(allowed.filter(key => fields[key] !== undefined).map(key => [key, fields[key]])) });
       if (queue.length > 24) queue.shift();
       if (!timer) timer = setTimeout(flush, 2000);
@@ -44,4 +46,6 @@ export function voiceDiagnostics(config) {
     },
     flush,
   };
+  instances.set(config, diagnostics);
+  return diagnostics;
 }

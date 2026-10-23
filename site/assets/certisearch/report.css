@@ -1,0 +1,27 @@
+.search-report{color:#17223b;background:#fff;line-height:1.6;font-family:"Segoe UI",sans-serif;counter-reset:report-section}
+.search-print-view[data-report-export]{--paper:#fff;--white:#fff;--ink:#17223b;--muted:#4b5563;--hover:#f3f4f6;--line:#cbd5e1;color-scheme:light}
+.search-report .report-cover{padding:32px 0 24px;border-top:6px solid #c74634;border-bottom:1px solid #cbd5e1}
+.search-report .report-eyebrow{color:#a83225;font-weight:700;font-size:10pt;letter-spacing:.12em;text-transform:uppercase}
+.search-report .report-cover h2{font-size:30pt;line-height:1.16;max-width:22ch;margin:20px 0}
+.search-report .case-report-image img{display:block;width:100%;max-height:115mm;object-fit:cover;border-radius:8px;margin:24px 0}
+.search-report .report-metadata{display:grid;grid-template-columns:1fr 2fr;gap:6px 16px;font-size:10pt}
+.search-report .report-metadata dt{font-weight:700}.search-report .report-metadata dd{margin:0;overflow-wrap:anywhere}
+.search-report .report-disclaimer{padding:12px 16px;border-left:3px solid #c74634;background:#f4f6f8;font-size:9pt}
+.search-report .report-section{padding-top:20px;margin-bottom:24px;counter-increment:report-section}
+.search-report .report-section>h3{font-size:18pt;line-height:1.3;padding-bottom:10px;border-bottom:1px solid #cbd5e1}
+.search-report .report-section>h3:before{content:counter(report-section,decimal-leading-zero) " / ";color:#a83225;font-size:11pt}
+.search-report .report-turn{margin-bottom:18px;border-bottom:1px solid #e2e8f0;padding-bottom:12px}
+.search-report .report-turn h4{font-size:9pt;color:#4b5563;font-weight:600;margin:0 0 8px}
+.search-report .report-turn p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10pt;margin:0}
+.search-report .search-stage-svg{display:block;width:100%;height:auto;margin:20px 0;break-inside:avoid}
+.search-report .search-table{width:100%;border-collapse:collapse}.search-report .search-table :is(th,td){vertical-align:top}
+@media print{
+  @page{size:A4;margin:18mm 16mm 20mm}
+  .search-print-view .search-report{font-size:10pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .search-print-view .report-cover{min-height:245mm;box-sizing:border-box;break-after:page}
+  .search-print-view .report-section{break-inside:auto}
+  .search-print-view .report-section>h3,.search-print-view h4,.search-print-view dt{break-after:avoid}
+  .search-print-view .report-turn{break-inside:auto;orphans:3;widows:3}
+  .search-print-view #report-transcript{break-before:page}
+  .search-print-view .search-report .search-stage-svg{max-height:165mm}
+}

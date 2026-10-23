@@ -1,6 +1,8 @@
-import { validateCase, assertCurrentResponse } from './case.js?v=2e73772e0e66';
+import { validateCase, assertCurrentResponse } from './case.js?v=c6c63c136710';
+import { validateMeetingJournal, journalFromHistory } from './meeting.js?v=c6c63c136710';
 
 export const IMAGE_LIMIT = 384 * 1024;
+export const ARCHIVE_LIMIT = 8 * 1024 * 1024;
 const invalid = () => { throw new Error('La imagen no es válida o supera el límite admitido.'); };
 function bytes(dataUrl, limit = IMAGE_LIMIT) {
   if (typeof dataUrl !== 'string' || dataUrl.length > limit * 4 / 3 + 100) invalid();
@@ -34,24 +36,36 @@ export async function normalizeIllustration(image) {
   } finally { bitmap.close(); }
 }
 /** Export image bytes beside the validated case so API case context remains bounded and excludes binary data. */
-export async function caseArchive(current, illustration) {
+export async function caseArchive(current, illustration, journal = []) {
   validateCase(current);
-  if (!current.imageId) return current;
-  await validateIllustration(illustration, current.imageId);
-  return { format: 'certisearch-case', version: 1, case: current, illustration };
+  journal=journalFromHistory(current,journal);
+  if (current.imageId) await validateIllustration(illustration, current.imageId);
+  const archive = { format: 'certisearch-case', version: 2, case: {...current,history:[]}, illustration: current.imageId ? illustration : null, journal };
+  if (new TextEncoder().encode(JSON.stringify(archive,null,2)).length > ARCHIVE_LIMIT) invalid();
+  return archive;
 }
 /** Import the versioned image envelope or a legacy image-free case, validating size and image integrity. */
 export async function parseCaseArchive(text) {
-  if (typeof text !== 'string' || new TextEncoder().encode(text).length > 1024 * 1024) invalid();
+  if (typeof text !== 'string' || new TextEncoder().encode(text).length > ARCHIVE_LIMIT) invalid();
   const value = JSON.parse(text);
   if (value?.format !== 'certisearch-case') {
     const current = validateCase(value); if (current.imageId) invalid();
-    return { current, illustration: null };
+    return { current, illustration: null, journal: [] };
   }
-  if (value.version !== 1 || Object.keys(value).some(key => !['format', 'version', 'case', 'illustration'].includes(key))) invalid();
-  const current = validateCase(value.case), illustration = await validateIllustration(value.illustration, current.imageId);
-  return { current, illustration };
+  if (![1, 2].includes(value.version) || Object.keys(value).some(key => !['format', 'version', 'case', 'illustration', ...(value.version === 2 ? ['journal'] : [])].includes(key))) invalid();
+  const current = validateCase(value.case), illustration = current.imageId ? await validateIllustration(value.illustration, current.imageId) : null;
+  if (!current.imageId && value.illustration != null) invalid();
+  const journal = value.version === 2 ? validateMeetingJournal(value.journal) : [];
+  return { current, illustration, journal };
 }
+/** A stored image prompt alone never authorizes a new generation; require a current, explicit image instruction. */
+export function requestsIllustration(message){
+  const text=String(message||'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
+  const sentences=text.split(/[.!?;\n]/);
+  return sentences.some(sentence=>!/(?:\bno\b|\bnao\b|\bnon\b|\bnot\b|don't|do not)[^,]{0,45}\b(?:cre|cri|gener|edit|modif|draw|redraw|make)/.test(sentence)
+    && /\b(?:crea|crear|cree|cria|criar|crie|create|creare|genera|generar|gere|generate|generare|edita|editar|edite|edit|modifica|modificar|modifique|modify|modificare|draw|redraw|make)\b[^.!?;\n]{0,100}\b(?:imagen|image|imagem|immagine|ilustracion|illustration|ilustracao|illustrazione|portada|cover|capa|copertina)\b/.test(sentence));
+}
+
 /** Reuse the pending request identity and prior image; accept only a response matching the current case revision and prompt. */
 export async function requestIllustration(current, prompt, illustration, pending, request, normalize = normalizeIllustration) {
   if (current.imageId) await validateIllustration(illustration, current.imageId);

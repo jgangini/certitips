@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "components": [
+    {
+      "id": "aidp",
+      "kind": "oci-service",
+      "name": "Oracle AI Data Platform",
+      "icon": "assets/oci/oci-ai-data-platform-workbench.svg",
+      "layer": "Procesamiento"
+    },
+    {
+      "id": "lakehouse",
+      "kind": "oci-service",
+      "name": "Oracle Autonomous AI Lakehouse",
+      "icon": "assets/oci/data-lakehouse.svg",
+      "layer": "Datos"
+    },
+    {
+      "id": "oac",
+      "kind": "oci-service",
+      "name": "Oracle Analytics Cloud",
+      "icon": "assets/oci/analytics.svg",
+      "layer": "Analítica"
+    },
+    {
+      "id": "oke",
+      "kind": "oci-service",
+      "name": "OCI Kubernetes Engine",
+      "icon": "assets/oci/container-engine-for-kubernetes.svg",
+      "layer": "Aplicaciones e IA"
+    },
+    {
+      "id": "api-gateway",
+      "kind": "oci-service",
+      "name": "OCI API Gateway",
+      "icon": "assets/oci/api-gateway.svg",
+      "layer": "Acceso e integración"
+    },
+    {
+      "id": "generative-ai",
+      "kind": "oci-service",
+      "name": "OCI Generative AI",
+      "icon": "assets/oci/oci-generative-ai.svg",
+      "layer": "Aplicaciones e IA"
+    },
+    {
+      "id": "object-storage",
+      "kind": "oci-service",
+      "name": "OCI Object Storage",
+      "icon": "assets/oci/object-storage.svg",
+      "layer": "Almacenamiento"
+    },
+    {
+      "id": "external-files",
+      "kind": "external-system",
+      "name": "Archivos de un sistema origen",
+      "icon": "assets/icons/document-thin.svg",
+      "layer": "Sistemas externos"
+    },
+    {
+      "id": "external-database",
+      "kind": "external-system",
+      "name": "Base de datos externa",
+      "icon": "assets/icons/database-thin.svg",
+      "layer": "Sistemas externos"
+    },
+    {
+      "id": "external-application",
+      "kind": "external-system",
+      "name": "Aplicación o API externa",
+      "icon": "assets/icons/workflow-thin.svg",
+      "layer": "Sistemas externos"
+    }
+  ]
+}

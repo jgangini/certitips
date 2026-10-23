@@ -1,6 +1,6 @@
-import { t, localizedURL, language } from '../../site/i18n.js?v=2e73772e0e66';
-import { readTrace, sourcePath } from '../trace.js?v=2e73772e0e66';
-import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=2e73772e0e66';
+import { t, localizedURL, language } from '../../site/i18n.js?v=c6c63c136710';
+import { readTrace, sourcePath } from '../trace.js?v=c6c63c136710';
+import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=c6c63c136710';
 
 let mounted;
 const instances = new WeakMap();
@@ -35,7 +35,7 @@ export function mountGraphPilot(scope = document) {
   const scrollButtons = [...root.querySelectorAll('[data-pilot-scroll]')];
   const number = new Intl.NumberFormat(language, { useGrouping: 'always' });
   const timestamp = new Intl.DateTimeFormat(language, { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
-  const sourceName = id => ({ certitips: 'tips', certiquiz: 'quiz', certitube: 'tube', certisearch: 'search', cognee: 'cognee' })[id] || 'unknown';
+  const sourceName = id => ({ certitips: 'tips', certiquiz: 'quiz', certitube: 'tube', certirss: 'rss', certisearch: 'search', cognee: 'cognee' })[id] || 'unknown';
   let discoveryCounts = { nodes: 0, edges: 0 };
   let follow = true, generatedAt, checkedAt, indexing = false, healthRequest;
   const freshness = element('span'); freshness.className = 'graph-pilot-freshness'; freshness.dataset.pilotFreshness = ''; freshness.hidden = true; freshness.setAttribute('role', 'img');
@@ -122,7 +122,7 @@ export function mountGraphPilot(scope = document) {
   // Native button activation (click, Enter or Space) alone changes the selected source layers.
   const updateLegendSelection = () => scene?.preview([...enabledBanks]);
   for (const chip of root.querySelectorAll('.chat-graph-legend [data-source]')) {
-    const bank = { tips: 'certitips', quiz: 'certiquiz', tube: 'certitube', search: 'certisearch', cognee: 'cognee' }[chip.dataset.source];
+    const bank = { tips: 'certitips', quiz: 'certiquiz', tube: 'certitube', rss: 'certirss', search: 'certisearch', cognee: 'cognee' }[chip.dataset.source];
     chip.setAttribute('aria-pressed', 'false');
     chip.addEventListener('click', () => {
       if (enabledBanks.has(bank)) enabledBanks.delete(bank); else enabledBanks.add(bank);
@@ -366,7 +366,7 @@ export function mountGraphPilot(scope = document) {
     const revision = ++sceneRevision; scene?.destroy(); scene = undefined; discoveryCounts = { nodes: 0, edges: 0 };
     if (compact.matches) { availability(false); return; }
     try {
-      const { createPilotScene } = await import('./scene.js?v=2e73772e0e66');
+      const { createPilotScene } = await import('./scene.js?v=c6c63c136710');
       if (signal.aborted || revision !== sceneRevision) return;
       availability(true); canvas.dataset.disposed = 'false';
       scene = createPilotScene(canvas, labels, select, () => { follow = false; root.dataset.followPaused = 'true'; }, availability, anchorCard, value => { zoom.textContent = `${Math.round(value * 100)}%`; }, (running, bank = '') => {

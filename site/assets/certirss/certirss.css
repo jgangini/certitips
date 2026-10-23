@@ -6,6 +6,14 @@ body[data-page^="certirss"] #main { padding-top:20px; padding-bottom:20px; }
 .rss-detail { display:flex; flex-direction:column; }
 .rss-detail:focus { outline:none; }
 .rss-detail > header { margin-bottom:0; flex-shrink:0; }
+.rss-detail:has(.rss-empty) > header { display:none; }
+.rss-detail:has(.rss-empty) .rss-detail-body { display:flex; flex:1; flex-direction:column; align-items:center; justify-content:center; }
+.rss-empty { width:100%; padding:24px; text-align:center; }
+.rss-detail .rss-empty h1 { display:flex; align-items:center; justify-content:center; gap:18px; color:var(--ink); font-size:clamp(28px,3vw,44px); line-height:1.08; letter-spacing:-.045em; margin:14px 0 20px; }
+.rss-empty h1 svg { width:46px; height:46px; flex:0 0 auto; }
+.rss-empty p { margin:0; color:var(--muted); }
+.rss-empty .hint { margin-top:24px; font-size:13px; }
+.rss-empty kbd { display:inline-flex; padding:2px 5px; border:1px solid var(--line); border-radius:4px; background:var(--chrome-bg); color:var(--muted); font-size:.62rem; white-space:nowrap; }
 .rss-detail h1 { margin:0; font-size:1.45rem; line-height:1.05; }
 .rss-origin { display:block; }
 .rss-publications { align-self:stretch; contain:size; min-height:0; display:flex; flex-direction:column; }
@@ -35,8 +43,14 @@ body[data-page^="certirss"] #main { padding-top:20px; padding-bottom:20px; }
 .rss-article-content { display:flex; flex:1; flex-direction:column; min-height:0; overflow:auto; }
 .rss-article-content > .rss-cover { height:clamp(110px,20dvh,190px); aspect-ratio:auto; }
 .rss-summary.tube-summary { flex:1 1 0; min-height:0; max-height:none; overflow:auto; mask-image:none; }
-.rss-article-content > .rss-cover, .rss-article-content > .tube-resources { flex-shrink:0; }
-.rss-article-content > .tube-resources { flex:0 0 auto; margin:0; }
+.rss-article-content > .rss-cover, .rss-article-content > .rss-article-meta { flex-shrink:0; }
+.rss-article-meta { display:grid; grid-template-columns:1fr 1fr; flex:0 0 auto; border-top:1px solid var(--line); }
+.rss-article-meta > .tube-resources { margin:0; border:0; min-width:0; }
+.rss-article-meta .rss-author p { margin:0; color:var(--muted); font-size:.8rem; }
+.rss-summary-header { display:flex; align-items:baseline; justify-content:space-between; gap:8px 16px; flex-wrap:wrap; margin-bottom:16px; padding:12px 0 4px; position:sticky; top:0; z-index:1; background:var(--white); }
+.rss-summary-header h2 { margin:0; padding:0; position:static; }
+.rss-summary-header h2::after { display:none; }
+.rss-summary-header time { margin-left:auto; color:var(--muted); font-size:.75rem; }
 .rss-article-content > .rss-cover { border-bottom:0; overflow:hidden; grid-template-rows:minmax(0,1fr); }
 .rss-tabs.tube-chapters { flex-shrink:0; padding:6px 8px; background:var(--white); }
 .rss-tabs [role="tab"] { padding:3px 6px; font-family:inherit; font-weight:400; cursor:pointer; }
@@ -46,21 +60,32 @@ body[data-page^="certirss"] #main { padding-top:20px; padding-bottom:20px; }
 .rss-app :focus-visible { outline:2px solid var(--red); outline-offset:2px; }
 .rss-article-content,.rss-items { scrollbar-color:var(--scrollbar) transparent; scrollbar-width:thin; }
 .rss-footer.chat-graph-footer { min-height:32px; }
-.rss-footer .chat-graph-meta { grid-template-columns:repeat(2,max-content); }
+.rss-footer .chat-graph-meta { display:flex; flex-wrap:wrap; justify-content:space-between; }
+.rss-footer .rss-sync { margin-left:auto; }
+.rss-footer .chat-graph-meta > div:first-child { border-right:1px solid var(--line); }
 [data-rss-article-heading] { display:flex; align-items:center; gap:10px; }
 [data-rss-article-heading] > div { min-width:0; }
-.rss-detail .certichat-brand small { text-transform:uppercase; }
+[data-rss-number]:empty { display:none; }
+.rss-detail .certichat-brand small,.rss-publications .certichat-brand small { text-transform:uppercase; }
 .rss-items li > a { position:relative; }
 .rss-items .tube-video-number { position:absolute; top:12px; left:12px; pointer-events:none; }
 .rss-items [data-rss-description] { display:none; }
-.rss-cover.rss-artwork img, .rss-items .rss-cover.rss-artwork img { width:100%; height:100%; object-fit:contain; min-height:0; min-width:0; opacity:1; }
+.rss-cover.rss-artwork img, .rss-items .rss-cover.rss-artwork img { width:100%; height:100%; object-fit:contain; object-position:center; min-height:0; min-width:0; opacity:1; }
+
+.rss-cover.rss-artwork img[src*=".webp"], .rss-items .rss-cover.rss-artwork img[src*=".webp"] { object-fit:cover; }
 
 @media(min-width:801px) { .rss-detail { height:var(--panel-height); } }
+@media(min-width:801px) {
+  body[data-page^="certirss"] .certichat { right:var(--frame-left); bottom:calc(var(--footer-height) + var(--layout-gap)); }
+  body[data-page^="certirss"] .certichat-launcher { height:var(--chat-launcher-size); }
+  body[data-page^="certirss"] .certichat.is-beside-content { right:20px; bottom:calc(var(--footer-height) + 20px); }
+}
 @media(min-width:1001px) { body[data-page^="certirss"]:has(.certichat:not(.is-beside-content) [data-chat-open]:not([hidden])) .rss-publications { max-height:calc(var(--panel-height) + 20px - 2 * var(--layout-gap) - var(--chat-launcher-size)); } }
 @media(max-width:1000px) { .rss-columns { grid-template-columns:minmax(0,1fr); gap:16px; } .rss-publications { contain:none; height:60dvh; min-height:300px; } .rss-article-content { height:65dvh; max-height:65dvh; flex:none; } }
 @media(max-width:800px) { body[data-page^="certirss"] #main { padding:0 0 calc(2 * var(--layout-gap) + var(--chat-launcher-size)); } .rss-columns { gap:0; } .rss-detail,.rss-publications { border:0; border-radius:0; box-shadow:none; } .rss-detail { border-top:4px solid var(--red); } .rss-publications { border-top:1px solid var(--line); } .rss-detail h1 { font-size:1.25rem; } }
+@media(max-width:480px) { .rss-article-meta { grid-template-columns:minmax(0,1fr); } }
 
-@container (max-width:430px) { .rss-footer .chat-graph-meta { grid-template-columns:1fr; } }
+@container (max-width:430px) { .rss-footer .rss-sync { margin-left:auto; } }
 
 .rss-footer .chat-graph-meta { flex:1; min-width:0; width:auto; }
 .rss-footer dd { white-space:normal; overflow-wrap:anywhere; }

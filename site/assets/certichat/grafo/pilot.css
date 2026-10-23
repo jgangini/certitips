@@ -98,3 +98,8 @@
 [data-graph-pilot] .chat-graph-card:has([data-pilot-card-sources][hidden], [data-pilot-contact-sources][hidden]) > strong { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
 
 [data-graph-pilot] [data-pilot-card] { z-index: 2; }
+
+[data-graph-pilot] .chat-graph-legend [data-source="rss"] { color:#fff; background:#b65a00; border-color:#b65a00; }
+[data-graph-pilot] .chat-graph-active button[data-source="rss"] { border-color:#b65a00; }
+[data-graph-pilot] .chat-graph-active button[data-source="rss"][aria-pressed="true"] { background:#b65a00; color:#fff; }
+[data-graph-pilot] .chat-graph-card a[data-source="rss"]::before { mask-image:url("../../certirss/rss.svg"); }

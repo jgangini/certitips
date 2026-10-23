@@ -34,18 +34,9 @@
 .chat-graph-scroll:disabled { visibility: hidden; }
 .chat-graph-evidence:not(:has(.chat-graph-scroll:enabled)) .chat-graph-scroll { display: none; }
 .chat-graph-toolbar .button:enabled:hover, .chat-graph-scroll:enabled:hover { border-color: var(--red); color: var(--red); }
-.chat-graph-footer { flex-shrink: 0; min-height: 46px; display: flex; border-top: 1px solid var(--line); background: var(--white); container-type: inline-size; }
-.chat-graph-meta { display: grid; grid-template-columns: repeat(4, max-content); justify-content: start; width: 100%; color: var(--muted); font-size: 12px; line-height: 1.5; margin: 0; }
-.chat-graph-meta > div { display: flex; min-height: 23px; }
-.chat-graph-meta > div + div, .chat-graph-meta dd { border-left: 1px solid var(--line); }
-.chat-graph-meta > div:nth-child(2) { border-right: 1px solid var(--line); }
-.chat-graph-meta dt, .chat-graph-meta dd { display: flex; align-items: center; padding: 2px 8px; margin: 0; }
-.chat-graph-meta dd { flex: 1; justify-content: flex-end; color: var(--ink); white-space: nowrap; }
 .chat-graph-stamp { justify-self: start; }
 .chat-graph-updating { flex-shrink: 0; width: 12px; height: 12px; margin-left: 6px; border-width: 2px; }
 .chat-graph-updating[hidden] { display: none; }
-@container (max-width: 660px) { .chat-graph-meta { grid-template-columns: 1fr 1fr; } .chat-graph-stamp { justify-self: stretch; } }
-@container (max-width: 430px) { .chat-graph-meta { grid-template-columns: 1fr; } }
 .chat-graph-active { display: flex; flex: 1; min-width: 0; flex-wrap: nowrap; gap: 6px; list-style: none; padding: 2px; margin: 6px 0; overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; scrollbar-width: none; }
 .chat-graph-active::-webkit-scrollbar { display: none; }
 .chat-graph-active li { flex-shrink: 0; }

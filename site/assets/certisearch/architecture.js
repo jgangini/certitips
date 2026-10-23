@@ -1,6 +1,26 @@
 // Bounded, static architecture pages. Only declared components and connections are used.
 // Diagram Design: topology first, functional groups, orthogonal ports and crossing bridges.
 export const serviceLayer = id => ({ 'api-gateway':'Acceso e integración', aidp:'Procesamiento', lakehouse:'Datos', oac:'Analítica', oke:'Aplicaciones e IA', 'generative-ai':'Aplicaciones e IA' })[id] || 'Servicios OCI';
+// Older portable cases used title/text; retain their authored meaning when reopening.
+export const architectureNodeLabel = node => node.label || node.title || node.serviceId || node.id;
+export const architectureNodePurpose = node => node.purpose || node.text || node.description || '';
+
+/** Accept only the bounded, packaged icon catalog; case/model fields never supply asset URLs. */
+export function validateArchitectureComponents(value) {
+  if(value?.schemaVersion!==1||!Array.isArray(value.components)||!value.components.length||value.components.length>100)throw new Error('Catálogo de componentes incompatible');
+  const seen=new Set();
+  for(const item of value.components){
+    if(!validComponent(item)||seen.has(item.id))throw new Error('Componente físico o SVG local no permitido');
+    seen.add(item.id);
+  }
+  return value.components;
+}
+
+function validComponent(item) {
+  if(!item||!['oci-service','external-system'].includes(item.kind))return false;
+  if(!['id','name','layer','icon'].every(key=>typeof item[key]==='string'&&item[key].length>0&&item[key].length<=160))return false;
+  return /^[a-z][a-z0-9-]{0,63}$/.test(item.id)&&/^assets\/(oci|icons)\/[a-z0-9-]+\.svg$/.test(item.icon);
+}
 
 export function wrapArchitectureText(value, width=28) {
   const words=String(value).trim().split(/\s+/).flatMap(word=>Array.from(word).reduce((parts,char,index)=>{if(index%width===0)parts.push('');parts[parts.length-1]+=char;return parts;},[]));
@@ -59,8 +79,8 @@ function overlaps(a,b,c,d){
 const simplify = points => points.filter((point,index)=>!index||index===points.length-1||!((points[index-1].x===point.x&&point.x===points[index+1].x)||(points[index-1].y===point.y&&point.y===points[index+1].y)));
 
 // Search a small orthogonal visibility grid, not a free-form diagram editor.
-function route(start,end,boxes,previous,canvasHeight=720) {
-  const xs=[...new Set([24,1256,start.x,end.x,...boxes.flatMap(box=>[box.x-24,box.x+box.width+24]),...Array.from({length:51},(_,i)=>32+i*24)])].sort((a,b)=>a-b);
+function route(start,end,boxes,previous,canvasHeight=720,canvasWidth=1280) {
+  const xs=[...new Set([24,canvasWidth-24,start.x,end.x,...boxes.flatMap(box=>[box.x-24,box.x+box.width+24]),...Array.from({length:Math.floor((canvasWidth-56)/24)+1},(_,i)=>32+i*24)])].sort((a,b)=>a-b);
   const ys=[...new Set([24,canvasHeight-24,start.y,end.y,...boxes.flatMap(box=>[box.y-24,box.y+box.height+24]),...Array.from({length:Math.ceil(canvasHeight/24)},(_,i)=>32+i*24)])].sort((a,b)=>a-b);
   const sx=xs.indexOf(start.x),sy=ys.indexOf(start.y),tx=xs.indexOf(end.x),ty=ys.indexOf(end.y),key=(x,y,d)=>`${x},${y},${d}`;
   const open=[{x:sx,y:sy,d:0,g:0,f:0}],distance=new Map([[key(sx,sy,0),0]]),parent=new Map();let finish;
@@ -87,7 +107,7 @@ export function layoutArchitecture(nodes,edges) {
   for(const rank of new Set(order.map(item=>item.rank))){const entries=order.filter(item=>item.rank===rank);for(let i=0;i<entries.length;i+=2)columns.push(entries.slice(i,i+2));}
   const gap=112,width=Math.min(352,(1184-gap*(columns.length-1))/Math.max(1,columns.length)),left=(1280-(width*columns.length+gap*(columns.length-1)))/2;
   const boxes=columns.flatMap((column,index)=>{
-    const items=column.map(({node,rank})=>{const full=node.label||node.serviceId||node.id,caption=full.length>180?(node.serviceId||node.id):full,lines=wrapArchitectureText(caption,Math.floor((width-36)/13.5));return {node,rank,caption,lines,height:Math.max(200,lines.length*30+112)};});
+    const items=column.map(({node,rank})=>{const full=architectureNodeLabel(node),caption=full.length>180?(node.serviceId||node.id):full,lines=wrapArchitectureText(caption,Math.floor((width-36)/13.5));return {node,rank,caption,lines,height:Math.max(200,lines.length*30+112)};});
     const total=items.reduce((sum,item)=>sum+item.height,0)+(items.length-1)*108;let y=76+(608-total)/2;
     return items.map(item=>{const box={...item,x:left+index*(width+gap),y,width};y+=item.height+108;return box;});
   });
@@ -95,14 +115,14 @@ export function layoutArchitecture(nodes,edges) {
   return routeArchitecture(boxes,edges);
 }
 
-function routeArchitecture(boxes,edges,canvasHeight=720) {
+function routeArchitecture(boxes,edges,canvasHeight=720,canvasWidth=1280) {
   const byId=new Map(boxes.map(box=>[box.node.id,box])),ports=new Map(),requests=[];
   for(const edge of edges){const a=byId.get(edge.source),b=byId.get(edge.target);if(!a||!b)continue;const [sourceSide,targetSide]=sides(a,b),request={edge,a,b,sourceSide,targetSide};requests.push(request);
     for(const [box,side,kind] of [[a,sourceSide,'source'],[b,targetSide,'target']]){const key=`${box.node.id}:${side}`;if(!ports.has(key))ports.set(key,[]);ports.get(key).push({request,kind});}
   }
   for(const entries of ports.values())entries.forEach(({request,kind},i)=>{request[kind]=port(kind==='source'?request.a:request.b,request[`${kind}Side`],i,entries.length);});
   const routed=[],occupied=[];
-  for(const request of requests){const start=stub(request.source,request.sourceSide),end=stub(request.target,request.targetSide),middle=route(start,end,boxes,occupied,canvasHeight);if(!middle)return {boxes,edges:routed,overflow:true};
+  for(const request of requests){const start=stub(request.source,request.sourceSide),end=stub(request.target,request.targetSide),middle=route(start,end,boxes,occupied,canvasHeight,canvasWidth);if(!middle)return {boxes,edges:routed,overflow:true};
     const points=simplify([request.source,...middle,request.target]);const hops=segments(points).flatMap((segment,index)=>occupied.flatMap(other=>{const point=crossing(segment.a,segment.b,other.a,other.b);return point?[{...point,segment:index}]:[];}));
     if(hops.some((hop,index)=>[points[hop.segment],points[hop.segment+1]].some(point=>Math.abs(point.x-hop.x)+Math.abs(point.y-hop.y)<20)||hops.some((other,j)=>j!==index&&other.segment===hop.segment&&Math.abs(other.x-hop.x)+Math.abs(other.y-hop.y)<20)))return {boxes,edges:routed,overflow:true};
     routed.push({edge:request.edge,points,hops});occupied.push(...segments(points));
@@ -113,6 +133,11 @@ function routeArchitecture(boxes,edges,canvasHeight=720) {
 // The presentation is a single high-level view; the report keeps the detailed layouts.
 // Functional lanes come from connected components, never from invented network scopes.
 export function architectureOverview(nodes,edges) {
+  const physical=nodes.length&&nodes.every(node=>node.componentId)?physicalOverview(nodes,edges):null;
+  return physical||legacyOverview(nodes,edges);
+}
+
+function legacyOverview(nodes,edges) {
   const ordered=architectureOrder(nodes,edges).map(item=>item.node),byId=new Map(nodes.map(node=>[node.id,node]));
   const adjacent=new Map(nodes.map(node=>[node.id,new Set()]));
   for(const edge of edges){adjacent.get(edge.source)?.add(edge.target);adjacent.get(edge.target)?.add(edge.source);}
@@ -122,20 +147,45 @@ export function architectureOverview(nodes,edges) {
     groups.push(ordered.filter(item=>members.has(item.id)));
   }
   groups.sort((a,b)=>Number(b.some(node=>['aidp','lakehouse','oac'].includes(node.serviceId)))-Number(a.some(node=>['aidp','lakehouse','oac'].includes(node.serviceId))));
-  const columns=Math.min(3,Math.max(1,...groups.map(group=>group.length))),rowCount=groups.reduce((sum,group)=>sum+Math.ceil(group.length/columns),0);
-  const groupGap=Math.min(56,160/Math.max(1,groups.length-1)),columnWidth=1232/columns,rowHeight=(720-groupGap*Math.max(0,groups.length-1))/Math.max(1,rowCount),width=Math.min(280,columnWidth-96),boxes=[],zones=[];let row=0;
+  const columns=Math.min(5,Math.max(1,...groups.map(group=>group.length))),rowCount=groups.reduce((sum,group)=>sum+Math.ceil(group.length/columns),0);
+  const canvasWidth=Math.max(1280,columns*376+48),contentWidth=canvasWidth-48;
+  const groupGap=Math.min(56,160/Math.max(1,groups.length-1)),columnWidth=contentWidth/columns,rowHeight=334,width=Math.min(280,columnWidth-96),boxes=[],zones=[];let row=0;
+  const canvasHeight=240+rowCount*rowHeight+groupGap*Math.max(0,groups.length-1);
   for(const [groupIndex,group] of groups.entries()){const rows=Math.ceil(group.length/columns),top=144+row*rowHeight+groupIndex*groupGap,height=rows*rowHeight;
-    zones.push({x:24,y:top,width:1232,height,label:group.some(node=>['aidp','lakehouse','oac'].includes(node.serviceId))?'Flujo de datos':'Aplicaciones e IA'});
+    zones.push({x:24,y:top,width:contentWidth,height,label:group.some(node=>['aidp','lakehouse','oac'].includes(node.serviceId))?'Flujo de datos':'Aplicaciones e IA'});
     group.forEach((node,index)=>{const x=24+(index%columns)*columnWidth+(columnWidth-width)/2;
       const boxHeight=Math.min(200,rowHeight*.6),iconSize=Math.min(68,boxHeight/3);
-      const label=node.label||node.serviceId||node.id,caption=label.length>120||boxHeight<120?(node.serviceId||node.id):label;
-      let fontSize=Math.min(26,Math.max(12,boxHeight/6.5)),lines;
+      const label=architectureNodeLabel(node),caption=label.length>120||boxHeight<120?(node.serviceId||node.id):label;
+      let fontSize=Math.min(20,Math.max(12,boxHeight/6.5)),lines;
       do{lines=wrapArchitectureText(caption,Math.floor((width-32)/(fontSize*.55)));if(iconSize+32+fontSize+(lines.length-1)*fontSize*1.15<=boxHeight||fontSize<=12)break;fontSize-=2;}while(true);
       boxes.push({node,x,y:top+Math.floor(index/columns)*rowHeight+70+(rowHeight-70-boxHeight)/2,width,height:boxHeight,caption,lines,fontSize,iconSize});
     });row+=rows;
   }
-  const layout=routeArchitecture(boxes,edges,960);
-  return {...layout,nodes,overview:true,zones,columns,height:960};
+  const layout=routeArchitecture(boxes,edges,canvasHeight,canvasWidth);
+  return {...layout,nodes,overview:true,zones,columns,width:canvasWidth,height:canvasHeight};
+}
+
+/** Rank the primary declared traffic; responses/administration retain their own return routes. */
+function physicalOverview(nodes,edges) {
+  const data=edges.filter(edge=>edge.kind==='data-flow');
+  const primary=data.length?data:edges.filter(edge=>edge.kind==='request');
+  const ordered=architectureOrder(nodes,primary),ranks=[...new Set(ordered.map(item=>item.rank))];
+  const columns=Math.max(1,ranks.length),canvasWidth=Math.max(1280,columns*232+48),contentWidth=canvasWidth-48,columnWidth=contentWidth/columns,width=168;
+  const rows=Math.max(...ranks.map(rank=>ordered.filter(item=>item.rank===rank).length));
+  // Cycles share a lane. Leave room between stacked cards for both directed stubs.
+  const contentHeight=Math.max(320,rows*232),canvasHeight=contentHeight+232;
+  const rowHeight=contentHeight/rows,height=Math.min(160,rowHeight-72),boxes=[];
+  for(const [index,rank] of ranks.entries()){
+    const entries=ordered.filter(item=>item.rank===rank),top=156+(contentHeight-entries.length*rowHeight)/2;
+    entries.forEach(({node},row)=>{
+      const caption=architectureNodeLabel(node),fontSize=16,iconSize=Math.min(52,height*.44);
+      boxes.push({node,rank,x:24+index*columnWidth+(columnWidth-width)/2,y:top+row*rowHeight+(rowHeight-height)/2,
+        width,height,caption,lines:wrapArchitectureText(caption,Math.max(10,Math.floor((width-24)/(fontSize*.55)))),fontSize,iconSize});
+    });
+  }
+  const layout=routeArchitecture(boxes,edges,canvasHeight,canvasWidth);
+  if(layout.overflow)return null;
+  return {...layout,nodes,overview:true,physical:true,zones:[{x:24,y:124,width:contentWidth,height:canvasHeight-164,label:'Arquitectura de la solución'}],columns,width:canvasWidth,height:canvasHeight};
 }
 
 // If a dense page cannot preserve routing clearance, split its actual relationships.
