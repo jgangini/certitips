@@ -1,4 +1,4 @@
-import { t, siteBase, prepareLocale } from "./i18n.js?v=b3b939609c94";
+import { t, siteBase, prepareLocale } from "./i18n.js?v=2e73772e0e66";
 
 let navigate;
 export function navigateSite(url, options) { return navigate ? navigate(url, options) : Promise.resolve(false); }
@@ -11,10 +11,11 @@ function supportedURL(value) {
 }
 async function pageModules(doc) {
   const mounts = [];
-  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=b3b939609c94')).mountQuiz);
-  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=b3b939609c94')).mountTube);
-  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=b3b939609c94')).mountGraphPilot);
-  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=b3b939609c94')).mountSearch);
+  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=2e73772e0e66')).mountQuiz);
+  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=2e73772e0e66')).mountTube);
+  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=2e73772e0e66')).mountGraphPilot);
+  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=2e73772e0e66')).mountSearch);
+  if (doc.querySelector('[data-certirss]')) mounts.push((await import('../certirss/certirss.js?v=2e73772e0e66')).mountRss);
   return mounts;
 }
 async function stylesFor(doc, signal) {
@@ -43,6 +44,7 @@ function staticChatLabels(fresh) {
   for (const selector of ['[data-certichat] .certichat-heading', '[data-chat-confirm]', '[data-chat-clear-error-message]']) {
     const live = document.querySelector(selector), next = fresh.querySelector(selector);
     if (!live || !next) continue;
+    live.querySelector('[data-chat-module-icon]')?.replaceChildren();
     const left = document.createTreeWalker(live, NodeFilter.SHOW_TEXT), right = fresh.createTreeWalker(next, NodeFilter.SHOW_TEXT);
     let a, b; while ((a = left.nextNode()) && (b = right.nextNode())) a.nodeValue = b.nodeValue;
     const elements = [live, ...live.querySelectorAll('*')], sources = [next, ...next.querySelectorAll('*')];
@@ -56,10 +58,14 @@ function pageMetadata(fresh) {
   document.head.querySelectorAll(selector).forEach(node => node.remove());
   document.head.append(...fresh.head.querySelectorAll(selector));
 }
-// Only same-language video changes retain the playlist and shared page shell.
-function tubeURL(url) {
-  return document.querySelector('[data-tube-player]') && url.pathname.startsWith(`${siteBase}${document.body.dataset.locale}/certitube/`);
+// Same-language readers retain their navigation list and shared chat instance.
+function readerModule(url) {
+  const prefix = `${siteBase}${document.body.dataset.locale}/`;
+  if (document.querySelector('[data-tube-player]') && url.pathname.startsWith(`${prefix}certitube/`)) return 'certitube';
+  if (document.querySelector('[data-certirss]') && url.pathname.startsWith(`${prefix}certirss/`)) return 'certirss';
+  return null;
 }
+
 function tubeScroll() {
   return ['.tube-videos ol', '.tube-browse', '#main'].map(selector => document.querySelector(selector)?.scrollTop || 0);
 }
@@ -104,14 +110,14 @@ export function installPageNavigation(mountSite) {
   };
   navigate = async (value, options = {}) => {
     const target = supportedURL(value);
-    if (!target || !enabled && !tubeURL(target)) return false;
+    if (!target || !enabled && !readerModule(target)) return false;
     request?.abort();
     if (target.pathname === currentURL.pathname && target.search === currentURL.search) {
       if (target.hash !== location.hash) location.hash = target.hash;
       else if (!target.hash) scrollTo(0, 0);
       currentURL = new URL(location.href); return true;
     }
-    const partial = Boolean(tubeURL(target));
+    const reader = readerModule(target), partial = Boolean(reader);
     if (partial) history.scrollRestoration = 'manual';
     const operation = request = new AbortController();
     const signal = operation.signal; let timedOut = false;
@@ -134,11 +140,11 @@ export function installPageNavigation(mountSite) {
       if (signal.aborted) throw new DOMException('Navigation canceled', 'AbortError');
       if (options.history !== 'pop') { clearTimeout(scrollTimer); remember(); }
       let retainPlaylist;
-      if (partial && fresh.querySelector('[data-tube-player]') && fresh.body.dataset.locale === document.body.dataset.locale) {
-        const { replaceTube } = await import('../certitube/certitube.js?v=b3b939609c94');
+      if (partial && fresh.querySelector(reader === 'certitube' ? '[data-tube-player]' : '[data-certirss]') && fresh.body.dataset.locale === document.body.dataset.locale) {
+        const controller = reader === 'certitube' ? await import('../certitube/certitube.js?v=2e73772e0e66') : await import('../certirss/certirss.js?v=2e73772e0e66');
         if (signal.aborted) throw new DOMException('Navigation canceled', 'AbortError');
         viewScope.abort();
-        retainPlaylist = replaceTube(fresh);
+        retainPlaylist = (controller.replaceTube || controller.replaceRss)(fresh);
         Object.assign(document.body.dataset, fresh.body.dataset);
         for (const link of document.querySelectorAll('[data-language-link]')) link.href = fresh.querySelector(`[data-language-link="${link.dataset.languageLink}"]`).href;
         pageMetadata(fresh);
@@ -170,7 +176,7 @@ export function installPageNavigation(mountSite) {
     const link = event.composedPath().find(node => node.matches?.('a[href]'));
     if (!link || link.hasAttribute('download') || link.target && link.target.toLowerCase() !== '_self') return;
     const target = supportedURL(link.href);
-    if (!target || !enabled && !tubeURL(target)) return;
+    if (!target || !enabled && !readerModule(target)) return;
     if (target.pathname === currentURL.pathname && target.search === currentURL.search) {
       if (!target.hash) { event.preventDefault(); request?.abort(); history.replaceState(history.state, '', target); currentURL = new URL(target); scrollTo(0, 0); }
       return;
@@ -179,7 +185,7 @@ export function installPageNavigation(mountSite) {
     void navigate(target, { source: 'link' }).then(moved => { if (!moved) location.assign(target); }).catch(() => {});
   });
   window.addEventListener('popstate', event => {
-    if (!enabled && !tubeURL(new URL(location.href))) return;
+    if (!enabled && !readerModule(new URL(location.href))) return;
     clearTimeout(scrollTimer);
     if (location.pathname === currentURL.pathname && location.search === currentURL.search) {
       currentURL = new URL(location.href);
@@ -189,5 +195,5 @@ export function installPageNavigation(mountSite) {
     }
     void navigate(location.href, { history: 'pop', source: 'history', scroll: event.state?.certitipsPage?.scroll, tubeScroll: event.state?.certitipsPage?.tubeScroll }).then(moved => { if (!moved) location.reload(); }).catch(() => history.replaceState(history.state, '', currentURL));
   });
-  document.addEventListener('scroll', () => { if ((enabled || tubeURL(currentURL)) && !request) { clearTimeout(scrollTimer); scrollTimer = setTimeout(remember, 120); } }, { passive: true, capture: true });
+  document.addEventListener('scroll', () => { if ((enabled || readerModule(currentURL)) && !request) { clearTimeout(scrollTimer); scrollTimer = setTimeout(remember, 120); } }, { passive: true, capture: true });
 }

@@ -1,4 +1,4 @@
-import * as THREE from '../../vendor/three/three.module.js?v=b3b939609c94';
+import * as THREE from '../../vendor/three/three.module.js?v=2e73772e0e66';
 
 export function pilotWorldPixel(point, camera, height) {
   const view = camera.matrixWorldInverse.elements;

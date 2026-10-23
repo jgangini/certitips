@@ -1,6 +1,6 @@
-import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=b3b939609c94";
-import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=b3b939609c94";
-import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=b3b939609c94";
+import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=2e73772e0e66";
+import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=2e73772e0e66";
+import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=2e73772e0e66";
 
 function nextPresentationSlide(doc) {
   const slides = [...doc.querySelectorAll('#diagram-viewer[open].is-presenting .diagram-presentation-nav button[data-slide-number][data-source-id]')];

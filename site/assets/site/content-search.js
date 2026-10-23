@@ -1,5 +1,5 @@
-import { sourcePath } from "../certichat/trace.js?v=b3b939609c94";
-import { locale, language } from './i18n.js?v=b3b939609c94';
+import { sourcePath } from "../certichat/trace.js?v=2e73772e0e66";
+import { locale, language } from './i18n.js?v=2e73772e0e66';
 
 const normalize = value => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const words = value => new Set(normalize(value).split(/\s+/).filter(Boolean));
@@ -44,7 +44,7 @@ export function searchContent(entries, query) {
   // One useful section per page keeps repeated chapter/page titles out of the result list.
   const pages = new Set();
   return matches.filter(({ entry }) => {
-    const page = entry.url.split("#")[0];
+    const page = entry.kind === "rss" && /#novedades\//.test(entry.url) ? entry.url : entry.url.split("#")[0];
     if (pages.has(page)) return false;
     pages.add(page); return true;
   }).slice(0, 50).map(({ entry }) => entry);
@@ -52,12 +52,12 @@ export function searchContent(entries, query) {
 
 export function corpusSearchEntries(corpus, siteRoot) {
   if (corpus?.schemaVersion !== 1 || !Array.isArray(corpus.documents) || corpus.documents.length > 10000) throw new Error("Invalid search corpus");
-  const videoPrefix = `${new URL(siteRoot).pathname}certitube/`;
+  const videoPrefix = `${new URL(siteRoot).pathname}certitube/`, rssPrefix = `${new URL(siteRoot).pathname}certirss/`;
   return corpus.documents.flatMap(doc => {
     if (typeof doc?.title !== "string" || doc.title.length > 1500 || typeof doc.text !== "string" || doc.text.length > 100000) return [];
     const url = sourcePath(doc.url, siteRoot);
     if (!url) return [];
-    return [indexSearchEntry({ title: doc.title, heading: doc.title.split(" · ").at(-1), terms: doc.title, text: doc.text, url, kind: url.startsWith(videoPrefix) ? "video" : "topic" })];
+    return [indexSearchEntry({ title: doc.title, heading: doc.title.split(" · ").at(-1), terms: doc.title, text: doc.text, url, kind: url.startsWith(videoPrefix) ? "video" : url.startsWith(rssPrefix) ? "rss" : "topic" })];
   });
 }
 
@@ -78,4 +78,15 @@ export function searchExcerpt(text, query) {
   const match = [...line.matchAll(/[\p{L}\p{N}]+/gu)].find(token => terms.some(term => wordScore(term, words(token[0]))));
   const start = Math.max(0, (match?.index ?? 0) - 50);
   return `${start ? "…" : ""}${line.slice(start, start + 180)}${line.length > start + 180 ? "…" : ""}`;
+}
+
+// Keep both catalog and corpus matches literal and rebuild marks when the query changes.
+export function highlightSearch(node, text, query) {
+  const parts = []; let end = 0;
+  for (const match of searchMatches(text, query)) {
+    parts.push(document.createTextNode(text.slice(end, match.start)));
+    const mark = document.createElement('mark'); mark.textContent = text.slice(match.start, match.end);
+    parts.push(mark); end = match.end;
+  }
+  node.replaceChildren(...parts, document.createTextNode(text.slice(end)));
 }

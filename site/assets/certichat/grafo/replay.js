@@ -1,4 +1,4 @@
-import { collectionIds, pilotNodeCollections } from './state.js?v=b3b939609c94';
+import { collectionIds, pilotNodeCollections } from './state.js?v=2e73772e0e66';
 
 // Show the complete spider from the first frame; on exit retract before fading the core.
 export function pilotSpiderEnvelope(elapsed, closing = false) {

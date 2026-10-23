@@ -1,0 +1,208 @@
+{
+  "description": "Portadas estándar editoriales de CertiRSS; no son imágenes del sitio de origen. Iconos Lucide existentes, avisos ISC AND MIT en LICENSE.txt e icons-manifest.json.",
+  "covers": [
+    {
+      "resource": "agent-factory-lab",
+      "image": "data/es/certirss/agent-factory-lab/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-network.svg",
+      "sha256": "3646751e4baf173fc7fed6044789fe22b49fddaf71dbc950c7518b2b5c5c54b2"
+    },
+    {
+      "resource": "agentic-guide",
+      "image": "data/es/certirss/agentic-guide/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-file-check.svg",
+      "sha256": "0b5a4d3388216138ea0aaa3cbb95a8c50c1177427e8f00728defff440d53e2d9"
+    },
+    {
+      "resource": "agentic-mylearn",
+      "image": "data/es/certirss/agentic-mylearn/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-file-check.svg",
+      "sha256": "7011a61bb03872796b05ba0570b3288c5a22e57515d02baa5f8f0fd832b5f495"
+    },
+    {
+      "resource": "ai-guide",
+      "image": "data/es/certirss/ai-guide/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-file-check.svg",
+      "sha256": "0b5a4d3388216138ea0aaa3cbb95a8c50c1177427e8f00728defff440d53e2d9"
+    },
+    {
+      "resource": "ai-solutions",
+      "image": "data/es/certirss/ai-solutions/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-list-tree.svg",
+      "sha256": "1fe20f3d9ae1debded0c9650f09a61546d70f80430c3e165a04d3378a641ba7d"
+    },
+    {
+      "resource": "autonomous-doc",
+      "image": "data/es/certirss/autonomous-doc/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-book-open.svg",
+      "sha256": "c8e7ac61eca4153d8527c0c5c79955795906ebdbbd17723b4b5fe67895453c35"
+    },
+    {
+      "resource": "certitube",
+      "image": "data/es/certirss/certitube/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-user-round.svg",
+      "sha256": "fe0303c167c5891f270fd1c4594ff93548301608f4446359763c3074820e4526"
+    },
+    {
+      "resource": "data-science-lab",
+      "image": "data/es/certirss/data-science-lab/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-network.svg",
+      "sha256": "3646751e4baf173fc7fed6044789fe22b49fddaf71dbc950c7518b2b5c5c54b2"
+    },
+    {
+      "resource": "database-doc",
+      "image": "data/es/certirss/database-doc/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-book-open.svg",
+      "sha256": "c8e7ac61eca4153d8527c0c5c79955795906ebdbbd17723b4b5fe67895453c35"
+    },
+    {
+      "resource": "database-examples",
+      "image": "data/es/certirss/database-examples/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-list-tree.svg",
+      "sha256": "1fe20f3d9ae1debded0c9650f09a61546d70f80430c3e165a04d3378a641ba7d"
+    },
+    {
+      "resource": "database-foundations",
+      "image": "data/es/certirss/database-foundations/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-file-check.svg",
+      "sha256": "7011a61bb03872796b05ba0570b3288c5a22e57515d02baa5f8f0fd832b5f495"
+    },
+    {
+      "resource": "developer-hub",
+      "image": "data/es/certirss/developer-hub/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-list-tree.svg",
+      "sha256": "1fe20f3d9ae1debded0c9650f09a61546d70f80430c3e165a04d3378a641ba7d"
+    },
+    {
+      "resource": "enterprise-ai",
+      "image": "data/es/certirss/enterprise-ai/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-file-check.svg",
+      "sha256": "7011a61bb03872796b05ba0570b3288c5a22e57515d02baa5f8f0fd832b5f495"
+    },
+    {
+      "resource": "foundations-code",
+      "image": "data/es/certirss/foundations-code/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-list-tree.svg",
+      "sha256": "1fe20f3d9ae1debded0c9650f09a61546d70f80430c3e165a04d3378a641ba7d"
+    },
+    {
+      "resource": "genai-doc",
+      "image": "data/es/certirss/genai-doc/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-book-open.svg",
+      "sha256": "c8e7ac61eca4153d8527c0c5c79955795906ebdbbd17723b4b5fe67895453c35"
+    },
+    {
+      "resource": "langchain-doc",
+      "image": "data/es/certirss/langchain-doc/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-book-open.svg",
+      "sha256": "c8e7ac61eca4153d8527c0c5c79955795906ebdbbd17723b4b5fe67895453c35"
+    },
+    {
+      "resource": "langchain-lab",
+      "image": "data/es/certirss/langchain-lab/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-network.svg",
+      "sha256": "3646751e4baf173fc7fed6044789fe22b49fddaf71dbc950c7518b2b5c5c54b2"
+    },
+    {
+      "resource": "mcp-lab",
+      "image": "data/es/certirss/mcp-lab/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-network.svg",
+      "sha256": "3646751e4baf173fc7fed6044789fe22b49fddaf71dbc950c7518b2b5c5c54b2"
+    },
+    {
+      "resource": "memory-codex",
+      "image": "data/es/certirss/memory-codex/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-book-open.svg",
+      "sha256": "c8e7ac61eca4153d8527c0c5c79955795906ebdbbd17723b4b5fe67895453c35"
+    },
+    {
+      "resource": "memory-course",
+      "image": "data/es/certirss/memory-course/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-file-check.svg",
+      "sha256": "865d1ff86c2f53a17663195ee72620406e4bfe06b0dae1a8081aa3afa593afd5"
+    },
+    {
+      "resource": "memory-doc",
+      "image": "data/es/certirss/memory-doc/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-book-open.svg",
+      "sha256": "c8e7ac61eca4153d8527c0c5c79955795906ebdbbd17723b4b5fe67895453c35"
+    },
+    {
+      "resource": "memory-package",
+      "image": "data/es/certirss/memory-package/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-list-tree.svg",
+      "sha256": "ac05493366ce676d02395c49693158da7bb60441386f0cac06607224aab05d69"
+    },
+    {
+      "resource": "no-memory",
+      "image": "data/es/certirss/no-memory/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-user-round.svg",
+      "sha256": "a47e49df481638d491880e98549d12356209c3a9f3d88f69007e6b6e1a293720"
+    },
+    {
+      "resource": "oci-guide",
+      "image": "data/es/certirss/oci-guide/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-file-check.svg",
+      "sha256": "0b5a4d3388216138ea0aaa3cbb95a8c50c1177427e8f00728defff440d53e2d9"
+    },
+    {
+      "resource": "oci-notes",
+      "image": "data/es/certirss/oci-notes/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-book-open.svg",
+      "sha256": "c8e7ac61eca4153d8527c0c5c79955795906ebdbbd17723b4b5fe67895453c35"
+    },
+    {
+      "resource": "oracle-blogs",
+      "image": "data/es/certirss/oracle-blogs/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-book-open.svg",
+      "sha256": "b386940eaf99c9f9dde9c886d7ad6b4f47b1afdac1c7c522d53091696495c28d"
+    },
+    {
+      "resource": "oracle-devs",
+      "image": "data/es/certirss/oracle-devs/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-user-round.svg",
+      "sha256": "a47e49df481638d491880e98549d12356209c3a9f3d88f69007e6b6e1a293720"
+    },
+    {
+      "resource": "oracle-skills",
+      "image": "data/es/certirss/oracle-skills/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-list-tree.svg",
+      "sha256": "1fe20f3d9ae1debded0c9650f09a61546d70f80430c3e165a04d3378a641ba7d"
+    },
+    {
+      "resource": "select-ai",
+      "image": "data/es/certirss/select-ai/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-book-open.svg",
+      "sha256": "c8e7ac61eca4153d8527c0c5c79955795906ebdbbd17723b4b5fe67895453c35"
+    },
+    {
+      "resource": "technology-engineering",
+      "image": "data/es/certirss/technology-engineering/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-list-tree.svg",
+      "sha256": "1fe20f3d9ae1debded0c9650f09a61546d70f80430c3e165a04d3378a641ba7d"
+    },
+    {
+      "resource": "total-recall",
+      "image": "data/es/certirss/total-recall/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-user-round.svg",
+      "sha256": "a47e49df481638d491880e98549d12356209c3a9f3d88f69007e6b6e1a293720"
+    },
+    {
+      "resource": "vector-python",
+      "image": "data/es/certirss/vector-python/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-network.svg",
+      "sha256": "3646751e4baf173fc7fed6044789fe22b49fddaf71dbc950c7518b2b5c5c54b2"
+    },
+    {
+      "resource": "vibe-lab",
+      "image": "data/es/certirss/vibe-lab/img/cover.svg",
+      "icon": "assets/icons/cdmp-diagrams/lucide-network.svg",
+      "sha256": "3646751e4baf173fc7fed6044789fe22b49fddaf71dbc950c7518b2b5c5c54b2"
+    }
+  ],
+  "newsCover": {
+    "image": "assets/certirss/news-cover.svg",
+    "source": "assets/icons/cdmp-diagrams/lucide-network.svg",
+    "purpose": "Ilustración editorial estándar para novedades sin imagen verificada."
+  }
+}

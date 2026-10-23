@@ -1,0 +1,69 @@
+body[data-page^="certirss"] #main { padding-top:20px; padding-bottom:20px; }
+.rss-app { width:100%; max-width:var(--content-width); min-width:0; margin:0 auto; overflow-wrap:anywhere; }
+.rss-app [hidden] { display:none!important; }
+.rss-columns { display:grid; grid-template-columns:minmax(0,1fr) clamp(300px,30%,360px); gap:24px; align-items:start; }
+.rss-detail,.rss-publications { min-width:0; border:1px solid var(--line); border-top:4px solid var(--red); border-radius:var(--radius); background:var(--white); box-shadow:var(--panel-shadow); overflow:hidden; }
+.rss-detail { display:flex; flex-direction:column; }
+.rss-detail:focus { outline:none; }
+.rss-detail > header { margin-bottom:0; flex-shrink:0; }
+.rss-detail h1 { margin:0; font-size:1.45rem; line-height:1.05; }
+.rss-origin { display:block; }
+.rss-publications { align-self:stretch; contain:size; min-height:0; display:flex; flex-direction:column; }
+.rss-publications > header { flex-shrink:0; }
+.rss-publications .certichat-brand strong { display:block; font-size:1.45rem; line-height:1.05; }
+.rss-controls { flex-shrink:0; margin:0; padding:0 8px 8px; }
+.rss-search.search-heading { display:flex; align-items:center; gap:8px; width:100%; height:38px; min-height:38px; padding:4px 8px; border:1px solid var(--line); border-radius:6px; background:var(--white); }
+.rss-search.search-heading input { flex:1; min-width:0; width:100%; height:28px; min-height:0; margin:0; padding:0; border:0; background:transparent; color:var(--ink); font:inherit; font-size:.8rem; line-height:1.2; }
+.rss-search > svg { flex-shrink:0; width:17px; height:17px; }
+.rss-search.search-heading button { flex-shrink:0; width:26px; height:26px; min-height:0; padding:4px; }
+.rss-search:focus-within { outline:2px solid var(--red); outline-offset:-2px; }
+.rss-search input:focus-visible { outline:0; }
+.rss-publications [role="tabpanel"] { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; }
+.rss-items { flex:1; min-height:0; list-style:none; margin:0; padding:8px; overflow:auto; overflow-anchor:none; }
+.rss-items li { margin:0 0 8px; padding:0; }
+.rss-items li > a { display:flex; gap:10px; align-items:center; padding:8px; border:1px solid transparent; border-radius:7px; background:var(--hover); color:var(--ink); text-decoration:none; }
+.rss-items a:hover,.rss-items a:focus-visible { border-color:var(--red); color:var(--ink); }
+.rss-items li > a > :last-child { min-width:0; flex:1; }
+.rss-items .rss-current { position:relative; height:5px; min-height:5px; border-radius:2px; background:var(--red); }
+.rss-items .rss-current > * { display:none; }
+.rss-cover { display:grid; place-items:center; flex-shrink:0; aspect-ratio:16/9; background:linear-gradient(135deg,var(--hover),var(--white)); border-block:1px solid var(--line); }
+.rss-cover img { width:64px; height:64px; opacity:.45; }
+.rss-items .rss-cover { width:40%; min-width:80px; border:0; border-radius:4px; }
+.rss-items .rss-cover img { width:24px; height:24px; }
+.rss-items h2 { margin:0; font-size:.8rem; line-height:1.35; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; }
+.rss-items small { display:block; margin-top:5px; font-size:.7rem; color:var(--muted); }
+.rss-article-content { display:flex; flex:1; flex-direction:column; min-height:0; overflow:auto; }
+.rss-article-content > .rss-cover { height:clamp(110px,20dvh,190px); aspect-ratio:auto; }
+.rss-summary.tube-summary { flex:1 1 0; min-height:0; max-height:none; overflow:auto; mask-image:none; }
+.rss-article-content > .rss-cover, .rss-article-content > .tube-resources { flex-shrink:0; }
+.rss-article-content > .tube-resources { flex:0 0 auto; margin:0; }
+.rss-article-content > .rss-cover { border-bottom:0; overflow:hidden; grid-template-rows:minmax(0,1fr); }
+.rss-tabs.tube-chapters { flex-shrink:0; padding:6px 8px; background:var(--white); }
+.rss-tabs [role="tab"] { padding:3px 6px; font-family:inherit; font-weight:400; cursor:pointer; }
+.rss-notice { margin:0; padding:0 12px 8px; font-size:.75rem; color:var(--muted); }
+.rss-source-status { padding-left:16px; }
+.rss-warning { font-weight:600; }
+.rss-app :focus-visible { outline:2px solid var(--red); outline-offset:2px; }
+.rss-article-content,.rss-items { scrollbar-color:var(--scrollbar) transparent; scrollbar-width:thin; }
+.rss-footer.chat-graph-footer { min-height:32px; }
+.rss-footer .chat-graph-meta { grid-template-columns:repeat(2,max-content); }
+[data-rss-article-heading] { display:flex; align-items:center; gap:10px; }
+[data-rss-article-heading] > div { min-width:0; }
+.rss-detail .certichat-brand small { text-transform:uppercase; }
+.rss-items li > a { position:relative; }
+.rss-items .tube-video-number { position:absolute; top:12px; left:12px; pointer-events:none; }
+.rss-items [data-rss-description] { display:none; }
+.rss-cover.rss-artwork img, .rss-items .rss-cover.rss-artwork img { width:100%; height:100%; object-fit:contain; min-height:0; min-width:0; opacity:1; }
+
+@media(min-width:801px) { .rss-detail { height:var(--panel-height); } }
+@media(min-width:1001px) { body[data-page^="certirss"]:has(.certichat:not(.is-beside-content) [data-chat-open]:not([hidden])) .rss-publications { max-height:calc(var(--panel-height) + 20px - 2 * var(--layout-gap) - var(--chat-launcher-size)); } }
+@media(max-width:1000px) { .rss-columns { grid-template-columns:minmax(0,1fr); gap:16px; } .rss-publications { contain:none; height:60dvh; min-height:300px; } .rss-article-content { height:65dvh; max-height:65dvh; flex:none; } }
+@media(max-width:800px) { body[data-page^="certirss"] #main { padding:0 0 calc(2 * var(--layout-gap) + var(--chat-launcher-size)); } .rss-columns { gap:0; } .rss-detail,.rss-publications { border:0; border-radius:0; box-shadow:none; } .rss-detail { border-top:4px solid var(--red); } .rss-publications { border-top:1px solid var(--line); } .rss-detail h1 { font-size:1.25rem; } }
+
+@container (max-width:430px) { .rss-footer .chat-graph-meta { grid-template-columns:1fr; } }
+
+.rss-footer .chat-graph-meta { flex:1; min-width:0; width:auto; }
+.rss-footer dd { white-space:normal; overflow-wrap:anywhere; }
+.rss-subscribe { flex-shrink:0; display:inline-flex; align-items:center; align-self:stretch; gap:5px; padding:2px 8px; margin-left:auto; border-left:1px solid var(--line); color:var(--ink); font-size:12px; }
+.rss-subscribe svg { width:14px; height:14px; }
+[data-rss-health] { margin-left:5px; }

@@ -1,0 +1,300 @@
+import { highlightSearch } from '../site/content-search.js?v=2e73772e0e66';
+import { t, locale } from '../site/i18n.js?v=2e73772e0e66';
+
+const snapshots = new WeakMap();
+
+const normalize = value => String(value).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+const timestamp = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}(?:T.*(?:Z|[+-]\d{2}:\d{2}))?$/.test(value) && Number.isFinite(Date.parse(value));
+
+function sourceRecord(row) {
+  if (!row || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(row.id)) throw new Error('Invalid source ID');
+  if (typeof row.name !== 'string' || row.name.length > 120 || typeof row.error !== 'boolean') throw new Error('Invalid source metadata');
+  if (row.lastSuccessAt !== null && !timestamp(row.lastSuccessAt)) throw new Error('Invalid source date');
+  return { id: row.id, name: row.name, error: row.error, lastSuccessAt: row.lastSuccessAt };
+}
+
+function expandedArticle(row) {
+  if (row.content !== undefined && (typeof row.content !== 'string' || row.content.length > 1200)) throw new Error('Invalid article excerpt');
+  if (row.relatedLinks !== undefined && (!Array.isArray(row.relatedLinks) || row.relatedLinks.length > 6)) throw new Error('Invalid related links');
+  const relatedLinks = (row.relatedLinks || []).map(link => {
+    const related = new URL(link.url);
+    if (related.protocol !== 'https:' || related.username || related.password || typeof link.label !== 'string' || link.label.length > 180) throw new Error('Invalid related link');
+    return { url: related.href, label: link.label };
+  });
+  return { content: row.content || '', relatedLinks };
+}
+
+function translatedArticle(row, language) {
+  const variants = { es: row.editorial, ...row.translations };
+  for (const [key, value] of Object.entries(variants)) {
+    if (value === undefined) continue;
+    if (!['es', 'en', 'pt', 'it'].includes(key) || !value || typeof value.title !== 'string' || value.title.length > 1000 || typeof value.content !== 'string' || value.content.length > 5000) throw new Error('Invalid article translation');
+  }
+  const value = variants[language];
+  return value ? { title: value.title, summary: value.content.slice(0, 1000), content: value.content } : {};
+}
+
+function articleRecord(row, ids, urls, language) {
+  const url = new URL(row.url);
+  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) throw new Error('Invalid article URL');
+  if (!ids.has(row.sourceId) || urls.has(url.href)) throw new Error('Invalid article identity');
+  if (![row.title, row.summary, row.sourceName].every(value => typeof value === 'string' && value.length <= 1000)) throw new Error('Invalid article text');
+  if (!timestamp(row.firstSeenAt) || row.publishedAt !== null && !timestamp(row.publishedAt)) throw new Error('Invalid article date');
+  urls.add(url.href);
+  if (typeof row.id !== 'string' || !/^[a-f0-9]{24}$/.test(row.id)) throw new Error('Invalid article ID');
+  return { id: row.id, title: row.title, summary: row.summary, ...expandedArticle(row), ...translatedArticle(row, language), ...articleCover(row), url: url.href, sourceId: row.sourceId, sourceName: row.sourceName, publishedAt: row.publishedAt, firstSeenAt: row.firstSeenAt };
+}
+
+function articleCover(row) {
+  if (!row.cover) return {};
+  const prefix = `/certitips/assets/certirss/articles/${row.id}/img/cover-`;
+  if (row.cover.wide !== prefix + 'wide.webp' || row.cover.thumbnail !== prefix + 'thumb.webp' || typeof row.cover.alt !== 'string' || row.cover.alt.length > 240) throw new Error('Invalid article cover');
+  return { cover: { wide: row.cover.wide, thumbnail: row.cover.thumbnail, alt: row.cover.alt } };
+}
+
+/** Proyecta datos remotos no confiables a campos conocidos; rechaza toda instantánea incompatible. */
+export function validateSnapshot(data, language = locale) {
+  if (data?.version !== 1 || !Array.isArray(data.sources) || data.sources.length > 50 || !Array.isArray(data.items) || data.items.length > 1000) throw new Error('Invalid RSS snapshot');
+  if (data.checkedAt !== null && !timestamp(data.checkedAt)) throw new Error('Invalid snapshot date');
+  const sources = data.sources.map(sourceRecord);
+  const ids = new Set(sources.map(row => row.id)), urls = new Set();
+  if (ids.size !== sources.length) throw new Error('Duplicate sources');
+  return { checkedAt: data.checkedAt, sources, items: data.items.map(row => articleRecord(row, ids, urls, language)) };
+}
+
+function compareArticles(a, b, sort) {
+  if (sort === 'source') return a.sourceName.localeCompare(b.sourceName) || a.title.localeCompare(b.title);
+  if (sort === 'title') return a.title.localeCompare(b.title);
+  const publicationOrder = (a.publishedAt || a.firstSeenAt).localeCompare(b.publishedAt || b.firstSeenAt);
+  return (sort === 'oldest' ? 1 : -1) * publicationOrder;
+}
+
+/** Filtra sin mutar la instantánea y ordena usando publicación o detección explícita. */
+export function selectItems(items, { query = '', source = '', sort = 'newest' } = {}) {
+  const terms = normalize(query).split(/\s+/).filter(Boolean);
+  const matching = items.filter(item => (!source || item.sourceId === source) && terms.every(term => normalize(`${item.title} ${item.summary} ${item.content || ''} ${item.sourceName}`).includes(term)));
+  return matching.sort((a, b) => compareArticles(a, b, sort));
+}
+
+function formatDate(value) {
+  return new Intl.DateTimeFormat(locale, value.length === 10 ? { dateStyle: 'medium', timeZone: 'UTC' } : { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Lima' }).format(new Date(value));
+}
+
+function statusMessage(root, message = '') {
+  const status = root.querySelector('[data-rss-status]');
+  status.textContent = message; status.hidden = !message;
+}
+
+function markCurrent(row, selected, collapse = true) {
+  row.querySelector('a')?.removeAttribute('aria-current');
+  row.classList.toggle('rss-current', selected && collapse);
+  if (selected) { row.setAttribute('aria-current', 'true'); row.setAttribute('aria-label', row.querySelector('h2').textContent); }
+  else { row.removeAttribute('aria-current'); row.removeAttribute('aria-label'); }
+}
+
+function drawLibrary(root, cards, query) {
+  const terms = normalize(query.value).split(/\s+/).filter(Boolean);
+  let count = 0;
+  for (const card of cards) {
+    card.hidden = !terms.every(term => normalize(`${card.querySelector('h2').textContent} ${card.querySelector('[data-rss-description]').textContent} ${card.dataset.source} ${card.dataset.category}`).includes(term));
+    const title = card.querySelector('h2'); highlightSearch(title, title.textContent, query.value);
+    markCurrent(card, card.dataset.rssId === root.dataset.rssSelected, !query.value.trim());
+    if (!card.hidden) count++;
+  }
+  statusMessage(root, count ? '' : t('No hay recursos para estos filtros.'));
+}
+
+function drawSourceStatuses(container, sources) {
+  const warnings = sources.filter(row => row.error || !row.lastSuccessAt || Date.now() - Date.parse(row.lastSuccessAt) > 36 * 3600000);
+  container.textContent = warnings.length ? '⚠' : '';
+  container.hidden = warnings.length === 0;
+  container.classList.toggle('rss-warning', warnings.length > 0);
+  container.title = sources.map(row => `${row.name}: ${row.error ? t('No se pudo actualizar; se conserva la última lectura válida.') : t('Comprobación correcta')}${!row.lastSuccessAt || Date.now() - Date.parse(row.lastSuccessAt) > 36 * 3600000 ? ` · ${t('Información pendiente o con más de 36 horas sin comprobarse.')}` : ''}`).join('\n');
+  container.setAttribute('aria-label', container.title);
+}
+
+function newsDetail(root, item, ordinal) {
+  const heading = root.querySelector('[data-rss-article-heading]'), content = root.querySelector('[data-rss-article-content]');
+  const title = document.createElement('h1'), origin = document.createElement('small');
+  origin.className = 'rss-origin'; origin.textContent = `CERTIRSS${item ? ` · ${item.sourceName}` : ''}`;
+  title.textContent = item ? item.title : t('No hay novedades para estos filtros.'); title.translate = !item;
+  const number = document.createElement('span'), copy = document.createElement('div');
+  number.className = 'tube-video-number tube-player-number'; number.dataset.rssNumber = ''; number.setAttribute('aria-hidden', 'true'); number.textContent = ordinal || '';
+  copy.append(title, origin); heading.replaceChildren(number, copy);
+  content.replaceChildren();
+  if (!item) return;
+  const cover = document.createElement('span'), image = document.createElement('img');
+  cover.className = 'rss-cover rss-artwork'; image.src = item.cover?.wide || root.dataset.rssCover;
+  image.alt = item.cover?.alt || ''; image.width = 1600; image.height = 400; cover.append(image);
+  const body = document.createElement('section'), published = document.createElement('p'), link = document.createElement('a');
+  body.className = 'tube-summary rss-summary rss-detail-body';
+  const summaryHeading = document.createElement('h2'); summaryHeading.textContent = t('Resumen'); body.append(summaryHeading);
+  const label = item.publishedAt ? t('Publicado') : t('Detectado; publicación sin fecha');
+  published.textContent = `${label} · ${formatDate(item.publishedAt || item.firstSeenAt)}`;
+  body.append(published);
+  for (const text of (item.content || item.summary).split(/\n\s*\n/)) {
+    const paragraph = document.createElement('p'); paragraph.textContent = text; paragraph.translate = false; body.append(paragraph);
+  }
+  link.href = item.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = t('Abrir la fuente original');
+  const related = document.createElement('section'), resourceHeading = document.createElement('h2'), links = document.createElement('ul'), row = document.createElement('li');
+  related.className = 'tube-resources'; related.dataset.rssOriginal = ''; resourceHeading.textContent = t('Recursos relacionados'); links.className = 'resource-list';
+  const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg'), use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  icon.setAttribute('viewBox', '0 0 16 16'); icon.setAttribute('aria-hidden', 'true'); use.setAttribute('href', new URL('../icons/resource-link.svg', import.meta.url).href + '#resource-link'); icon.append(use);
+  row.append(icon, link); links.append(row); related.append(resourceHeading, links); content.replaceChildren(cover, body, related);
+}
+
+function newsCard(item, coverURL, selected, ordinal, query) {
+  const row = document.createElement('li'), link = document.createElement('a'), image = document.createElement('img'), cover = document.createElement('span'), copy = document.createElement('span'), title = document.createElement('h2'), date = document.createElement('time');
+  link.href = `#novedades/${item.id}`; link.dataset.rssArticle = item.id;
+  row.dataset.rssId = item.id;
+  cover.className = 'rss-cover rss-artwork'; image.src = item.cover?.thumbnail || coverURL; image.alt = item.cover?.alt || ''; image.width = 480; image.height = 270; cover.append(image);
+  highlightSearch(title, item.title, query); title.translate = false;
+  date.className = 'tube-video-date'; date.dateTime = (item.publishedAt || item.firstSeenAt).slice(0, 10); date.textContent = date.dateTime;
+  const number = document.createElement('span'); number.className = 'tube-video-number'; number.setAttribute('aria-hidden', 'true'); number.textContent = ordinal;
+  copy.append(title, date); link.append(cover, number, copy); row.append(link); markCurrent(row, item.id === selected, !query.trim()); return row;
+}
+
+/** Preserve the first visible recommendation while its selected row becomes the same divider as CertiTube. */
+function keepListPosition(list, selected, update) {
+  const bounds = list.getBoundingClientRect(), previous = list.scrollTop;
+  const anchor = [...list.children].find(row => !row.hidden && !row.classList.contains('rss-current') && row.dataset.rssId !== selected && row.getBoundingClientRect().bottom > bounds.top);
+  const top = anchor?.getBoundingClientRect().top, id = anchor?.dataset.rssId;
+  update();
+  const replacement = [...list.children].find(row => row.dataset.rssId === id);
+  list.scrollTop = replacement ? list.scrollTop + replacement.getBoundingClientRect().top - top : previous;
+}
+
+function drawNews(root, snapshot, query) {
+  if (!snapshot) return;
+  const find = name => root.querySelector(`[data-rss-${name}]`);
+  const ordinals = new Map(selectItems(snapshot.items, {}).map((item, index) => [item.id, index + 1]));
+  const items = selectItems(snapshot.items, { query: query.value });
+  const requested = location.hash.split('/')[1], selected = items.find(item => item.id === requested) || items[0];
+  if (selected && requested && selected.id !== requested) history.replaceState(history.state, '', `#novedades/${selected.id}`);
+  const list = find('items');
+  keepListPosition(list, selected?.id, () => list.replaceChildren(...items.map(item => newsCard(item, root.dataset.rssCover, selected?.id, ordinals.get(item.id), query.value))));
+  newsDetail(root, selected, ordinals.get(selected?.id));
+  statusMessage(root, !snapshot.sources.length ? t('Todavía no hay fuentes disponibles.') : !items.length ? t('No hay novedades para estos filtros.') : '');
+  find('updated').textContent = snapshot.checkedAt ? new Intl.DateTimeFormat(locale, { timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).format(new Date(snapshot.checkedAt)).replaceAll('/', '-').replace(',', '') : t('Pendiente de la primera actualización.');
+  find('current-source').textContent = selected?.sourceName || 'CertiRSS';
+  drawSourceStatuses(find('health'), snapshot.sources);
+}
+
+/** Lee una instantánea pública acotada sin credenciales y la valida antes de exponerla a la vista. */
+export async function readSnapshot(url, signal) {
+  const response = await fetch(url, { signal, cache: 'no-cache', credentials: 'omit' });
+  if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) throw new Error('RSS unavailable');
+  const text = await response.text();
+  if (text.length > 8 * 1024 * 1024) throw new Error('RSS too large');
+  const data = JSON.parse(text);
+  // La proyección editorial sólo corresponde al mismo extracto original; un cambio invalida la traducción estática.
+  try {
+    const base = document.body.dataset.base;
+    const response = await fetch(`${base}assets/certirss/editorial.json`, { signal, credentials: 'omit' });
+    if (!response.ok) throw new Error('Editorial unavailable');
+    const raw = await response.text();
+    if (raw.length > 8 * 1024 * 1024) throw new Error('Editorial too large');
+    const editorial = JSON.parse(raw);
+    if (editorial.version !== 1 || !Array.isArray(editorial.items) || editorial.items.length > 1000) throw new Error('Editorial incompatible');
+    const records = new Map(editorial.items.map(row => [row.id, row]));
+    data.items = await Promise.all(data.items.map(async item => {
+      const row = records.get(item.id);
+      if (!row) return item;
+      const bytes = new TextEncoder().encode(JSON.stringify([item.url, item.title, item.content || item.summary]));
+      const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(byte => byte.toString(16).padStart(2, '0')).join('');
+      if (hash !== row.sourceHash && hash !== row.displayHash) return item;
+      return { ...item, ...articleCover(row), translations: { ...item.translations, [locale]: { title: row.title, content: row.content } } };
+    }));
+  } catch { /* Conservar la lectura remota cuando la ficha publicada no está disponible. */ }
+  return validateSnapshot(data);
+}
+
+function mountTabs(tabs, setView, signal) {
+  for (const tab of tabs) {
+    tab.addEventListener('click', () => { history.replaceState(history.state, '', `#${tab.dataset.rssTab}`); setView(tab.dataset.rssTab); }, { signal });
+    tab.addEventListener('keydown', event => {
+      if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const next = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs.at(-1) : tabs[(tabs.indexOf(tab) + 1) % tabs.length];
+      next.focus(); next.click();
+    }, { signal });
+  }
+}
+
+
+function activateView(root, tabs, view) {
+  for (const tab of tabs) {
+    const selected = tab.dataset.rssTab === view;
+    tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1;
+  }
+  root.querySelector('#rss-library').hidden = view !== 'biblioteca';
+  root.querySelector('#rss-news').hidden = view !== 'novedades';
+  root.querySelector('[data-rss-news-footer]').hidden = view !== 'novedades';
+  root.querySelector('[data-rss-editorial-footer]').hidden = view !== 'biblioteca';
+}
+
+async function loadNews(root, signal) {
+  const refresh = root.querySelector('[data-rss-refresh]'), items = root.querySelector('[data-rss-items]');
+  refresh.disabled = true; items.setAttribute('aria-busy', 'true');
+  try {
+    return await readSnapshot(root.dataset.rssUrl, AbortSignal.any([signal, AbortSignal.timeout(15000)]));
+  } finally {
+    if (!signal.aborted) { refresh.disabled = false; items.removeAttribute('aria-busy'); }
+  }
+}
+
+/** Monta pestañas accesibles y lecturas cancelables; los enlaces externos se muestran como texto inerte. */
+export function mountRss(signal) {
+  const root = document.querySelector('[data-certirss]');
+  if (!root || root.dataset.mounted) return;
+  root.dataset.mounted = 'true';
+  const find = name => root.querySelector(`[data-rss-${name}]`);
+  const query = find('query'), refresh = find('refresh');
+  const cards = [...root.querySelectorAll('[data-rss-resource]')], tabs = [...root.querySelectorAll('[data-rss-tab]')];
+  let view, snapshot = snapshots.get(root), request;
+  const editorial = ['article-heading', 'article-content'].map(name => find(name).cloneNode(true));
+  const renderLibrary = () => {
+    for (const node of editorial) find(node.hasAttribute('data-rss-article-heading') ? 'article-heading' : 'article-content').replaceChildren(...[...node.childNodes].map(child => child.cloneNode(true)));
+    drawLibrary(root, cards, query);
+  };
+  const renderNews = () => drawNews(root, snapshot, query);
+  const render = () => view === 'biblioteca' ? renderLibrary() : renderNews();
+  const load = async () => {
+    request?.abort(); request = new AbortController();
+    const pending = request, combined = AbortSignal.any([signal, pending.signal]);
+    if (view === 'novedades') statusMessage(root, t('Cargando novedades…'));
+    try {
+      const data = await loadNews(root, combined);
+      if (combined.aborted) return;
+      snapshot = data; snapshots.set(root, data);
+      if (view === 'novedades') renderNews();
+    } catch (error) {
+      if (!signal.aborted && error.name !== 'AbortError' && view === 'novedades') statusMessage(root, t('No se pudieron cargar las novedades. Reintenta con Actualizar lista.'));
+    }
+  };
+  const setView = value => {
+    const requested = value.split('/')[0];
+    view = ['biblioteca', 'novedades'].includes(requested) ? requested : root.dataset.rssInitial;
+    activateView(root, tabs, view);
+    render(); if (view === 'novedades' && !snapshot) void load();
+  };
+  root.querySelector('form').addEventListener('submit', event => event.preventDefault(), { signal });
+  query.addEventListener('input', render, { signal });
+  refresh.addEventListener('click', load, { signal });
+  find('clear').addEventListener('click', () => { query.value = ''; query.focus(); render(); }, { signal });
+  mountTabs(tabs, setView, signal);
+  window.addEventListener('hashchange', () => setView(location.hash.slice(1)), { signal });
+  signal.addEventListener('abort', () => request?.abort(), { once: true });
+  setView(location.hash.slice(1));
+}
+
+/** Swap only the editorial article, retaining the reader list, query, snapshot and chat instance. */
+export function replaceRss(fresh) {
+  const root = document.querySelector('[data-certirss]'), next = fresh.querySelector('[data-certirss]');
+  const list = root.querySelector('[data-rss-library]'), position = list.scrollTop;
+  root.querySelector('[data-rss-detail]').replaceWith(next.querySelector('[data-rss-detail]'));
+  root.dataset.rssSelected = next.dataset.rssSelected;
+  root.dataset.rssInitial = next.dataset.rssInitial;
+  delete root.dataset.mounted;
+  return () => list.scrollTo({ top: position, behavior: 'instant' });
+}

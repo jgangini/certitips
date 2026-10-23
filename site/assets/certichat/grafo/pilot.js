@@ -1,6 +1,6 @@
-import { t, localizedURL, language } from '../../site/i18n.js?v=b3b939609c94';
-import { readTrace, sourcePath } from '../trace.js?v=b3b939609c94';
-import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=b3b939609c94';
+import { t, localizedURL, language } from '../../site/i18n.js?v=2e73772e0e66';
+import { readTrace, sourcePath } from '../trace.js?v=2e73772e0e66';
+import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=2e73772e0e66';
 
 let mounted;
 const instances = new WeakMap();
@@ -366,7 +366,7 @@ export function mountGraphPilot(scope = document) {
     const revision = ++sceneRevision; scene?.destroy(); scene = undefined; discoveryCounts = { nodes: 0, edges: 0 };
     if (compact.matches) { availability(false); return; }
     try {
-      const { createPilotScene } = await import('./scene.js?v=b3b939609c94');
+      const { createPilotScene } = await import('./scene.js?v=2e73772e0e66');
       if (signal.aborted || revision !== sceneRevision) return;
       availability(true); canvas.dataset.disposed = 'false';
       scene = createPilotScene(canvas, labels, select, () => { follow = false; root.dataset.followPaused = 'true'; }, availability, anchorCard, value => { zoom.textContent = `${Math.round(value * 100)}%`; }, (running, bank = '') => {

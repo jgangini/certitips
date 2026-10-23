@@ -10,7 +10,7 @@
 <text x="56" y="68" class="title">Explica agente com evidência observável.</text>
 <g class="card"><rect x="56" y="134" width="232" height="188" rx="24"/><rect x="342" y="134" width="232" height="188" rx="24"/><rect x="628" y="134" width="232" height="188" rx="24"/><rect x="914" y="134" width="232" height="188" rx="24"/></g>
 <path d="M288 228H342" class="flow"/><path d="M574 228H628" class="flow"/><path d="M860 228H914" class="flow"/>
-<g text-anchor="middle"><text x="172" y="189" class="label">Alvo.</text><text x="458" y="189" class="label">Chame.</text><text x="744" y="189" class="label">Controle.</text><text x="1030" y="189" class="label">Resultado</text>
+<g text-anchor="middle"><text x="172" y="189" class="label">Meta</text><text x="458" y="189" class="label">Chame.</text><text x="744" y="189" class="label">Controle.</text><text x="1030" y="189" class="label">Resultado</text>
 <text x="172" y="243" class="body"><tspan x="172">solicitação </tspan><tspan x="172" dy="32">do usuário</tspan></text>
 <text x="458" y="243" class="body"><tspan x="458">Nome e </tspan><tspan x="458" dy="32">argumentos</tspan></text>
 <text x="744" y="243" class="body"><tspan x="744">Permissões </tspan><tspan x="744" dy="32">e limites</tspan></text>

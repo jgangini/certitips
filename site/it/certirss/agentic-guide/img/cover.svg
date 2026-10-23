@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450"><title>Copertura di CertiRSS</title><desc>Illustrazione editoriale standard per identificare un apprendimento risorsa.</desc><rect width="800" height="450" fill="#f4f6fa"/><path d="M0 0H800V12H0Z" fill="#aa6710"/><circle cx="650" cy="80" r="220" fill="#aa6710" opacity=".07"/><circle cx="120" cy="440" r="180" fill="#aa6710" opacity=".07"/><rect x="314" y="104" width="172" height="172" rx="40" fill="#aa6710"/><g transform="translate(346 136) scale(4.5)" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+  <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+  <path d="m9 15 2 2 4-4" />
+</g><text x="400" y="342" text-anchor="middle" font-family="sans-serif" font-size="30" fill="#31333f">CertiTips</text><path d="M340 378H460" stroke="#aa6710" stroke-width="5" stroke-linecap="round"/></svg>

@@ -1,0 +1,15 @@
+{
+  "source": "../icons/cdmp-diagrams/icons-manifest.json",
+  "file": "cover.svg",
+  "original": "lucide-book-open.svg",
+  "sha256": "29a0b88117d60320e029d4a6612acec7dc90ed9595895e8f58fa0d2e16fcd19c",
+  "use": "Portada estándar decorativa de los artículos CertiRSS",
+  "rss": {
+    "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/rss.svg",
+    "source_sha256": "68297d9ec163f3d07bb4efac82c54bc62679a5e3ba37cf2dabb27d4c8de8bfe4",
+    "file": "rss.svg",
+    "sha256": "c3c1e3a59c748c61ce07877a10f2635d73ef313381b7c4e9905c83079b39a977",
+    "license": "ISC AND MIT",
+    "adaptation": "ID rss para referencia SVG local; geometría conservada"
+  }
+}

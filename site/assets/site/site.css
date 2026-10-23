@@ -1507,7 +1507,7 @@ html:has(#language-transition[open]) { overflow: hidden; }
 }
 .search-results a:hover, .search-results a:focus-visible { background: var(--hover); }
 .search-results a:focus-visible { outline-offset: -3px; }
-.search-results mark { background: #ffe066; color: #20232b; border-radius: 2px; }
+.search-results mark, .rss-items mark { background: #ffe066; color: #20232b; border-radius: 2px; }
 .search-result-icon {
   display: grid;
   place-items: center;
@@ -1519,6 +1519,7 @@ html:has(#language-transition[open]) { overflow: hidden; }
   color: #fff;
 }
 .search-result-icon-topic { background: #565c70; }
+.search-result-icon-rss { background:#b65a00; }
 .search-result-icon-video { background: var(--video-accent); }
 .search-result-copy { display: block; min-width: 0; }
 .search-result-copy small,
@@ -2123,9 +2124,9 @@ html[data-theme="dark"] .quiz-heading .eyebrow {
     gap: 14px;
   }
   .course-page .site-header .brand > span { display: none; }
-  /* Course headers have ten controls. Reserve their actual size before distributing gaps. */
+  /* Reserve all eleven course controls, including the RSS entry, before distributing gaps. */
   .course-page .site-header {
-    --header-controls-width: 440px;
+    --header-controls-width: 484px;
     padding-inline: clamp(5px, calc((100vw - var(--header-controls-width)) / 2), var(--content-gutter));
     gap: clamp(0px, calc((100vw - var(--header-controls-width) - 2 * var(--content-gutter)) / 9), 14px);
   }
@@ -2268,7 +2269,7 @@ html[data-theme="dark"] .quiz-heading .eyebrow {
     gap: clamp(0px, calc((100vw - 319px) / 8), 9px);
   }
   .course-page .site-header {
-    --header-controls-width: 310px;
+    --header-controls-width: 341px;
     gap: clamp(0px, calc((100vw - var(--header-controls-width) - 2 * var(--content-gutter)) / 9), 5px);
   }
   .course-groups { left: 20px; width: calc(100% - 40px); }
@@ -2417,9 +2418,25 @@ html[data-theme="dark"] .quiz-heading .eyebrow {
 .language-toggle::-webkit-details-marker { display: none; }
 .language-panel { width: 160px; max-width: calc(100vw - 24px); }
 .language-panel a[aria-current="true"] { color: var(--on-red); background: var(--red); }
-@media (max-width: 700px) { .site-header { gap: 5px; } }
-@media (max-width: 360px) {
-  .site-header { padding-inline: 6px; gap: 3px; }
+/* Keep every app reachable at the standard control size on narrow headers. */
+@media (max-width: 800px) {
+  .site-header { --header-controls-width:440px; padding-inline:clamp(5px,calc((100vw - var(--header-controls-width)) / 2),var(--content-gutter)); gap:clamp(0px,calc((100vw - var(--header-controls-width) - 2 * var(--content-gutter)) / 9),14px); }
+  .course-page .site-header { --header-controls-width:484px; gap:clamp(0px,calc((100vw - var(--header-controls-width) - 2 * var(--content-gutter)) / 10),14px); }
+}
+@media (max-width: 760px) { .site-header .brand > span { display:none; } }
+@media (max-width: 480px) {
+  .site-header { --header-controls-width:310px; }
+  .course-page .site-header { --header-controls-width:341px; }
+}
+@media (min-width:481px) and (max-width:493px), (max-width:350px) {
+  .course-page { --header:116px; }
+  .course-page .site-header { display:grid; grid-template-columns:repeat(6,44px); grid-template-rows:repeat(2,44px); justify-content:space-between; align-content:center; gap:6px 0; padding-inline:var(--content-gutter); }
+  .course-page .site-header > .brand { grid-row:1 / 3; }
+  .course-page .site-header > .header-app-link[aria-label="CertiSearch"] { grid-column:2; }
+}
+@media(max-width:350px) {
+  .course-page { --header:88px; }
+  .course-page .site-header { grid-template-columns:repeat(6,31px); grid-template-rows:repeat(2,31px); }
 }
 
 /* Shared full-page loading and error presentation. */
@@ -2434,3 +2451,14 @@ html[data-theme="dark"] .quiz-heading .eyebrow {
 .status-page p { color: var(--muted); overflow-wrap: anywhere; }
 .status-page .hint { font-size: 13px; margin-top: 7px; }
 @media (prefers-reduced-motion: reduce) { .status-page .loading-full h1 svg { animation: none; } }
+
+/* Barra de metadatos compartida por Cognee y CertiRSS. */
+.rss-app .chat-graph-footer { flex-shrink: 0; min-height: 46px; display: flex; border-top: 1px solid var(--line); background: var(--white); container-type: inline-size; }
+.rss-app .chat-graph-meta { display: grid; grid-template-columns: repeat(4, max-content); justify-content: start; width: 100%; color: var(--muted); font-size: 12px; line-height: 1.5; margin: 0; }
+.rss-app .chat-graph-meta > div { display: flex; min-height: 23px; }
+.rss-app .chat-graph-meta > div + div, .rss-app .chat-graph-meta dd { border-left: 1px solid var(--line); }
+.rss-app .chat-graph-meta > div:nth-child(2) { border-right: 1px solid var(--line); }
+.rss-app .chat-graph-meta dt, .rss-app .chat-graph-meta dd { display: flex; align-items: center; padding: 2px 8px; margin: 0; }
+.rss-app .chat-graph-meta dd { flex: 1; justify-content: flex-end; color: var(--ink); white-space: nowrap; }
+@container (max-width: 660px) { .rss-app .chat-graph-meta { grid-template-columns: 1fr 1fr; } .rss-app .chat-graph-stamp { justify-self: stretch; } }
+@container (max-width: 430px) { .rss-app .chat-graph-meta { grid-template-columns: 1fr; } }

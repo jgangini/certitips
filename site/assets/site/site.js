@@ -1,7 +1,8 @@
-import { installPageNavigation, navigateSite } from "./navigation.js?v=b3b939609c94";
-import { t, locale, localizedURL, siteBase } from "./i18n.js?v=b3b939609c94";
-import { readStored, writeStored } from "./storage.js?v=b3b939609c94";
-import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, searchMatches } from "./content-search.js?v=b3b939609c94";
+import { readSnapshot } from '../certirss/certirss.js?v=2e73772e0e66';
+import { installPageNavigation, navigateSite } from "./navigation.js?v=2e73772e0e66";
+import { t, locale, localizedURL, siteBase } from "./i18n.js?v=2e73772e0e66";
+import { readStored, writeStored } from "./storage.js?v=2e73772e0e66";
+import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, highlightSearch } from "./content-search.js?v=2e73772e0e66";
 
 // The root entry recalls a language; missing routes are handled by the 404 allowlist.
 if (/^(?:index\.html)?$/.test(location.pathname.slice(siteBase.length))) {
@@ -308,33 +309,25 @@ const catalogSearch = searchEntries.map(row => indexSearchEntry({
   kind: row.dataset.searchKind, url: row.querySelector("a").getAttribute("href"), detail: row.querySelector("small").textContent, row,
 }));
 const searchIcons = new Map(searchEntries.map(row => [row.dataset.searchKind, row.querySelector(".search-result-icon")]));
+searchIcons.set("rss", searchDialog.querySelector("#search-rss-icon").content.firstElementChild);
 searchIcons.set("video", searchDialog.querySelector("#search-video-icon").content.firstElementChild);
-let contentSearch = [], searchLoading, searchError = false;
+let contentSearch = [], newsSearch = [], searchLoading, searchError = false;
 
 function contentResult(entry) {
   const row = searchEntries[0].cloneNode(true), link = row.querySelector("a");
   row.hidden = false; row.dataset.searchKind = entry.kind;
   link.href = entry.url; link.removeAttribute("target"); link.removeAttribute("rel");
-  row.querySelector("small").textContent = entry.kind === "video" ? t("Video · CertiTube") : t("Contenido de la guía");
+  row.querySelector("small").textContent = entry.kind === "video" ? t("Video · CertiTube") : entry.kind === "rss" ? t("Recurso · CertiRSS") : t("Contenido de la guía");
   row.querySelector(".search-result-icon").replaceWith(searchIcons.get(entry.kind).cloneNode(true));
   return row;
 }
 
-// Keep both catalog and corpus matches literal and rebuild marks when the query changes.
-function highlightSearch(node, text, query) {
-  const parts = []; let end = 0;
-  for (const match of searchMatches(text, query)) {
-    parts.push(document.createTextNode(text.slice(end, match.start)));
-    const mark = document.createElement('mark'); mark.textContent = text.slice(match.start, match.end);
-    parts.push(mark); end = match.end;
-  }
-  node.replaceChildren(...parts, document.createTextNode(text.slice(end)));
-}
+
 
 function updateSearch() {
   const query = searchInput.value.trim(), searching = query.length > 0;
   const focusedLink = searchDialog.querySelector("a:focus")?.getAttribute("href");
-  const results = searching ? searchContent([...catalogSearch, ...contentSearch], query) : catalogSearch.filter(entry => entry.kind !== "topic");
+  const results = searching ? searchContent([...catalogSearch, ...contentSearch, ...newsSearch], query) : [...catalogSearch.filter(entry => entry.kind !== "topic"), ...newsSearch];
   const rows = results.map(entry => {
     const row = entry.row || contentResult(entry);
     row.hidden = false;
@@ -349,7 +342,7 @@ function updateSearch() {
   searchDialog.classList.toggle("has-query", searching);
   searchEmpty.hidden = total !== 0;
   searchClose.setAttribute("aria-label", searchInput.value ? t("Limpiar búsqueda") : t("Cerrar búsqueda"));
-  searchCount.textContent = !searching ? t('{total} cursos y videos disponibles.', {total})
+  searchCount.textContent = !searching ? t('{total} cursos, videos y recursos disponibles.', {total})
     : total ? t(total === 1 ? '{total} resultado.' : '{total} resultados.', {total})
     : t("No se encontraron resultados. Prueba con otro término.");
   if (searchError) searchCount.textContent += t(" No se pudieron cargar las secciones. Vuelve a abrir el buscador para reintentar; puedes buscar por título y tema.");
@@ -365,8 +358,15 @@ async function loadSearchContent() {
     if (!response.ok) throw new Error("Search content unavailable");
     const siteRoot = new URL(document.body.dataset.base, document.querySelector('link[rel="canonical"]').href).href;
     contentSearch = corpusSearchEntries(await response.json(), siteRoot);
+
   } catch { searchError = true; searchLoading = undefined; }
   finally { searchDialog.setAttribute("aria-busy", "false"); updateSearch(); }
+  try {
+    const snapshot = await readSnapshot(searchDialog.dataset.rssUrl, AbortSignal.any([signal, AbortSignal.timeout(10000)]));
+    newsSearch = snapshot.items.map(item => indexSearchEntry({ title: item.title, terms: `${item.title} ${item.sourceName} CertiRSS`, text: item.content || item.summary, kind: 'rss', url: `${document.body.dataset.base}certirss/#novedades/${item.id}` }));
+    updateSearch();
+  } catch { /* El catálogo y la última lectura disponible siguen siendo utilizables. */ }
+
 }
 function openSearch() {
   if (!searchDialog.open) {
