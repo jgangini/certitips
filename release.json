@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "releaseId": "2026-10-23-22-04-09--79d79a98500c--40030842824-1",
+  "releaseId": "2026-10-23-23-19-59--0c0bd6f2a782--40038062722-2",
   "site": {
-    "sha256": "6a4d523a1bc77d5a6327f1b6d3967549ac7c0795b9b01960e39cb2362116bcd0",
+    "sha256": "52801e3a3e82c2abeffd57706eef9a7a15e76e814759dae1b5e5ab667d5dce8e",
     "files": [
       {
         "path": ".nojekyll",
@@ -12,7 +12,7 @@
       {
         "path": "404.html",
         "size": 111538,
-        "sha256": "d09b21e7dc9573b5f4ae766c1f8535e89c7b36b4e3682ebf2bbd3f48db01f318"
+        "sha256": "449db68c576ac5b317c28b4a7d89ce3989b10622a483ad4637be93cddc8b8032"
       },
       {
         "path": "assets/1Z0-1085-26/questions.json",
@@ -61,8 +61,8 @@
       },
       {
         "path": "assets/certichat/corpus.json",
-        "size": 1346587,
-        "sha256": "495171cf299a1996a6b29baa0db6861cd23ec041f4bad74646c23d0f898a050f"
+        "size": 1348118,
+        "sha256": "d317a6b2f09cf76d86a69c465fb3adfd5c95e8c014a6addaefa16c41ab4b8c5a"
       },
       {
         "path": "assets/certichat/grafo/base.css",
@@ -131,28 +131,28 @@
       },
       {
         "path": "assets/certichat/i18n/en.json",
-        "size": 1150985,
-        "sha256": "951d464157d83066f50134a125ead4c6609496561899dda379244e47c9b98e91"
+        "size": 1152372,
+        "sha256": "8895b1f7c9daa75f3a18893110d116c1ea453287e04a554b6037cf25722b4798"
       },
       {
         "path": "assets/certichat/i18n/it.json",
-        "size": 1222410,
-        "sha256": "d43fc2dc093592a835ab6263e7d53f35d7cb73e9387923b892bc1cdc13cb2680"
+        "size": 1223914,
+        "sha256": "56fbc2d76f1e50b100f5e77eb71239464caef57fc4ac0a904f5b2bf2c4728cdd"
       },
       {
         "path": "assets/certichat/i18n/manifest.json",
         "size": 328,
-        "sha256": "3dea52dd9e5775256c845df33f2339a4f36236a657d8e89e380e168048c04e26"
+        "sha256": "9f21db3dd5c4b40572cb285d943b125dca31eead8da6187e2dfa35a625845e20"
       },
       {
         "path": "assets/certichat/i18n/pt.json",
-        "size": 1201082,
-        "sha256": "e6edd61c812187e5ce4f691ad9b881854d560eb64d036e94a70135baeb2f440c"
+        "size": 1202567,
+        "sha256": "418839b039f19e3c507d2dbad2e877538f5d584d272e395df736314f2c37d69f"
       },
       {
         "path": "assets/certichat/manifest.json",
-        "size": 513466,
-        "sha256": "aee0973c6e38fe653747e0a3dd9b6ff2542592b8a3a0829a435985b811959e97"
+        "size": 514067,
+        "sha256": "55ec972284be58c378a99b155858626569ff7c051627e27faeaff72f8f36cfe4"
       },
       {
         "path": "assets/certichat/presentation.js",
@@ -510,24 +510,24 @@
         "sha256": "403581b69dac5cff4079205e01c6b467e56af449ecbd7247693ddb1baafa005b"
       },
       {
-        "path": "assets/i18n/en-c2bdb0eb4adfc3ae.json",
-        "size": 505347,
-        "sha256": "c2bdb0eb4adfc3ae07cf4c9e2fd73518e5bd32e8bbf2c50225c2a49b72b329df"
+        "path": "assets/i18n/en-dfaeba1a9855cf21.json",
+        "size": 505567,
+        "sha256": "dfaeba1a9855cf2150d56c5f4c64b7bed99eceb2cc1ebaf61a46c5a76fd81a81"
       },
       {
-        "path": "assets/i18n/es-d97ff8fd3378660d.json",
-        "size": 517973,
-        "sha256": "d97ff8fd3378660d5ce9537a9d429df481753407d6f9b44dbd745b9e10aab806"
+        "path": "assets/i18n/es-b3929baf9fc555d7.json",
+        "size": 518211,
+        "sha256": "b3929baf9fc555d7186a189659207306b6e96a6666824659727f84e9f2eb892c"
       },
       {
-        "path": "assets/i18n/it-adba11e34cb2a52f.json",
-        "size": 522497,
-        "sha256": "adba11e34cb2a52fecd653d2c38b7d9cdd4cb0fe3921d9517fe103b48f185ceb"
+        "path": "assets/i18n/it-8019a89238ec47ae.json",
+        "size": 522732,
+        "sha256": "8019a89238ec47aef01af36d0a98e423ca859f16243e2d3e171b33d7e2de06a2"
       },
       {
-        "path": "assets/i18n/pt-bf3bb045b57fa05e.json",
-        "size": 522617,
-        "sha256": "bf3bb045b57fa05e12c4f9baf014dc69fa9298a723c66f947ba69d77f617560e"
+        "path": "assets/i18n/pt-d6fa5695df0a42a3.json",
+        "size": 522850,
+        "sha256": "d6fa5695df0a42a305c54229e4009f39b553acdd6d30ef227d78b5430373a640"
       },
       {
         "path": "assets/icons/LICENSE-annotation-icons.txt",
@@ -1212,12 +1212,12 @@
       {
         "path": "en/1Z0-1085-26/compute/index.html",
         "size": 144193,
-        "sha256": "6a5b5ae5155b764ea7201bbb49a42fbb87cf5589242733e1b68e2e0dc7421e66"
+        "sha256": "d0590210fc7af58bd5da8b42560426690e9eb533eae4096fa0f6e1bba2a8ffb7"
       },
       {
         "path": "en/1Z0-1085-26/exam-checklist/index.html",
         "size": 133957,
-        "sha256": "7806d408bfa7076f1d9c6ee2821f76b098bdebf88f69dd3c485f1614a59bb270"
+        "sha256": "e9e2382923096710dbe7f2cffa8c4ec8b897afb0cc7b09786a8974351b4f9c4e"
       },
       {
         "path": "en/1Z0-1085-26/gallery.json",
@@ -1227,7 +1227,7 @@
       {
         "path": "en/1Z0-1085-26/glossary/index.html",
         "size": 136681,
-        "sha256": "2b9f86f8774fdd70123161f4754980df27f799053c9810ac97174b4e475e2339"
+        "sha256": "952963711d6a2a55bf512eb6c33264fda2a471c709eed2252b54836ba7a05fc9"
       },
       {
         "path": "en/1Z0-1085-26/governance/img/ocif-governance-concepts.svg",
@@ -1267,7 +1267,7 @@
       {
         "path": "en/1Z0-1085-26/governance/index.html",
         "size": 143273,
-        "sha256": "43a6d417aacb73fb6d9c090481770e8ba3c4191a4edbf7b69b3a06e7a289bb18"
+        "sha256": "f2e3e1af13ab012b6dfcfcffca26fbf0c00b469d86652e2839424951293c458a"
       },
       {
         "path": "en/1Z0-1085-26/iam/img/ocif-iam-concepts.svg",
@@ -1307,7 +1307,7 @@
       {
         "path": "en/1Z0-1085-26/iam/index.html",
         "size": 143166,
-        "sha256": "759014ebc2b9758c7b7af1e01795137775b51400bd076339da9a55c7d5373333"
+        "sha256": "a44f2a8016b1a3928491201c66e10125a2fb00a1ba8d4f2099dffffe97c2e136"
       },
       {
         "path": "en/1Z0-1085-26/networking/img/ocif-network-balancing.svg",
@@ -1347,7 +1347,7 @@
       {
         "path": "en/1Z0-1085-26/networking/index.html",
         "size": 143710,
-        "sha256": "b305af242fd57f1e283882ddeb7ab1ce504eec7c82282582f2fcf388a52e99cc"
+        "sha256": "3dc1bd55333620a3e2a6a7f3870877dc42f48ee1ddc19c6f394c961d506e3995"
       },
       {
         "path": "en/1Z0-1085-26/oci-architecture/img/ocif-architecture-concepts.svg",
@@ -1387,17 +1387,17 @@
       {
         "path": "en/1Z0-1085-26/oci-architecture/index.html",
         "size": 143109,
-        "sha256": "47c8a604f62574738eeb7088fd17492fe8d38808d83683663fd3cbc0fc5f6f10"
+        "sha256": "265dd1ac6a7d8d4ccad33f2b571733ccfdfdec4479f2158ae14f92f59c33afd1"
       },
       {
         "path": "en/1Z0-1085-26/overview/index.html",
         "size": 131499,
-        "sha256": "f6e578bdc828661f2e7c21ad94678dc01775ef13d540e90fecaf809c49468c33"
+        "sha256": "6d0bc62fcb1623b4b04dd26b2fde59a368ac28f81fccd67268e2e5a3170238a7"
       },
       {
         "path": "en/1Z0-1085-26/practice/index.html",
         "size": 128875,
-        "sha256": "740419cef6b7ca66f2a190dee62107a8e575dc747c2a92f155c7443682cccfe3"
+        "sha256": "9bde80d5d9d1ee2802ec20f7c7972d1ad4851161b38f38f19d00cd961d76ae4a"
       },
       {
         "path": "en/1Z0-1085-26/security/img/ocif-security-concepts.svg",
@@ -1437,7 +1437,7 @@
       {
         "path": "en/1Z0-1085-26/security/index.html",
         "size": 143090,
-        "sha256": "7b8ebcf110ac336d0518cfd5ba7cb17166b60466d985cbf60996178541b0c856"
+        "sha256": "b3c6c1b854af45aded219288e4ea926faedf7a37cc03f00975f9b7c60a74ab87"
       },
       {
         "path": "en/1Z0-1085-26/storage/img/ocif-storage-concepts.svg",
@@ -1477,7 +1477,7 @@
       {
         "path": "en/1Z0-1085-26/storage/index.html",
         "size": 144018,
-        "sha256": "b29ed31ca839918afaa5139306a0afe80f2cbd8a6a76a4e4c089c5ed98255103"
+        "sha256": "e8dc3654920078861a2709f52aeb535971616ecc6249bdf5bf01fed52ed22b8f"
       },
       {
         "path": "en/1Z0-1122-26/ai-basics/img/aif-ai-choice.svg",
@@ -1517,7 +1517,7 @@
       {
         "path": "en/1Z0-1122-26/ai-basics/index.html",
         "size": 145439,
-        "sha256": "003d96512d9a01ef2588ad10460e38a59e97a79b64cebc0ca55145a499144496"
+        "sha256": "482bb7d1df69b88bd9d3485c4b75ed5b8ccc46b1bb8e742d6136ca0e654d28e7"
       },
       {
         "path": "en/1Z0-1122-26/ai-portfolio/img/aif-portfolio-concepts.svg",
@@ -1557,7 +1557,7 @@
       {
         "path": "en/1Z0-1122-26/ai-portfolio/index.html",
         "size": 145553,
-        "sha256": "e6cd5ccb4c296234ad1cff521e2b3b1d6c0dc283135c07da4b5cb221a7142970"
+        "sha256": "c28ad9871661f64251cb15ccefe92fa93d44fbebd0ff552199bcf5970c615f27"
       },
       {
         "path": "en/1Z0-1122-26/ai-services/img/aif-services-concepts.svg",
@@ -1597,7 +1597,7 @@
       {
         "path": "en/1Z0-1122-26/ai-services/index.html",
         "size": 145896,
-        "sha256": "3081d264cb7186d88a00868d3aaebf0fa468be01952fb7f4d8d02e0ae8f577a8"
+        "sha256": "192d887d0f5a0b32c30126b16dc3c948471d86ad500ed6130fbfc52f2a1757fa"
       },
       {
         "path": "en/1Z0-1122-26/database-ai/img/aif-database-capabilities.svg",
@@ -1637,7 +1637,7 @@
       {
         "path": "en/1Z0-1122-26/database-ai/index.html",
         "size": 145675,
-        "sha256": "db5b115596f3581d40b1cfc71e2cf2b360e4e477311f74e040f6789495668127"
+        "sha256": "c354d6969ca1a1f19320cd910c2a7ada3e3553c5c28ac8c62ecb414c95c815c4"
       },
       {
         "path": "en/1Z0-1122-26/deep-learning/img/aif-dl-cnn.svg",
@@ -1677,7 +1677,7 @@
       {
         "path": "en/1Z0-1122-26/deep-learning/index.html",
         "size": 145245,
-        "sha256": "2d18ff5c701dd3dfb8728ae23ac272aa51c6a04b354b7d83807a207fe01a84a3"
+        "sha256": "732c48d2e398cc70b86dd003e56ffea331495d8d6449fa07dda87f465fc9bdfa"
       },
       {
         "path": "en/1Z0-1122-26/enterprise-ai/img/aif-enterprise-concepts.svg",
@@ -1717,12 +1717,12 @@
       {
         "path": "en/1Z0-1122-26/enterprise-ai/index.html",
         "size": 145925,
-        "sha256": "b72ff53bcab73640b6888a32a5c2ca710062cdaa9c4ef2400dcf9ddb2cd130b6"
+        "sha256": "761d2cf1c33f918b5d76804a4e44278c3eb0aed556cccd519127366920698742"
       },
       {
         "path": "en/1Z0-1122-26/exam-checklist/index.html",
         "size": 137837,
-        "sha256": "4d6b33ce603ea6d983025cf9b17c75f8587186db6c36ef5c6f94c89b9cf4a1fe"
+        "sha256": "9bc5499e1ffe9f70e0ae0168250174a861663dddb8b2c7bd1c25e7aab5330a7d"
       },
       {
         "path": "en/1Z0-1122-26/gallery.json",
@@ -1767,12 +1767,12 @@
       {
         "path": "en/1Z0-1122-26/generative-ai/index.html",
         "size": 145991,
-        "sha256": "3c45730cd6384b202304d7cce7a85fb53ae59eed34b495529fee8159d3a26e4c"
+        "sha256": "b4e705d98e123929fd8c58b049f3a176199fd67c9b79d3418654d2de41a253ae"
       },
       {
         "path": "en/1Z0-1122-26/glossary/index.html",
         "size": 139016,
-        "sha256": "9d593b63222bbf014d60a9950b5613b1135efa4d95b7b7a1d317ec7fd3b81252"
+        "sha256": "33488380f561a99353153cb93cc34afb59f5d78e0cd9c3bf8e697051d1db146e"
       },
       {
         "path": "en/1Z0-1122-26/machine-learning/img/aif-ml-approaches.svg",
@@ -1812,7 +1812,7 @@
       {
         "path": "en/1Z0-1122-26/machine-learning/index.html",
         "size": 145679,
-        "sha256": "aea03d3af4a83a27f796402d26cd411e5dfe3c4630e70ba48e9e44af9f990426"
+        "sha256": "0d3cd11785b2f550c739f22b776191cc3f38570981fda1626e95078c81bc66d0"
       },
       {
         "path": "en/1Z0-1122-26/oci-generative-ai/img/aif-oci-gen-concepts.svg",
@@ -1852,17 +1852,17 @@
       {
         "path": "en/1Z0-1122-26/oci-generative-ai/index.html",
         "size": 145488,
-        "sha256": "4d0a51dbdadb8cc88fa81802dd41eb400020ec633d31d40fec686238f1cebd74"
+        "sha256": "578b49e49282619884c328dba25c2bd17dd5799c3219f1a5e23d852d366a31d0"
       },
       {
         "path": "en/1Z0-1122-26/overview/index.html",
         "size": 134922,
-        "sha256": "ab665a2e109790f7135ec1d3a3f0e400d7f9e84be498865ef3c48c493abb2413"
+        "sha256": "176115c9bad5331ed528c0991615188618c481696b36c37eb75c500a31005789"
       },
       {
         "path": "en/1Z0-1122-26/practice/index.html",
         "size": 132288,
-        "sha256": "8d20486d87640457803cb258efc1726f675697a76c145d25e1bcc476183912e6"
+        "sha256": "db30d3f8b35d48d30d799437a7ba1d732c2bcc99ecca5ce0a4e95fb772dca5af"
       },
       {
         "path": "en/1Z0-1157-26/agents/img/agent-loop.svg",
@@ -1917,12 +1917,12 @@
       {
         "path": "en/1Z0-1157-26/agents/index.html",
         "size": 149412,
-        "sha256": "5d5fe17d0d507873d943ae42164e01f2be78eee86fbb68b0c754e93097f7d986"
+        "sha256": "64217929e0e875498448ea65ea5a01aa0ce029f68e1963168648dd6151bcd703"
       },
       {
         "path": "en/1Z0-1157-26/exam-checklist/index.html",
         "size": 135334,
-        "sha256": "4046675325dd8b9e5ac500ce1e43951a462bc43e4bc8f63824ff4f3bc2f618b1"
+        "sha256": "115a3b0e3227a90d1038bd4a42feee3b190a2233d177be090eae5f41e078cbd4"
       },
       {
         "path": "en/1Z0-1157-26/gallery.json",
@@ -1932,7 +1932,7 @@
       {
         "path": "en/1Z0-1157-26/glossary/index.html",
         "size": 137797,
-        "sha256": "d9f6ca9806ae62c945a30b710ae558e08a8dc890a78391f8348b08b6b5b92122"
+        "sha256": "7d8e9f1abf40cab0b4ed65b3a489f4de2619b2bbc12f51e84ae6c637305b8d12"
       },
       {
         "path": "en/1Z0-1157-26/langchain/img/langchain-building-blocks.svg",
@@ -1977,7 +1977,7 @@
       {
         "path": "en/1Z0-1157-26/langchain/index.html",
         "size": 146203,
-        "sha256": "934eff67bd3a9f53f969e6df7073b2c2babbd9b95dfa4b3fc8d03f8fbdbfd49d"
+        "sha256": "9beedc4f9396e91db2eed6b2118a8e1aaea2ef42c7d8e5ad4f9d6e126bf4344b"
       },
       {
         "path": "en/1Z0-1157-26/mcp/img/mcp-architecture.svg",
@@ -2027,7 +2027,7 @@
       {
         "path": "en/1Z0-1157-26/mcp/index.html",
         "size": 147848,
-        "sha256": "e24a6e30278cb989df8ec5327c5a10aa00e5fb9d0ae9efe6df34798e0bfaf1c1"
+        "sha256": "b6c0f31fc97ae2f2f27d4e93d87ee1bbd87bc0a5f43b8ae73bd8378b912d6be0"
       },
       {
         "path": "en/1Z0-1157-26/oci-enterprise/img/enterprise-agent.svg",
@@ -2087,7 +2087,7 @@
       {
         "path": "en/1Z0-1157-26/oci-enterprise/index.html",
         "size": 153172,
-        "sha256": "9aa1c19436cc920dc0b3bae8fc5fb3e793e6a9a1be6bc3fbc6b8fdba6a35eb4d"
+        "sha256": "e50df9e91cac365210b6e412a59cd2f65d7be87060f683bf8893bb85e77778be"
       },
       {
         "path": "en/1Z0-1157-26/openai/img/handoffs.svg",
@@ -2142,7 +2142,7 @@
       {
         "path": "en/1Z0-1157-26/openai/index.html",
         "size": 148964,
-        "sha256": "f90928b05566c69edbade622ce7da92cd2160f0a4fabce0f20ee7937114134bb"
+        "sha256": "a84c3f13a2f3306e29d9ca1d135024335d439ec1f4f69ebf4c1accb9a4c1d0f1"
       },
       {
         "path": "en/1Z0-1157-26/oracle-database/img/database-agent-factory.svg",
@@ -2207,22 +2207,22 @@
       {
         "path": "en/1Z0-1157-26/oracle-database/index.html",
         "size": 156965,
-        "sha256": "90f1598bc439c868fd6511145607ca9359264886b7f8e2250b0a7219cc720f20"
+        "sha256": "7d7baa891a2ae10ff336750a7f1f7391c28555f4e790b69b9b3ead36a70f3fd6"
       },
       {
         "path": "en/1Z0-1157-26/overview/index.html",
         "size": 133037,
-        "sha256": "90619207021147620ff2b7eecd715956c1a31a63c937300f2ec0cbcbefa741b9"
+        "sha256": "8ea901f53baa36a8bf40ba45d65d32380c2dc31a8d67ee0ce83d4755de56652b"
       },
       {
         "path": "en/1Z0-1157-26/practice/index.html",
         "size": 130477,
-        "sha256": "ba7bc9224a9979446a04347ac0dc22bf5c95390fdb627b2a5c9331ba18a0fef8"
+        "sha256": "4a60187d6bce3d5e0ef65cba04812f3c36970e50f57e79752fc141e823a195e1"
       },
       {
         "path": "en/404.html",
         "size": 108934,
-        "sha256": "5c4e2d40f338320ebbd7c2fe77e588d43d1ee3abd29c882323165f6de78cd155"
+        "sha256": "42cab7bb3601b28f05c0fcab83e32d0bdaef41eb884ff5e8b8fe2182e9398f73"
       },
       {
         "path": "en/CDMP-DMF/case-study/img/gov-case-assets.svg",
@@ -2247,7 +2247,7 @@
       {
         "path": "en/CDMP-DMF/case-study/index.html",
         "size": 148054,
-        "sha256": "fa3f0f48c737adeaad9ef02cf97a3746f5a75c92e2a026a7e5e76c1caa9c323c"
+        "sha256": "b2148978e239ef220f7b8c46d221295af92151b0bbb15ba08cc5ea59341598a8"
       },
       {
         "path": "en/CDMP-DMF/content-management/img/gov-content-management-concepts.svg",
@@ -2277,7 +2277,7 @@
       {
         "path": "en/CDMP-DMF/content-management/index.html",
         "size": 147177,
-        "sha256": "c1c8e1cb553eb1f9b192134c7e0b05613f3c171bd286d7aad93f999fa6106415"
+        "sha256": "a8163ec84e677550631b7e1e944db0a180da3d0d39051325fb71b0321c71e30d"
       },
       {
         "path": "en/CDMP-DMF/data-architecture/img/gov-data-architecture-concepts.svg",
@@ -2307,7 +2307,7 @@
       {
         "path": "en/CDMP-DMF/data-architecture/index.html",
         "size": 148127,
-        "sha256": "6ecad48237acf930e11e489efcf45ac21183065366179165330e3d206e6c4cc3"
+        "sha256": "3b0185f03530eafa63a8ecbc832123e38b54892a13f788779fe71f9a3d5aefff"
       },
       {
         "path": "en/CDMP-DMF/data-integration/img/gov-data-integration-concepts.svg",
@@ -2337,7 +2337,7 @@
       {
         "path": "en/CDMP-DMF/data-integration/index.html",
         "size": 147846,
-        "sha256": "c911e01344c4a60cb49f4092ff4d36d9b8a957e538652bfaad87c1e1ef519715"
+        "sha256": "943350be484c28a4f234f4825ffd93274304b43cdf35c2d45fe51e241b1b5c91"
       },
       {
         "path": "en/CDMP-DMF/data-modeling/img/gov-data-modeling-concepts.svg",
@@ -2367,7 +2367,7 @@
       {
         "path": "en/CDMP-DMF/data-modeling/index.html",
         "size": 147354,
-        "sha256": "adcb9b69a465ec5cbf1817fee381bb94c569d3e20eea493444b0e92ee9e00e68"
+        "sha256": "44d125f45f3a087fa5a4f242682491483898ea433eca6916d93d75344e044cab"
       },
       {
         "path": "en/CDMP-DMF/data-operations/img/gov-data-operations-concepts.svg",
@@ -2397,7 +2397,7 @@
       {
         "path": "en/CDMP-DMF/data-operations/index.html",
         "size": 146888,
-        "sha256": "d03481e8cf553c381b6275742b29300497e8f1a36e96f7868eb043db1616696f"
+        "sha256": "77398ad5895e2550391020a591f15bb2ab100cbcc7d3bbfacb6bf14570fc8858"
       },
       {
         "path": "en/CDMP-DMF/data-quality/img/gov-data-quality-concepts.svg",
@@ -2427,7 +2427,7 @@
       {
         "path": "en/CDMP-DMF/data-quality/index.html",
         "size": 147338,
-        "sha256": "f85e09bfa67f0137e94b43f114b4bab1f1551074b045878755fb77a385c67011"
+        "sha256": "71a28cc2dc16e783315c5aa325ace171d957f872aae13ab5c2a963acd2d0cfb8"
       },
       {
         "path": "en/CDMP-DMF/data-security/img/gov-data-security-concepts.svg",
@@ -2457,7 +2457,7 @@
       {
         "path": "en/CDMP-DMF/data-security/index.html",
         "size": 146950,
-        "sha256": "c1ce0afc13cdc4c8a0fbc99a0d74d144f800f6cac1432005e393e6bbc4759958"
+        "sha256": "0d7816160747b75837deb41f4ae41c5191636358c5dd52be629e3c6f1e9077eb"
       },
       {
         "path": "en/CDMP-DMF/data-warehousing-bi/img/gov-data-warehousing-bi-concepts.svg",
@@ -2487,7 +2487,7 @@
       {
         "path": "en/CDMP-DMF/data-warehousing-bi/index.html",
         "size": 147568,
-        "sha256": "e741cb7b84ce366c252b7a4d5259900617f23d7a77f10047c5946edac7e4df4c"
+        "sha256": "1c8d6f5329fcb4c63344bc28caf01f800663b50667d561ed42155e702563f426"
       },
       {
         "path": "en/CDMP-DMF/gallery.json",
@@ -2507,7 +2507,7 @@
       {
         "path": "en/CDMP-DMF/glossary/index.html",
         "size": 142357,
-        "sha256": "f639d6998025957f59643cafdd77067ec308151636a99fe3fc08743a357b26fa"
+        "sha256": "ccf86e5e3d479fbae5fa8ff9f2b3a0c5879231a756e5c5fd8678f6f6ffe9f9ed"
       },
       {
         "path": "en/CDMP-DMF/governance/img/gov-governance-concepts.svg",
@@ -2537,7 +2537,7 @@
       {
         "path": "en/CDMP-DMF/governance/index.html",
         "size": 147215,
-        "sha256": "6985876bfa24840618e68b7a86bbf43c521444d5695596f72a14efac7898f609"
+        "sha256": "5eadfc3b6b81136aabe8c6a5d5a581576ff9a88833b42194d9cb5a50a91c6f49"
       },
       {
         "path": "en/CDMP-DMF/master-reference-data/img/gov-master-reference-data-concepts.svg",
@@ -2567,7 +2567,7 @@
       {
         "path": "en/CDMP-DMF/master-reference-data/index.html",
         "size": 147162,
-        "sha256": "d370ae2b16053ae1e3531ffda72307b5fb0e2d41701dd90b25681a43398b8372"
+        "sha256": "50643c94a158f6a962eaa7c538e81704b04604f5c7b4adfbd1534f6dc8fd2ec5"
       },
       {
         "path": "en/CDMP-DMF/metadata/img/gov-metadata-concepts.svg",
@@ -2597,7 +2597,7 @@
       {
         "path": "en/CDMP-DMF/metadata/index.html",
         "size": 147456,
-        "sha256": "152fd26ad9c2efdc3dfe9071e336d76eb7d62d3ddaad39644e7b073a6bcff027"
+        "sha256": "feebf42d1dc164ceb5fe6e62f618dddcdfe6bf9dca021f27c97fa4c0c128aeb3"
       },
       {
         "path": "en/CDMP-DMF/oracle-map/img/gov-map-architecture.svg",
@@ -2617,7 +2617,7 @@
       {
         "path": "en/CDMP-DMF/oracle-map/index.html",
         "size": 153766,
-        "sha256": "8b3cd76f6210a9166769bfdc7f8236fc44a70c12e531108f5b1541479c5ec14f"
+        "sha256": "2bf104351e4f76cf5601dc314c26bb64ba4970371de30880577c98ddf9d8fc78"
       },
       {
         "path": "en/CDMP-DMF/overview/img/gov-overview-contract.svg",
@@ -2632,7 +2632,7 @@
       {
         "path": "en/CDMP-DMF/overview/index.html",
         "size": 138840,
-        "sha256": "7da3286d303a275ed892f275e7db2a60765dcddfae32ca55763955cf6151efc6"
+        "sha256": "8ad910e925a2444cb19ac07fe4dc081f1bbdbebe9b3e10957516da2d5e5c2c4a"
       },
       {
         "path": "en/assets/1Z0-1085-26/questions.json",
@@ -2657,7 +2657,7 @@
       {
         "path": "en/assets/certichat/search.json",
         "size": 1290262,
-        "sha256": "5fcd69a9c710ae67e0363f8359ebdf4a5e97690ea57d2d1dfc63c59589e683a3"
+        "sha256": "0f2f81c729f97ec179fc86bb708f0314d5113734055e9ed44b4ca3bb9a38df36"
       },
       {
         "path": "en/assets/certirss/editorial.json",
@@ -2672,177 +2672,177 @@
       {
         "path": "en/certichat/index.html",
         "size": 123821,
-        "sha256": "38e293553b8f4af2f9b3b23e995ab82c71e2aeb441e9f8e780cf242e27823b2b"
+        "sha256": "68fbc9256961527fb9498324acbc0821ef2c0ede239295a881c29b80e128ed4d"
       },
       {
         "path": "en/certichat/piloto/index.html",
         "size": 123823,
-        "sha256": "0970a22e15863c93fbcf5d229e0f791900daf1fe43fef8e7a1a9a9ce4bc509e3"
+        "sha256": "fa92a25c121ab1a3b6d7d52f70329e4321f0548b228a151516fbbce3222d8eaf"
       },
       {
         "path": "en/certiquiz/index.html",
         "size": 110428,
-        "sha256": "21ec4ef7928955abff38e5db8abc70c48bf189f79b12ad7b311932acb7e10a53"
+        "sha256": "2e5fe79f9b6fa694212cb46bb9db27fc24ee0c62f316a9788bb13ef137cea86e"
       },
       {
         "path": "en/certirss/index.html",
         "size": 120204,
-        "sha256": "c9a4abaa39d7c58057b83f38d131f7f68ba0b8c11eacda1327cc51016341a0fd"
+        "sha256": "2f8bdb99a5a940d0dd50a7cd3b904eaaf53b22e3ff237f7ad8e380deabb4ff36"
       },
       {
         "path": "en/certisearch/banco/index.html",
         "size": 235393,
-        "sha256": "9923d8446325954a5d3957988dec3c2ee066b0b83cc4a00ea1aabe176ff19114"
+        "sha256": "90c3fc0d431b9424839ffb9ddbdef080ce40ce478a9db36fd37559ebac454438"
       },
       {
         "path": "en/certisearch/index.html",
         "size": 123199,
-        "sha256": "fce731a961dca5579cf65cf27889c444c1387136f8ef95811301e82e9101b035"
+        "sha256": "d21f5bc3b222822b0ba7c34c5ea6d2af02454a40f2f5ca7c5a75bf89648bb551"
       },
       {
         "path": "en/certitube/-6_1iZv_0_E/index.html",
         "size": 158744,
-        "sha256": "c3888d4d50c8bce18249761d805b869ddf77293e50f31bcdf252aa68af949eaa"
+        "sha256": "fae69a753443cab0b5347badc187689d87377c94c4c816e3d94885d9c93011bb"
       },
       {
         "path": "en/certitube/01lvJGeFZ78/index.html",
         "size": 171095,
-        "sha256": "25a617b0f7614ea89411f316d558bb00fcf2af33a621110e74f3d004c9f24ffb"
+        "sha256": "b2b5505ac379adb5e497cb95aa81f31dd5a3b7c96865d479a1856004260fbf07"
       },
       {
         "path": "en/certitube/2qdNyl76opY/index.html",
         "size": 156327,
-        "sha256": "a7879e0c3d59a98b41addb1e9dd255d3776a7119f883da5c1ece0f0566780bb4"
+        "sha256": "9d29ddf2702e2b1df8b423e7f292eae5ba4f68f751090e34718a6a872dc6e131"
       },
       {
         "path": "en/certitube/5dilnUUcgQE/index.html",
         "size": 159927,
-        "sha256": "1a8eec3ca0cbda8e53fa67ec5163016b2b46d9cf7d0bf9a74f241766a24a0346"
+        "sha256": "de060531b8a883cafda9d240d78e471d48b1b8ec9d77455602530c9ae1882c11"
       },
       {
         "path": "en/certitube/5tABMapyzvA/index.html",
         "size": 163379,
-        "sha256": "af6f00b9928c0c45e62c2d1132940e593db635a3e4975ea794780633759759c2"
+        "sha256": "c9cf7672c428ee052ac0ef51c32ce7aad7065e4d2981c83163cb6c5a98ed7cc1"
       },
       {
         "path": "en/certitube/6L1YmTRZNxM/index.html",
         "size": 163309,
-        "sha256": "905067f119f675b52b879906e8a1a269e4365d675a1462b119163a5d68b514c1"
+        "sha256": "cdc4f763efe6a1b5ddf0ca1bd3f8637b5691164d47a7dbc8459c658ee85e298f"
       },
       {
         "path": "en/certitube/6nujUlKb5z0/index.html",
         "size": 162607,
-        "sha256": "a8f04933e7bc6fea900baacd9d95e84c7397089f4351dd92d1925c67df1cf40f"
+        "sha256": "abd7b9756347d50e426dd7ea47d5f25a80ce5f874de906e240e690f339fec245"
       },
       {
         "path": "en/certitube/7TtlKGNbBnc/index.html",
         "size": 164050,
-        "sha256": "26ca2623d4e4422442f068507febdb33699e77556dc4787bd8eed4499f6924d5"
+        "sha256": "9e25c860c52e821f383e299b8e1db54571efaaa8160ba2afae98fb8459197f6d"
       },
       {
         "path": "en/certitube/91k_Uo3D3OQ/index.html",
         "size": 161851,
-        "sha256": "754bc89410623d91f3cb18894279a0bde8b10fd55a9b4468a749df192b0d01c2"
+        "sha256": "2c42ee676fa35fe195f13e448b6065e6bf4d5929f7ca06f6ce67ab4e285feed6"
       },
       {
         "path": "en/certitube/FLisHRFT1Xg/index.html",
         "size": 166330,
-        "sha256": "e9916b947e3fef364906f9785aa4ee9f6fbff70eea0234a3a0a16643968975af"
+        "sha256": "b60229eace76c1af59787518d5c32fd1a204e097aaac8f6b64cc48420da64248"
       },
       {
         "path": "en/certitube/HCUHwtTt5RI/index.html",
         "size": 157554,
-        "sha256": "9e779c62b05bbb6131e252fefc65da93de86da8f9ced7bd666b9608ee871a397"
+        "sha256": "cc2b569c911364b8d865aafc17394122c931efd7a4d9356cd26654101b0e00e3"
       },
       {
         "path": "en/certitube/Ha74VhpQwQo/index.html",
         "size": 159584,
-        "sha256": "764c3e21c01d341bb57b2739b764f2a4853018ee575b97348ee9a6421ef816e1"
+        "sha256": "f47d1de49552df4e1e173e6f2f81ed858ef3960267a08543a4f95a29520c05e5"
       },
       {
         "path": "en/certitube/K4x0pGMfb5I/index.html",
         "size": 168692,
-        "sha256": "876277fd66c46b751d61a3d0472017cf1b89682a21af27c390526fd638e3fbdb"
+        "sha256": "9a2c2d2ce26bf78a8e3805fed384c1ec57d5ee0f356d748b766836a8d5f5598c"
       },
       {
         "path": "en/certitube/MWASexQNDVU/index.html",
         "size": 155672,
-        "sha256": "ff7f81dbbdc0d673672a6929b1c75e76b4e05d6f7e61822a1eab660f590cf9fd"
+        "sha256": "3552a5080fd79044c2b662d00df5aea9826fd0bdf89db8416642a6feb8aa6a26"
       },
       {
         "path": "en/certitube/R1dWXZ-iqc0/index.html",
         "size": 164166,
-        "sha256": "4b463f634f86ca5deffa23f886a9be76a76eda6210748fc99d4b25f15b8bc3b0"
+        "sha256": "fbf4047901f640e43aeba41f3f31230330c13e245781cd38edcecb5b7d52658f"
       },
       {
         "path": "en/certitube/Wf5fisusQOc/index.html",
         "size": 157747,
-        "sha256": "c304631b429b49bcad4b318080e04438d8b1ce500855cc47a746ed9b60a576dd"
+        "sha256": "8e698bb88ec58d9acb35b603c161b9f15f758b1e4d56b571bcbe1f79ee6772b8"
       },
       {
         "path": "en/certitube/ZDRz7aCPs2g/index.html",
         "size": 172032,
-        "sha256": "7526a890739d2f78595ed213cf7b72a3cb913f3d49f4a3f349f36cf0bb97d181"
+        "sha256": "be3711bb2c29b2c86783d557b208862a07cbec7bcfdff09e4aa9e9a86bc38b61"
       },
       {
         "path": "en/certitube/ZjfQUwUdpbI/index.html",
         "size": 160597,
-        "sha256": "6778b9f517a8d840baf0000d828d98a8622491db3036d0324757bfa23bf6e397"
+        "sha256": "4c5cd1fcff0a4910b76ae0a55d4511bc53792eaf3b67824c8ab41c29aea6f53c"
       },
       {
         "path": "en/certitube/aZV1wvcNK6s/index.html",
         "size": 157950,
-        "sha256": "6f83f1d2e0c0904fe8d51ffe106b29cff2515267bd24fa3fa86f87631634cbdf"
+        "sha256": "94bbd4919ae4bb34376a4615568d3e7440bdce8105d97e46f3d03c00bade3e86"
       },
       {
         "path": "en/certitube/eo0FgqtuBRs/index.html",
         "size": 157902,
-        "sha256": "368023a6e072534697053fa6da832b75de3c94125c59903682cd7a680ee4175d"
+        "sha256": "2c71f5c684bcec6c4421daff87fe8d4951cc95e846a4e64f1f9bcf0d29a35d5c"
       },
       {
         "path": "en/certitube/index.html",
         "size": 161803,
-        "sha256": "30e9b90952e8a786107bc2f00ad3df0c0c85c11ae9e671f4e850e2544433a8e6"
+        "sha256": "5cf901ad5ddf896c9c753649beeca38d5463de1a4dd2c20dea68fecea3454836"
       },
       {
         "path": "en/certitube/m__hzgjFwuk/index.html",
         "size": 161041,
-        "sha256": "81cf510a3f74ab17191a5ef0b95cc4ca2f718a68501330b7f3482c1891c756d9"
+        "sha256": "c51ce944efbc32997ec1ca11ad9d527410c768119dca782813d31ca47636529c"
       },
       {
         "path": "en/certitube/rZi6U8B4HG0/index.html",
         "size": 165410,
-        "sha256": "c0e930a10fb30d22e236dc995426e77caeb65e7b9ceaf88d09b3bec2cc7afe8f"
+        "sha256": "ac52b3250465969ba420996f6ff9f63d01961be5410048025fc712e0971c2a58"
       },
       {
         "path": "en/certitube/s7wmcm4hoGo/index.html",
         "size": 159834,
-        "sha256": "767bed12b727448f85f012035c22377c88c2cd2a5fa972b4ee02a94c8b1fe333"
+        "sha256": "a6ca01366d26f97209ae3f63a264c1dfdff5974e81411165b7a75eadbbf9e11f"
       },
       {
         "path": "en/certitube/xlymDCVWXoA/index.html",
         "size": 168648,
-        "sha256": "39e11e9118ead2d7d128a26268000d5647d14f4af300538f0bce83fb586692ea"
+        "sha256": "16a717aab6692ce9fe772d080fb3e761941699fcfb7802f87f6df72a47281115"
       },
       {
         "path": "en/certitube/zIxA0ebo2v4/index.html",
         "size": 170616,
-        "sha256": "1832900009bbc6f7bb0645cdeb24814178e49a6756540b2750809d4505bbe7ae"
+        "sha256": "044d1ba29fdb030010afd5ac881e1ce6a21c17e7099dd3875b52453d0f21a2cd"
       },
       {
         "path": "en/certitube/zihZUTZAm6k/index.html",
         "size": 169293,
-        "sha256": "ca97d4bab540289a4c0de7acc350e92ab65a965badd459e648e38b0c74178ec8"
+        "sha256": "8a67ea499f5e34fb80a1c8a993cdebe301d64da93d2a62a7b284f05ab2a0407f"
       },
       {
         "path": "en/courses/index.html",
         "size": 141989,
-        "sha256": "2478631c459821c622f44eb8382b623e2da76a77d71fc6dac6e46a74068a29e5"
+        "sha256": "48bd1b7e79ff2152359397f3b78b93d8c867da006f34578d913e8921e1a4c9c5"
       },
       {
         "path": "en/index.html",
         "size": 120578,
-        "sha256": "262e2d5969c8d63d1122c1dad94edf652c157f01fc87e08e8e8ac88a49eca9a2"
+        "sha256": "33983b74f31e92becb094b2483cc2e44382f9e6149ca4979e0c0419a8349d612"
       },
       {
         "path": "es/1Z0-1085-26/compute/img/ocif-compute-concepts.svg",
@@ -2882,12 +2882,12 @@
       {
         "path": "es/1Z0-1085-26/compute/index.html",
         "size": 147483,
-        "sha256": "edb26c37ea3aba2341ebe9cb9501676e6016bdd42e37aeb93095da4c7749f10d"
+        "sha256": "edfb39ab21bfe49f65d4f08c15207550975706d34df60efe1d28d882e38b0e67"
       },
       {
         "path": "es/1Z0-1085-26/exam-checklist/index.html",
         "size": 136870,
-        "sha256": "bf38e4c8b7db2e14738a2774d7952a399d5e70454a0b4fd45721f2f73e6aa478"
+        "sha256": "b6840f93b3c28f112232585e1bb8f9fcefd0ea188de87c277a6ab314fb4b9964"
       },
       {
         "path": "es/1Z0-1085-26/gallery.json",
@@ -2897,7 +2897,7 @@
       {
         "path": "es/1Z0-1085-26/glossary/index.html",
         "size": 139732,
-        "sha256": "e59f65729f2e4ecc3149a0c30e50119d6c0b0da271b1d5efc68097a07c150d56"
+        "sha256": "10ef3ae86c12ecfa17114d0b9eae2f9d74b46cd7889cc423d5c429e2d9e14817"
       },
       {
         "path": "es/1Z0-1085-26/governance/img/ocif-governance-concepts.svg",
@@ -2937,7 +2937,7 @@
       {
         "path": "es/1Z0-1085-26/governance/index.html",
         "size": 146314,
-        "sha256": "99805d01e4cee0b25c31b496c69a743541ad5a2ec27a6dabd89e146404c45956"
+        "sha256": "5e0bedae107fa220104773008dcbc5f6c3b5789397da261e6d6d1715471e0ed6"
       },
       {
         "path": "es/1Z0-1085-26/iam/img/ocif-iam-concepts.svg",
@@ -2977,7 +2977,7 @@
       {
         "path": "es/1Z0-1085-26/iam/index.html",
         "size": 146630,
-        "sha256": "410c5a89b7fcd062b5236e11128ccd226c45644026d04b597d087b9625454dff"
+        "sha256": "b0e8021710917e7dab218f069e19c4cbd94de73d1fecc230fc418535fc388a1a"
       },
       {
         "path": "es/1Z0-1085-26/networking/img/ocif-network-balancing.svg",
@@ -3017,7 +3017,7 @@
       {
         "path": "es/1Z0-1085-26/networking/index.html",
         "size": 146789,
-        "sha256": "9389f492864aa370f93bc447ff35a0db1be3ace935ca444710c1d0f3cc2a9b9b"
+        "sha256": "a0993f8522ad9daa27b99f64bd645b22b4825020306f845a48a169a4c00e55a4"
       },
       {
         "path": "es/1Z0-1085-26/oci-architecture/img/ocif-architecture-concepts.svg",
@@ -3057,17 +3057,17 @@
       {
         "path": "es/1Z0-1085-26/oci-architecture/index.html",
         "size": 146382,
-        "sha256": "c4faa459e427cadfd9570d7113b30f2a0eb5252808d75c06ab29a695b516966f"
+        "sha256": "0a2bbf6c89aabe6ddd7cc47713e6d4e29333e6eae379bc3c3c7be3a2a66c4f78"
       },
       {
         "path": "es/1Z0-1085-26/overview/index.html",
         "size": 134363,
-        "sha256": "0e06854b9c1080fa032a0c21713634412da17487097c5f438882e1283904dc75"
+        "sha256": "18a598c45fd5d4ff69bbe2a3bc741e2ae3b9f44bf8560128b4002400121fc84e"
       },
       {
         "path": "es/1Z0-1085-26/practice/index.html",
         "size": 131661,
-        "sha256": "dd615b22466eabd8f92f233ba556203c418a97c74de85fb7c857afa5f74de7d8"
+        "sha256": "abe251448e717a4fdea6062532b6ecc5d661196dfd81752678b14d06ff7b164c"
       },
       {
         "path": "es/1Z0-1085-26/security/img/ocif-security-concepts.svg",
@@ -3107,7 +3107,7 @@
       {
         "path": "es/1Z0-1085-26/security/index.html",
         "size": 146383,
-        "sha256": "2ff877672105352c05868fbcec6c1d167be3b8387faec3dbcba55c6745576ede"
+        "sha256": "64de06e4aaf62b1589de7e7bd224d5588561493ed4d68545c9290403febc56b9"
       },
       {
         "path": "es/1Z0-1085-26/storage/img/ocif-storage-concepts.svg",
@@ -3147,7 +3147,7 @@
       {
         "path": "es/1Z0-1085-26/storage/index.html",
         "size": 147609,
-        "sha256": "73cca8f5288367cb1b60361152742e5086acfc2e432f5dffed9a731b5db957ee"
+        "sha256": "88119891d0be0b3ab8e1bea985e139ebe5f68f245b1ceb92805a803c2b02b5dd"
       },
       {
         "path": "es/1Z0-1122-26/ai-basics/img/aif-ai-choice.svg",
@@ -3187,7 +3187,7 @@
       {
         "path": "es/1Z0-1122-26/ai-basics/index.html",
         "size": 148561,
-        "sha256": "53f5b306d5c1567c3a5e6e20d126cd710e2799d026d346d1b2b0b71dd12507a5"
+        "sha256": "dea82611e43e8ed94fd9a6c7d0d0b2b01ab9f55c76a55b7d0c72228a5c625480"
       },
       {
         "path": "es/1Z0-1122-26/ai-portfolio/img/aif-portfolio-concepts.svg",
@@ -3227,7 +3227,7 @@
       {
         "path": "es/1Z0-1122-26/ai-portfolio/index.html",
         "size": 148812,
-        "sha256": "362296804a862b0c67473da658826bc18cd884ed99142507ec793f3960fcbfb5"
+        "sha256": "05053bf3fc50339258ed23a97798a9f3d5eaa68c161b888802005dc2db68f130"
       },
       {
         "path": "es/1Z0-1122-26/ai-services/img/aif-services-concepts.svg",
@@ -3267,7 +3267,7 @@
       {
         "path": "es/1Z0-1122-26/ai-services/index.html",
         "size": 149344,
-        "sha256": "f57015f746980a74da0894d20b391e364f165dccf8c8c06e94a47863c6d281fc"
+        "sha256": "c8e19034f32f33f4bd88a54227031adf492aef603454c711495090eb08325854"
       },
       {
         "path": "es/1Z0-1122-26/database-ai/img/aif-database-capabilities.svg",
@@ -3307,7 +3307,7 @@
       {
         "path": "es/1Z0-1122-26/database-ai/index.html",
         "size": 149065,
-        "sha256": "17d52ec1f46a7118344dbf79b191d23b242705e34274100a592b558fe9aba354"
+        "sha256": "9968af0dc035e8e816df8766b7dd5311f26585278db852d0de646c4a9050f060"
       },
       {
         "path": "es/1Z0-1122-26/deep-learning/img/aif-dl-cnn.svg",
@@ -3347,7 +3347,7 @@
       {
         "path": "es/1Z0-1122-26/deep-learning/index.html",
         "size": 148550,
-        "sha256": "7cc1658d978b19ee6c10b4517e62019aabed7bc28cf33211c640b96f865c016b"
+        "sha256": "c5ea51796e535599fffc4bdfc97883bc0ae61372dfe5864c5473a10918431a82"
       },
       {
         "path": "es/1Z0-1122-26/enterprise-ai/img/aif-enterprise-concepts.svg",
@@ -3387,12 +3387,12 @@
       {
         "path": "es/1Z0-1122-26/enterprise-ai/index.html",
         "size": 149475,
-        "sha256": "6d1ba6d9c252c73741819b085b13d38d062306e057ab5d6d52b7b7482fa431a5"
+        "sha256": "513865fc59c9f29d9d2494a29828a41f7a90aee4cfb5b08678be581f88b70c2d"
       },
       {
         "path": "es/1Z0-1122-26/exam-checklist/index.html",
         "size": 140815,
-        "sha256": "d8fd161ee3a5cdb19ba8f5ffda06c6e4d3b97edcaaaf1f78afbfaeac6a7be7f8"
+        "sha256": "24d6bb6c4fb9983610ab889e4e1fc5103a8cd2b5c601be88a94d8aedc6e90b9d"
       },
       {
         "path": "es/1Z0-1122-26/gallery.json",
@@ -3437,12 +3437,12 @@
       {
         "path": "es/1Z0-1122-26/generative-ai/index.html",
         "size": 149134,
-        "sha256": "282333878128e42c9bcb2d4845ac5cb66962b44c36c52bac3edc2eb9d264cfae"
+        "sha256": "8ccee7a5baa17a16c9c75251723b39e1af8d7f2721afc09ab7dd093cd283240e"
       },
       {
         "path": "es/1Z0-1122-26/glossary/index.html",
         "size": 142223,
-        "sha256": "3fbe7087f4c21bfd920da56930554bc7dc3d000e33c35d597cbfbb461c78d89c"
+        "sha256": "84a3c580660df253f9450ed2252d30308dc8f27651ef9cb1d6522961561a6d2f"
       },
       {
         "path": "es/1Z0-1122-26/machine-learning/img/aif-ml-approaches.svg",
@@ -3482,7 +3482,7 @@
       {
         "path": "es/1Z0-1122-26/machine-learning/index.html",
         "size": 148959,
-        "sha256": "a8deda854955b7f8f63a117d4143d19568cfe769836af294daf84a1f31dc0447"
+        "sha256": "e57381773cca45f5f5d6e46f12a8103de02337474ac9d7ec558aae14c59b3bbc"
       },
       {
         "path": "es/1Z0-1122-26/oci-generative-ai/img/aif-oci-gen-concepts.svg",
@@ -3522,17 +3522,17 @@
       {
         "path": "es/1Z0-1122-26/oci-generative-ai/index.html",
         "size": 148759,
-        "sha256": "4c53bfe412b0c0189c4fd7d290acd13ea523ad184bd062643fd37d11ec5582c5"
+        "sha256": "4c144b28fa3388bc96f3b7ebe4c3aa56cec9bc27b0a55f9d7c9de408bd9bee75"
       },
       {
         "path": "es/1Z0-1122-26/overview/index.html",
         "size": 137835,
-        "sha256": "b916842be103a83dc538575395003729ea4e110c0bdd79b24e8a58e304cd97f9"
+        "sha256": "7fc5ce8516fad1f34cf7d28585d20dc1b41c75a900d2901a72c75c4c5032e9a1"
       },
       {
         "path": "es/1Z0-1122-26/practice/index.html",
         "size": 135139,
-        "sha256": "33877900d9870309b3af8f216035f91538ba767639a1f3cc015af84f88fa7a01"
+        "sha256": "0fc794a38bc77aa659c828b0e1a46b4c6e0c5389b3f78b35ea5a3720c38b8fb7"
       },
       {
         "path": "es/1Z0-1157-26/agents/img/agent-loop.svg",
@@ -3587,12 +3587,12 @@
       {
         "path": "es/1Z0-1157-26/agents/index.html",
         "size": 153469,
-        "sha256": "0199e4833e7efa0bc5692edc03b282c16317f8b8213852d3ceaa90cb2a60ed18"
+        "sha256": "7940d33788fb2df4b9a6347829e4d1d2d2ae6dcc839b3068fe84625595d7b5ad"
       },
       {
         "path": "es/1Z0-1157-26/exam-checklist/index.html",
         "size": 138313,
-        "sha256": "7f183066423a467b2494e416dcc04dadeae1429e8d691eb23eb1076d5712082b"
+        "sha256": "d740c3fa2bd5f2b59070822c45a3d40ee5220f0446b69451aefb333bb262be80"
       },
       {
         "path": "es/1Z0-1157-26/gallery.json",
@@ -3602,7 +3602,7 @@
       {
         "path": "es/1Z0-1157-26/glossary/index.html",
         "size": 141045,
-        "sha256": "fe6bd359c8e8d47115a5ea3fbef4cc85894c00390944864a907cea226b30e539"
+        "sha256": "3cd23fc2236024fceba079299afb9094dc47cdd368dbeeb845672b32ff425373"
       },
       {
         "path": "es/1Z0-1157-26/langchain/img/langchain-building-blocks.svg",
@@ -3647,7 +3647,7 @@
       {
         "path": "es/1Z0-1157-26/langchain/index.html",
         "size": 149564,
-        "sha256": "6bde7e27544c35b8a192a6f979b7545ff020dc4035f78f26803eef3e9c7c1419"
+        "sha256": "1c94d53a23afe35564bae045a453573b91b961859e284209eaa35c64adf6986d"
       },
       {
         "path": "es/1Z0-1157-26/mcp/img/mcp-architecture.svg",
@@ -3697,7 +3697,7 @@
       {
         "path": "es/1Z0-1157-26/mcp/index.html",
         "size": 151277,
-        "sha256": "fed0e486a80a1b89154e127e9215f87590254bc9930054caebfc86c2275ac0a3"
+        "sha256": "1b7a27ceee549ea23b9efb0cf482fa442117ddd5c43d00e12a6fdf25e4d14bc0"
       },
       {
         "path": "es/1Z0-1157-26/oci-enterprise/img/enterprise-agent.svg",
@@ -3757,7 +3757,7 @@
       {
         "path": "es/1Z0-1157-26/oci-enterprise/index.html",
         "size": 157030,
-        "sha256": "b5ecc06d66d447f1d926f3ab7629e04deef35d939ef73efe8b7b46abe8bcfb02"
+        "sha256": "907ce95725972627907e9c0977a495da6eaae2d545e3484299743f33d0c56bcc"
       },
       {
         "path": "es/1Z0-1157-26/openai/img/handoffs.svg",
@@ -3812,7 +3812,7 @@
       {
         "path": "es/1Z0-1157-26/openai/index.html",
         "size": 152639,
-        "sha256": "79e71683f6aac46fa3ad9561e82001a48c3d47a817cfa9cadb889c5200835d0a"
+        "sha256": "39f4f5cca3fcc85b13a155fc1d4e928b58583dac89186bb5f32eee8552c996c1"
       },
       {
         "path": "es/1Z0-1157-26/oracle-database/img/database-agent-factory.svg",
@@ -3877,22 +3877,22 @@
       {
         "path": "es/1Z0-1157-26/oracle-database/index.html",
         "size": 160718,
-        "sha256": "b023921e9ba1dc4ba227ffa304844a8f12bbf0f855381bee56397e53536b768b"
+        "sha256": "c9d2555332b60800209481c29a8d13737f76074f6c8f70538ca4bab674e82a0b"
       },
       {
         "path": "es/1Z0-1157-26/overview/index.html",
         "size": 135945,
-        "sha256": "73bef6750469dca8538cbe017c7b75dcace7c7e140e21bf46cd0e64f734e0b5e"
+        "sha256": "8ba54802f5a266c93258fbed72296872cb04781fc68beed263ea2796e1512f46"
       },
       {
         "path": "es/1Z0-1157-26/practice/index.html",
         "size": 133318,
-        "sha256": "2f9aa04ef07bf0da04bba7473559fdbbe464629d02115b8187c1159cf0c4dcac"
+        "sha256": "2b191955e9775c817f1419c48214eb3b7435205c86a1ff351ad96b80ad148893"
       },
       {
         "path": "es/404.html",
         "size": 111538,
-        "sha256": "d09b21e7dc9573b5f4ae766c1f8535e89c7b36b4e3682ebf2bbd3f48db01f318"
+        "sha256": "449db68c576ac5b317c28b4a7d89ce3989b10622a483ad4637be93cddc8b8032"
       },
       {
         "path": "es/CDMP-DMF/case-study/img/gov-case-assets.svg",
@@ -3917,7 +3917,7 @@
       {
         "path": "es/CDMP-DMF/case-study/index.html",
         "size": 151662,
-        "sha256": "0cf64df555f608249b0a705110ef81888784cd4f7e902fb1754144b767b075a6"
+        "sha256": "d87efd495e63789802f5980f63efaf6e1060ab78e3f14740e3adab539bc42484"
       },
       {
         "path": "es/CDMP-DMF/content-management/img/gov-content-management-concepts.svg",
@@ -3947,7 +3947,7 @@
       {
         "path": "es/CDMP-DMF/content-management/index.html",
         "size": 150832,
-        "sha256": "fe9189b8d3fe17f0ca5f09d658fd27cfab78805a8f17602a2ab064f32fffa07f"
+        "sha256": "278d7e34b3beee2187696de16c611ccc19cb34e296af10db425dc10f57e40a07"
       },
       {
         "path": "es/CDMP-DMF/data-architecture/img/gov-data-architecture-concepts.svg",
@@ -3977,7 +3977,7 @@
       {
         "path": "es/CDMP-DMF/data-architecture/index.html",
         "size": 151557,
-        "sha256": "80384d9b863493b3d4d6ee002a218fa4d60d6fb12806a26d6097498b5cfe1bcf"
+        "sha256": "7cf606cea17cfaf99d02f0e440056b52374e7256025b16eff549c2bb142fbdb1"
       },
       {
         "path": "es/CDMP-DMF/data-integration/img/gov-data-integration-concepts.svg",
@@ -4007,7 +4007,7 @@
       {
         "path": "es/CDMP-DMF/data-integration/index.html",
         "size": 151344,
-        "sha256": "cf35d7bc98ba8969df1b8a8299bd3a4927e9ef61c1f9966e88a6907a335fb4a2"
+        "sha256": "c8b20695b3344db45b1f65a0444d215b94b395699b009667830aeacf5b073a52"
       },
       {
         "path": "es/CDMP-DMF/data-modeling/img/gov-data-modeling-concepts.svg",
@@ -4037,7 +4037,7 @@
       {
         "path": "es/CDMP-DMF/data-modeling/index.html",
         "size": 150891,
-        "sha256": "887e70f54e6eb4a5ae3304428234abcf1cd35d3975d8560e601382e3625db0af"
+        "sha256": "a815bf746e1812fd018914c17e4a88a4b42c4b199026316b5409b178888ef05c"
       },
       {
         "path": "es/CDMP-DMF/data-operations/img/gov-data-operations-concepts.svg",
@@ -4067,7 +4067,7 @@
       {
         "path": "es/CDMP-DMF/data-operations/index.html",
         "size": 150536,
-        "sha256": "ed2fc5b59101f29d104c17e4ac593c52287af67c9aadf1d53b310ae586993e68"
+        "sha256": "6de05876ebf9b4470fd610683508ba0e97cdc207fe59f29d5e9925309a9340b1"
       },
       {
         "path": "es/CDMP-DMF/data-quality/img/gov-data-quality-concepts.svg",
@@ -4097,7 +4097,7 @@
       {
         "path": "es/CDMP-DMF/data-quality/index.html",
         "size": 150811,
-        "sha256": "2194e13d7c0d1d73ad316abbc8d7a8b9b1f5c0eccd22c80f301d14907b79c1d7"
+        "sha256": "29c5c9cddc0c4aa157950494b888540a56d5a168659fa5f2f6112622bc5981c6"
       },
       {
         "path": "es/CDMP-DMF/data-security/img/gov-data-security-concepts.svg",
@@ -4127,7 +4127,7 @@
       {
         "path": "es/CDMP-DMF/data-security/index.html",
         "size": 150425,
-        "sha256": "8630e8eda91af692c4d9ebf060729e56fd937f65fbf407f41ec94d7a2801173f"
+        "sha256": "99ead7b393173179a3d3665ddb98b4d1284076b724159962663f91beb3415897"
       },
       {
         "path": "es/CDMP-DMF/data-warehousing-bi/img/gov-data-warehousing-bi-concepts.svg",
@@ -4157,7 +4157,7 @@
       {
         "path": "es/CDMP-DMF/data-warehousing-bi/index.html",
         "size": 150760,
-        "sha256": "7c627e3ae9eff9745f6ecd0f97ad12a47e42fc0e3d6e6e9b4242a6ecf426bedc"
+        "sha256": "074453dd5b077b269d64f2c087d58d7214f42a58953851cde5b1ff49b852ab08"
       },
       {
         "path": "es/CDMP-DMF/gallery.json",
@@ -4177,7 +4177,7 @@
       {
         "path": "es/CDMP-DMF/glossary/index.html",
         "size": 145760,
-        "sha256": "f77d5470a565ead271681fe53e5f44957aec5c288e6d1fc75364cbd89a4eb89e"
+        "sha256": "e0a7837c052968e22cd10d1c116280f95c4dfd327771c76b09217cd9312d7a0a"
       },
       {
         "path": "es/CDMP-DMF/governance/img/gov-governance-concepts.svg",
@@ -4207,7 +4207,7 @@
       {
         "path": "es/CDMP-DMF/governance/index.html",
         "size": 150751,
-        "sha256": "d6a14084a7a396c6d275108555f9f581479b37a8bf9ae4a7d0a22659fd254b6e"
+        "sha256": "c1abc57e1b83ccae33c985716ec579cf80a9177e96fa36b39ca3e469fc2cfef1"
       },
       {
         "path": "es/CDMP-DMF/master-reference-data/img/gov-master-reference-data-concepts.svg",
@@ -4237,7 +4237,7 @@
       {
         "path": "es/CDMP-DMF/master-reference-data/index.html",
         "size": 151000,
-        "sha256": "2ed561ddd89f686e3d31bb97e921ec67741cc72fe7546a6fdde654f56620f750"
+        "sha256": "144a4ef042efbb00d25dee99565591d189f97bfe0a0c02fa537a99e267969425"
       },
       {
         "path": "es/CDMP-DMF/metadata/img/gov-metadata-concepts.svg",
@@ -4267,7 +4267,7 @@
       {
         "path": "es/CDMP-DMF/metadata/index.html",
         "size": 150885,
-        "sha256": "27642526305d7328f57566b59daa524c0a89d70a0f92554bc2255935127c0207"
+        "sha256": "76671c62f4a6ad96aeb6c53a984d31f29dfe94f7ff7ee66e32ef5d872bcb5a65"
       },
       {
         "path": "es/CDMP-DMF/oracle-map/img/gov-map-architecture.svg",
@@ -4287,7 +4287,7 @@
       {
         "path": "es/CDMP-DMF/oracle-map/index.html",
         "size": 157513,
-        "sha256": "1ff70de970fb36526221d821734266616223b1ec044d8bbff2e0cc5a21e6d4b4"
+        "sha256": "a05a09d5415f37543378a7eb042403d8b227d73a90974ab30e329b9cf3aabb2d"
       },
       {
         "path": "es/CDMP-DMF/overview/img/gov-overview-contract.svg",
@@ -4302,7 +4302,7 @@
       {
         "path": "es/CDMP-DMF/overview/index.html",
         "size": 142016,
-        "sha256": "6eb46fcb705ccb71139021e6734a4975d0b429534cb9cbba09e15608a555219f"
+        "sha256": "a737b0c4c933f7da2ede30f1b9b7e2efdbe6914d345a04b1d6a03649e4f90cae"
       },
       {
         "path": "es/assets/1Z0-1085-26/questions.json",
@@ -4327,7 +4327,7 @@
       {
         "path": "es/assets/certichat/search.json",
         "size": 1351511,
-        "sha256": "d922abcf0f82218e5d88e1708b0dd0f948c3a52d50023516075a4c52705641f0"
+        "sha256": "25abfa447f4c29ff49ea28157879e5b063aae1e09b5e8de85a2ed0f852fa52e9"
       },
       {
         "path": "es/assets/certirss/editorial.json",
@@ -4342,182 +4342,182 @@
       {
         "path": "es/certichat/index.html",
         "size": 126543,
-        "sha256": "47b0257998f6ddd30e0b55a1b9e5429f56dbabe61543c5c3aff6dd2a6b3c830f"
+        "sha256": "409a4de84f050825826b9e6f905e62fb77b1e52f962c082f82b4f8435b911079"
       },
       {
         "path": "es/certichat/piloto/index.html",
         "size": 126547,
-        "sha256": "b45cfa9629cc16e52ea60a73aca4287bd34ad0ff6964dd884fc267cb007b25ca"
+        "sha256": "c221507bd8a64394ebdf3cbc40fc71ec68cf4dd2715af5edc05603f26130df75"
       },
       {
         "path": "es/certiquiz/index.html",
         "size": 113034,
-        "sha256": "efa98399ad807f6da03a15eefe334c0bdcc589e9653f8a1411a89ea070a97abd"
+        "sha256": "0a8273592c2c538ccc3924be4d725fa775e2fc75a172b1a41401274a75608516"
       },
       {
         "path": "es/certirss/index.html",
         "size": 122903,
-        "sha256": "5d3fcb6ecd45c670aad47c6a88a53074da6e9db9d7e0bb8e8e818030c38aabf3"
+        "sha256": "73a013cd612bcc96b173422220756b212c53d670557893bb7f34663f5a5f45a0"
       },
       {
         "path": "es/certisearch/banco/index.html",
         "size": 240351,
-        "sha256": "abe6c68c17008bf2fea226985e9b3d41f74a302fd7bf7bd31afc1089306fe916"
+        "sha256": "38c388fd8fe1ff96d4873e64cb0f9cb919b1094ec245376265e6d80d08fb5343"
       },
       {
         "path": "es/certisearch/index.html",
         "size": 125897,
-        "sha256": "2cfdc3d5159af2e29ab7247582a5d2f49c907f4f821da9e33cd1de6be365f36e"
+        "sha256": "a400299f7f4769b9baa67720d3a491a5ee68402ebf409fd7c69705007d973d2c"
       },
       {
         "path": "es/certitube/-6_1iZv_0_E/index.html",
         "size": 163442,
-        "sha256": "46a76e82bf40005f0a16b6296cde1074106a9ec86b9e2d6d2394ebc2a8634304"
+        "sha256": "e05fb2d2d21a2ef0aba292a3f1b37e285e542987425310110602de47460b1427"
       },
       {
         "path": "es/certitube/01lvJGeFZ78/index.html",
         "size": 176022,
-        "sha256": "5d7ea5615c4e312b86f893b85766df4aefdd6e49e01b2d95def0a1a18e40e588"
+        "sha256": "3c02cb1040bc81e1d15ca9c5256d4356a4a3beea3a168cb2cff6ddfb23c27eaa"
       },
       {
         "path": "es/certitube/2qdNyl76opY/index.html",
         "size": 160929,
-        "sha256": "2b99b327649bffca174ffe03636d175dff2a3a09ee44effe0c0aad86987a3228"
+        "sha256": "fe4dd32fb95839701f6c6e0e98ea4cd2e987c44843753cb579dd3e661cc2ae3e"
       },
       {
         "path": "es/certitube/5dilnUUcgQE/index.html",
         "size": 164578,
-        "sha256": "233ae9fbcaac29296963e59a06dfef5e19e235fe64b196c5b588006ab528c687"
+        "sha256": "6ad19f1ac9dca92a803a989d4f81f7e49387586cfd610b8ff1dcfb68ab004150"
       },
       {
         "path": "es/certitube/5tABMapyzvA/index.html",
         "size": 168871,
-        "sha256": "44d333fde148a2cfa6badc96b30b2e71ff05f0a9b6ad61a13cccc992a7b510ba"
+        "sha256": "fb2df25542537a707d3ab6a8c423cf7fb6a51c9fd7174244e360273048409f95"
       },
       {
         "path": "es/certitube/6L1YmTRZNxM/index.html",
         "size": 168698,
-        "sha256": "a69558b614844002977c87fa13c8f9e0f134eb81569aad6f5eef4f8b96c7ee29"
+        "sha256": "654a20839a7a0bda8a762f79f18f0e6baf548b68b36011e07420b2a74d88b4c4"
       },
       {
         "path": "es/certitube/6nujUlKb5z0/index.html",
         "size": 167368,
-        "sha256": "8a1345900dbb245cf0a4126b73cd92ac72288c27ad0d67d924de860a97eca145"
+        "sha256": "27584c29f484a3416ea4d480ff9b840850fee45df841c1fed59d6943a0a61f60"
       },
       {
         "path": "es/certitube/7TtlKGNbBnc/index.html",
         "size": 169385,
-        "sha256": "483580b040302d9244c63561493696ff8526b3c5b9958719cde2d5cffa8b3b76"
+        "sha256": "cac8e7d3494c5734a3960aa5ed5104a7361f1b41d02594a90f52ed1c63cb23dc"
       },
       {
         "path": "es/certitube/91k_Uo3D3OQ/index.html",
         "size": 167034,
-        "sha256": "1467823b999a904fcec7840a58808404823f5b3e2d43dd34711c3391acc12cb2"
+        "sha256": "58756baca810d74a573bea058016332d0d34d06e66fc62b8617059b3642c3701"
       },
       {
         "path": "es/certitube/FLisHRFT1Xg/index.html",
         "size": 171685,
-        "sha256": "2454e1c70314a8857c91aa4baa16384e11859bbf57836993f2855762f3406bb7"
+        "sha256": "6901852bc08d6a7761d20106969776b2acb3608e48c323aac79d9f666ee55b69"
       },
       {
         "path": "es/certitube/HCUHwtTt5RI/index.html",
         "size": 162163,
-        "sha256": "a12e4641171bc56845f21e2441fa8ca160e78194d8e115cd0e03f9acef371841"
+        "sha256": "0fb6aca623016e5da16f61315bb47f77afe8a4e7b060da4b0a70ddcba9beda02"
       },
       {
         "path": "es/certitube/Ha74VhpQwQo/index.html",
         "size": 164140,
-        "sha256": "fbec2967e648b5efd9f57258e3f1c48344b1df8840e53108d7c2c08ed8ad7097"
+        "sha256": "f87071734fda199591bfd515dfafe28b70ba65ae114c4fd62c51d289669fd064"
       },
       {
         "path": "es/certitube/K4x0pGMfb5I/index.html",
         "size": 173663,
-        "sha256": "8dcc6727554f5177ef8d6aa6debd40273bf82c381650b07cd4e0fa7593a17542"
+        "sha256": "963368e10072f1cf23d57ae4787c0a9a88f23cf2e95c8de43ef857ee4c96d024"
       },
       {
         "path": "es/certitube/MWASexQNDVU/index.html",
         "size": 160106,
-        "sha256": "f1ec2ad8bc8b7cba03774c52ceaf637eba214b9d7cec8e653d278631fae2276f"
+        "sha256": "f7a6d743745817b3b17cb630bdecb6287a10697f7f95ba3382e0cd493174b729"
       },
       {
         "path": "es/certitube/R1dWXZ-iqc0/index.html",
         "size": 169027,
-        "sha256": "2370f6ec01fecabb3dc408f9cf84e0ec3cf083d3fe91440f41725072f8a9d90a"
+        "sha256": "d907bb0f08e3d741a4694acf4c8ac9696948f64aeb2c89df4246597da7edbe9b"
       },
       {
         "path": "es/certitube/Wf5fisusQOc/index.html",
         "size": 162311,
-        "sha256": "298faaac626a60af5fd63dad1ac4aa494d6c533764a44ce0468d15042ddde9e1"
+        "sha256": "0a53c75d4a899317563717d853eaab05a179c96088b8e6484e93b811d6bf9aab"
       },
       {
         "path": "es/certitube/ZDRz7aCPs2g/index.html",
         "size": 178125,
-        "sha256": "a036aa3ba1e21441334bc1c0514496ac616118b10811751439627b3d3ca14b49"
+        "sha256": "241a42ccb59d439cbb84b70f7d298f896e2fa560d2373cdf3a13cb186d4e1408"
       },
       {
         "path": "es/certitube/ZjfQUwUdpbI/index.html",
         "size": 165199,
-        "sha256": "d85c95f438908246ecdaef65e2c29121b812921ea3f9fe27e7aa9350791d5c54"
+        "sha256": "24a38bec962c2b4641150bc913fc278eb1ebed71321aa91a47cf3a32d2857936"
       },
       {
         "path": "es/certitube/aZV1wvcNK6s/index.html",
         "size": 162567,
-        "sha256": "38859ff77b6ec5c45b4dfe33da15f535568e3ed9588a19adcf1693ca9895f003"
+        "sha256": "2c371db70d131e344bd59f5f0013fbfbcefa79adc6807007f086af6d599609f3"
       },
       {
         "path": "es/certitube/eo0FgqtuBRs/index.html",
         "size": 162619,
-        "sha256": "53f94dc3c71dfc3e2c5d181bc308ccabbb8ee77cf97f0b0fbe71b62ba045c47f"
+        "sha256": "a5afa8c9b2a71e9340538289d8d0826de2d8377128267a3832bd8b85adffb58f"
       },
       {
         "path": "es/certitube/index.html",
         "size": 166986,
-        "sha256": "2270c316c6699f1829a6ca4651eebae29893d051f4baf943af07f896da52ced4"
+        "sha256": "6363bf8ede19813c8a2442f720c04b68a39adca66ba9bef3eedb03af521b1c3f"
       },
       {
         "path": "es/certitube/m__hzgjFwuk/index.html",
         "size": 165903,
-        "sha256": "d1ad3b70a84d69464bbc28eac236afb27cf493f7d9a7d5a5b2c780cf41ad52e4"
+        "sha256": "1a0315c4443b83ba924961ea2af47ae63b9b59c97b0ece429c70fa81c995fcec"
       },
       {
         "path": "es/certitube/rZi6U8B4HG0/index.html",
         "size": 170181,
-        "sha256": "a4b177d35c61c2b4e515ce0e9de6777ac5c20b10519bd95763fcd4c48eb724f4"
+        "sha256": "1956ebe479a67a1478c6d4efd6cc1a94ad76afea68774c507c7d20e76e8848b9"
       },
       {
         "path": "es/certitube/s7wmcm4hoGo/index.html",
         "size": 164762,
-        "sha256": "d72e92db0650fc3f25404d70cd0b408ce322995b44e89afd75cbbd1b7b3323aa"
+        "sha256": "038f14e406cac14823a110cd4e2f853cf186d1d9c19205638db6e97b5a38bcc5"
       },
       {
         "path": "es/certitube/xlymDCVWXoA/index.html",
         "size": 174019,
-        "sha256": "a776a3e63fff3e38c88e964f90240dea1235deb7a36b2ef482fc1c0aa36e8ba6"
+        "sha256": "8285e1638f21b19124d74de78828991226b3b8c5e6d04f5c815aa3ebf12218c2"
       },
       {
         "path": "es/certitube/zIxA0ebo2v4/index.html",
         "size": 175990,
-        "sha256": "f05a448e90a2e4f9700cde4a2640a1ea75e01044a804a064d32c6a55c768f992"
+        "sha256": "55b1f787d8d0334d54b19503ca581c2d7adfe9a7e72aa3fcb0f80319b2d9e892"
       },
       {
         "path": "es/certitube/zihZUTZAm6k/index.html",
         "size": 174869,
-        "sha256": "32947be7a15ac2616f2975d86c4731c041410d89eb3832d0667c4fa2a82ea705"
+        "sha256": "b5258e82a787ef305fcfa394207202727c9579ebcbd8e9d2df5cff33ffdd5b68"
       },
       {
         "path": "es/courses/index.html",
         "size": 144893,
-        "sha256": "b5d65648e60ddacccf8862c33ee7340a6cd5bd5245c53730a59a905b8a42314c"
+        "sha256": "a7dc5aeb7d1a37080137d370b669361e160c671dd611d1b5e024399aee0b380e"
       },
       {
         "path": "es/index.html",
         "size": 123284,
-        "sha256": "4d83157a7667aac70c983eb3864172f13eb2f2760dad3da1267eb54a241e30b3"
+        "sha256": "3a89aa0c40f89108e69bafee923a42275a7e5c53a647b9ed7354fcfd7aa4e96e"
       },
       {
         "path": "index.html",
         "size": 123284,
-        "sha256": "4d83157a7667aac70c983eb3864172f13eb2f2760dad3da1267eb54a241e30b3"
+        "sha256": "3a89aa0c40f89108e69bafee923a42275a7e5c53a647b9ed7354fcfd7aa4e96e"
       },
       {
         "path": "it/1Z0-1085-26/compute/img/ocif-compute-concepts.svg",
@@ -4557,12 +4557,12 @@
       {
         "path": "it/1Z0-1085-26/compute/index.html",
         "size": 147561,
-        "sha256": "375d7c43a5cadce94206dc281e0ce100406243f93570c94716d6ad6c12b5a9f6"
+        "sha256": "752a0b088142f726b4addd0aa598d14367c695cc76ba14297523bc5265a66cb8"
       },
       {
         "path": "it/1Z0-1085-26/exam-checklist/index.html",
         "size": 136989,
-        "sha256": "ecc6b3247c4879745d50b606779f7f2cd6f44134acfc498d0a987405fbcc86de"
+        "sha256": "7239c8cfa0201a1a18607eb0e2f22e58c433be226cb278996de4b3cb740ce7b7"
       },
       {
         "path": "it/1Z0-1085-26/gallery.json",
@@ -4572,7 +4572,7 @@
       {
         "path": "it/1Z0-1085-26/glossary/index.html",
         "size": 139891,
-        "sha256": "a03fc96bcf94fa851be045ff1f09699bba024998a9b5a9bdc4b555dd3e7962ca"
+        "sha256": "d2d1c556a61b094adad4ca917828446be17a291245448133326bf3f40eda55ba"
       },
       {
         "path": "it/1Z0-1085-26/governance/img/ocif-governance-concepts.svg",
@@ -4612,7 +4612,7 @@
       {
         "path": "it/1Z0-1085-26/governance/index.html",
         "size": 146570,
-        "sha256": "4c1f9b2cda3af3b9dfb65a40d0e7fb882e1bdd4e1729bb03264797e9d4f49d1a"
+        "sha256": "8d76a455b7a9b083eb53c0ac9149e8731a7d693ab07981d957db35b12cc055df"
       },
       {
         "path": "it/1Z0-1085-26/iam/img/ocif-iam-concepts.svg",
@@ -4652,7 +4652,7 @@
       {
         "path": "it/1Z0-1085-26/iam/index.html",
         "size": 146646,
-        "sha256": "ca87e76d8fde349d717bf62ef6005a8d4bb19d26071dbb886aa59f1c2c278ee1"
+        "sha256": "29fc1c257b1a05b8ec712f711b7b5e76bac20024854bf4c387b5921801b40c44"
       },
       {
         "path": "it/1Z0-1085-26/networking/img/ocif-network-balancing.svg",
@@ -4692,7 +4692,7 @@
       {
         "path": "it/1Z0-1085-26/networking/index.html",
         "size": 147117,
-        "sha256": "edb46e215d959057956dadcfec8a784564fb968059bef96f2d813b773e1374be"
+        "sha256": "3f33e6846f060eae25dab4671e7e2f6f7f1a9217e5f888c1f96efb51010a50f1"
       },
       {
         "path": "it/1Z0-1085-26/oci-architecture/img/ocif-architecture-concepts.svg",
@@ -4732,17 +4732,17 @@
       {
         "path": "it/1Z0-1085-26/oci-architecture/index.html",
         "size": 146365,
-        "sha256": "aabfea5491a3a2b647d49c3ac86dfc2a15cf5b2bfb33966616f65ebc458a8b31"
+        "sha256": "86f02439e8143e0b1a8e1d936702a2c26fd40d2f307acbd29727504271de479b"
       },
       {
         "path": "it/1Z0-1085-26/overview/index.html",
         "size": 134288,
-        "sha256": "bad27f8fb9d4409b6d3349ca1415ad3ecff42911d17c1d101aae5eefca3876b4"
+        "sha256": "5119094c610661c2fef660bc6175900842cde91d03155c8c9c32192fc6332e10"
       },
       {
         "path": "it/1Z0-1085-26/practice/index.html",
         "size": 131560,
-        "sha256": "b2799f47ae17cb9b69a1ae930b27d363da4de20bfb262176c430a0e4bc968f43"
+        "sha256": "48599c0d6966b1a1df0d3c9ba4fabed30da1faef919a7fd64479cbc069efe3de"
       },
       {
         "path": "it/1Z0-1085-26/security/img/ocif-security-concepts.svg",
@@ -4782,7 +4782,7 @@
       {
         "path": "it/1Z0-1085-26/security/index.html",
         "size": 146600,
-        "sha256": "e4c894e42e7ad27656e38fb6b2176e877336a1d419eaa0321024fd40fd0d7816"
+        "sha256": "33a45b598ae7f7c200afe3e7313773b9036a0195d9ca4ba52523ff8976e4e65e"
       },
       {
         "path": "it/1Z0-1085-26/storage/img/ocif-storage-concepts.svg",
@@ -4822,7 +4822,7 @@
       {
         "path": "it/1Z0-1085-26/storage/index.html",
         "size": 147400,
-        "sha256": "8d1bd9d56f73eed8b25f50f91f47ffe142de1f68c6c0332b46d36254647235d6"
+        "sha256": "c86d4cee1cfa69e8a2696a123864259dabb1c76a2e7e82354a4be03637aa6f48"
       },
       {
         "path": "it/1Z0-1122-26/ai-basics/img/aif-ai-choice.svg",
@@ -4862,7 +4862,7 @@
       {
         "path": "it/1Z0-1122-26/ai-basics/index.html",
         "size": 148706,
-        "sha256": "e3da7180b2e5e86d29a0231254ff5601a76e2dd18a23e5a9dc83021315a6f33e"
+        "sha256": "89297dbbc5049bd3cf286292460363ad81f675012042d715cf67357c54fc59ee"
       },
       {
         "path": "it/1Z0-1122-26/ai-portfolio/img/aif-portfolio-concepts.svg",
@@ -4902,7 +4902,7 @@
       {
         "path": "it/1Z0-1122-26/ai-portfolio/index.html",
         "size": 149022,
-        "sha256": "ec7ef2bd4b48f807ba11c96f973df0abd25a13de97eb6556fe883f0303af4d93"
+        "sha256": "d670a5096ef1f3073646cf266e889f12cccb16fa16d87a6b144468be3dc528df"
       },
       {
         "path": "it/1Z0-1122-26/ai-services/img/aif-services-concepts.svg",
@@ -4942,7 +4942,7 @@
       {
         "path": "it/1Z0-1122-26/ai-services/index.html",
         "size": 149322,
-        "sha256": "77056fd9bf248c64a9eaf00d37432ff18a971ec3e828ce5444f1703617804a46"
+        "sha256": "c61d1686a93565559495aa6a5b620749f7b78e239d3628172635cb43eaf14b6c"
       },
       {
         "path": "it/1Z0-1122-26/database-ai/img/aif-database-capabilities.svg",
@@ -4982,7 +4982,7 @@
       {
         "path": "it/1Z0-1122-26/database-ai/index.html",
         "size": 149027,
-        "sha256": "f83600953f2e1a544ce4134582f95e1c2a4c0839547553e8c2268aba4d3735d0"
+        "sha256": "834efa08850ad1658222689d7ed5428b085c910c834f0c1e7e416f62ccf3037c"
       },
       {
         "path": "it/1Z0-1122-26/deep-learning/img/aif-dl-cnn.svg",
@@ -5022,7 +5022,7 @@
       {
         "path": "it/1Z0-1122-26/deep-learning/index.html",
         "size": 148512,
-        "sha256": "b612c61d619067904a8f6e258ff5cd0ba9e2a240388a20904d5bbc58fa5a586a"
+        "sha256": "30e39dd386a9030af98afd0265f530e8aebb9bc3088c4ee11c800f4816fb6dd4"
       },
       {
         "path": "it/1Z0-1122-26/enterprise-ai/img/aif-enterprise-concepts.svg",
@@ -5062,12 +5062,12 @@
       {
         "path": "it/1Z0-1122-26/enterprise-ai/index.html",
         "size": 149504,
-        "sha256": "bea00a1f05cbe325564a374e573d1a8886938ab3b0398181d049a1c5d872031e"
+        "sha256": "b29393b5dd54f4c3cceaef4e866501a78a1e40e414aec06354e341ec2a7d458b"
       },
       {
         "path": "it/1Z0-1122-26/exam-checklist/index.html",
         "size": 140833,
-        "sha256": "e294aa7a3ae8ef2ca023dd4a6ed0fc7b693706e7bc237c77aada8318a340d125"
+        "sha256": "7e2b9d20f8babe3bb2d058d584312045787890756ef07106e6b0d91843343190"
       },
       {
         "path": "it/1Z0-1122-26/gallery.json",
@@ -5112,12 +5112,12 @@
       {
         "path": "it/1Z0-1122-26/generative-ai/index.html",
         "size": 149317,
-        "sha256": "cf86db0f8e35c5220bc00b3d3756a3bea4c2d73940d404276f37d321a14f00a5"
+        "sha256": "dd180289e49ceccf8251404a142c14ee231cd5d41577a897fe3ec08393f14df1"
       },
       {
         "path": "it/1Z0-1122-26/glossary/index.html",
         "size": 142116,
-        "sha256": "15253cf0ad383d7a53814ef1f673eb880a48e4e346d4aa1ed79be5057384e7f3"
+        "sha256": "da078f03238a3c062f863df9dcd23d0a7c7d58438fc10f249704b9ebf4166975"
       },
       {
         "path": "it/1Z0-1122-26/machine-learning/img/aif-ml-approaches.svg",
@@ -5157,7 +5157,7 @@
       {
         "path": "it/1Z0-1122-26/machine-learning/index.html",
         "size": 149086,
-        "sha256": "34c9b3a521e8b6b2c0d48b94d9bb5f2f11af2eff463cd0a2643260b87fac3a90"
+        "sha256": "680ba85769a3fe64b47f00e4e959a0f4326d6518282e135b63812a753511394d"
       },
       {
         "path": "it/1Z0-1122-26/oci-generative-ai/img/aif-oci-gen-concepts.svg",
@@ -5197,17 +5197,17 @@
       {
         "path": "it/1Z0-1122-26/oci-generative-ai/index.html",
         "size": 148716,
-        "sha256": "bb49b1413277159071c09437a5a028dfd2ced2cf9803dd42209f75a909bdaeaa"
+        "sha256": "e6e012935bc9ffa43d54e21441508a6e35da8f170435531f9946d773a8f4dbe0"
       },
       {
         "path": "it/1Z0-1122-26/overview/index.html",
         "size": 137710,
-        "sha256": "1a0c2958c854f227427a137d71d4428f6d43f2017d641b24cba38f0dc0b033a9"
+        "sha256": "3f5c530feb9d4205ddf44162ee011767906c1c2936a5e2ac6f503162ebe8f356"
       },
       {
         "path": "it/1Z0-1122-26/practice/index.html",
         "size": 135007,
-        "sha256": "904a7a4ff2fc81ea4ad0de96940400c3d28e2c5bccfc38f0e56aea8e71312dfc"
+        "sha256": "9f6d3e242f733c41a2926cf71c760ec8fbfa2fff36ff66a43b62d8976077cb32"
       },
       {
         "path": "it/1Z0-1157-26/agents/img/agent-loop.svg",
@@ -5262,12 +5262,12 @@
       {
         "path": "it/1Z0-1157-26/agents/index.html",
         "size": 153420,
-        "sha256": "7dccd0548e3527d6628a8622d8245d7beb65f19fbc9c7da06f04798a3f89cb99"
+        "sha256": "6f7c0f5621ecfce1626870837db91e5e92f26e2e80b75de32dd04ced01d9d849"
       },
       {
         "path": "it/1Z0-1157-26/exam-checklist/index.html",
         "size": 138224,
-        "sha256": "cfcb90473c362ca907dcacd66fe5b5ca8c7ba5e92f7bbaae871cc3aa4a271799"
+        "sha256": "9768c4415a5e269c10e7325a836823c2b77786489f5ad835fc85e5e45a9dbc8a"
       },
       {
         "path": "it/1Z0-1157-26/gallery.json",
@@ -5277,7 +5277,7 @@
       {
         "path": "it/1Z0-1157-26/glossary/index.html",
         "size": 140890,
-        "sha256": "71b451a40f0914dbfd7eaa641ffb7164f89a9216f348b2a2e24b614a9fd8a37d"
+        "sha256": "69e38f94b26ae1138139450e0a982e2ebb38e205acc4b753f8e29e973414230e"
       },
       {
         "path": "it/1Z0-1157-26/langchain/img/langchain-building-blocks.svg",
@@ -5322,7 +5322,7 @@
       {
         "path": "it/1Z0-1157-26/langchain/index.html",
         "size": 149653,
-        "sha256": "5684b29d59f1da7c60a6bacf39c24f2b6f3c799ebc0d9e18caa8ed2816cb5802"
+        "sha256": "7dee15eb5012795b5c84f091a2596d9f38b7cc837ef88ca50b3a65f5fac1bae2"
       },
       {
         "path": "it/1Z0-1157-26/mcp/img/mcp-architecture.svg",
@@ -5372,7 +5372,7 @@
       {
         "path": "it/1Z0-1157-26/mcp/index.html",
         "size": 151204,
-        "sha256": "439cf1da0a4aacad70a81386d9ec453cea24f290f2863c0fe94ab362b9374957"
+        "sha256": "ea56759a400d2820ec81d94128c84e10b682ff3d11a84ed2ffe496dbd8e38633"
       },
       {
         "path": "it/1Z0-1157-26/oci-enterprise/img/enterprise-agent.svg",
@@ -5432,7 +5432,7 @@
       {
         "path": "it/1Z0-1157-26/oci-enterprise/index.html",
         "size": 157421,
-        "sha256": "641a5d51ca1c677a77201702c10d0c5ecdfb9998530f7ab44153f9cc4391ebb8"
+        "sha256": "6f207cf30214bdd67e4b695d4df662e5804461d5a4fb755ec8b9690b2c53eb03"
       },
       {
         "path": "it/1Z0-1157-26/openai/img/handoffs.svg",
@@ -5487,7 +5487,7 @@
       {
         "path": "it/1Z0-1157-26/openai/index.html",
         "size": 152701,
-        "sha256": "1d216153dae61e0d410c59ed9a17e599429e635831b5eabc79e52829c4a6f1e5"
+        "sha256": "caee2d6d4470f3be45c8dc96e21326dbe12d55e5e71e767525fe5ec413d9a0de"
       },
       {
         "path": "it/1Z0-1157-26/oracle-database/img/database-agent-factory.svg",
@@ -5552,22 +5552,22 @@
       {
         "path": "it/1Z0-1157-26/oracle-database/index.html",
         "size": 161086,
-        "sha256": "24f3c765c42fa65645b9fdcfb8bad53f9f860fc62b3ef3dec251f0f26316be61"
+        "sha256": "580a42376940167006f4374442e6c4330da011696c8d47811aed82833d105e0b"
       },
       {
         "path": "it/1Z0-1157-26/overview/index.html",
         "size": 135772,
-        "sha256": "c6e314b923cb7874c018838a6fc0550943ce8e22b58005eca493b2f98378932a"
+        "sha256": "6e4281cd193ba3c0d1b0ace50527e63dde0cb8b11cd3c0723a1d65b2494cd29e"
       },
       {
         "path": "it/1Z0-1157-26/practice/index.html",
         "size": 133143,
-        "sha256": "87a3e7e2bf53511a791ae2a1c2b225d0759db9b8841294fc5ff27b195c84a65d"
+        "sha256": "beebea735cdda0f633c056a535092f4065bf8a1d96e8ac6d21f67965a4626355"
       },
       {
         "path": "it/404.html",
         "size": 111421,
-        "sha256": "7779172b8fb5fa93106a44731e4530417f881ccbe32a4da35facf00b6892d2be"
+        "sha256": "342e934e9879bed7b700dc1ec776ab2799ca46197d1a5985d70a5e1dc41bf45b"
       },
       {
         "path": "it/CDMP-DMF/case-study/img/gov-case-assets.svg",
@@ -5592,7 +5592,7 @@
       {
         "path": "it/CDMP-DMF/case-study/index.html",
         "size": 151512,
-        "sha256": "062fd8b5bd78a374e902acf9464a0cc50e33711dc3e9ab998ea434dfb5f44aa5"
+        "sha256": "bae689f0f1454b132a06a0c49566171f1f2ff6837e55131e23576d9fd3d0d1a1"
       },
       {
         "path": "it/CDMP-DMF/content-management/img/gov-content-management-concepts.svg",
@@ -5622,7 +5622,7 @@
       {
         "path": "it/CDMP-DMF/content-management/index.html",
         "size": 150690,
-        "sha256": "6e7f33703b1c88b725b08f9bb014bd8195cf5d53a3c57eb5eaead61abc66c2e1"
+        "sha256": "7cdff059509771b634b620291ce6c054130fa724f4c99c044df26568533f49a8"
       },
       {
         "path": "it/CDMP-DMF/data-architecture/img/gov-data-architecture-concepts.svg",
@@ -5652,7 +5652,7 @@
       {
         "path": "it/CDMP-DMF/data-architecture/index.html",
         "size": 151563,
-        "sha256": "017b2df480dc01ad509db74e76f8b1c190b86ddac500a6a2372c8b0984b48dbf"
+        "sha256": "8b0d468cf538823f9b036bcebf7260896769375d00581873e4faf0dd1b039a0f"
       },
       {
         "path": "it/CDMP-DMF/data-integration/img/gov-data-integration-concepts.svg",
@@ -5682,7 +5682,7 @@
       {
         "path": "it/CDMP-DMF/data-integration/index.html",
         "size": 151454,
-        "sha256": "7283387751e8bae4c53c2eb86e743ea0fe04aaac6a0645b05a12f53e125a6b21"
+        "sha256": "e49ebe5ca5d783f0623cf870f9aa5251831d9dbe2882df9d372a57582b9bd883"
       },
       {
         "path": "it/CDMP-DMF/data-modeling/img/gov-data-modeling-concepts.svg",
@@ -5712,7 +5712,7 @@
       {
         "path": "it/CDMP-DMF/data-modeling/index.html",
         "size": 150784,
-        "sha256": "be7556681d77a3642b78245544cbce4b949ad03cef673ba6ab125ed334db0499"
+        "sha256": "7550d9498961ee53829edb695fad75e472ee781d5125646892ca78155d7cb1ac"
       },
       {
         "path": "it/CDMP-DMF/data-operations/img/gov-data-operations-concepts.svg",
@@ -5742,7 +5742,7 @@
       {
         "path": "it/CDMP-DMF/data-operations/index.html",
         "size": 150350,
-        "sha256": "2b901110a22d6edc1344cc8c776112b5541adde28401cfab7c095dae03f8ff2f"
+        "sha256": "5d159abadf27810277a64b24fc96f0ced91ebec7a935650cdbbdab835410353a"
       },
       {
         "path": "it/CDMP-DMF/data-quality/img/gov-data-quality-concepts.svg",
@@ -5772,7 +5772,7 @@
       {
         "path": "it/CDMP-DMF/data-quality/index.html",
         "size": 150608,
-        "sha256": "c59cc2784bbbeb20928d1f9a9e7c5cb0b792af0cb157592faae980ce779e27f8"
+        "sha256": "ef1fcd9c4b13c1888062615ea4d2fe25f7735767b79b6c411d144a453312a1aa"
       },
       {
         "path": "it/CDMP-DMF/data-security/img/gov-data-security-concepts.svg",
@@ -5802,7 +5802,7 @@
       {
         "path": "it/CDMP-DMF/data-security/index.html",
         "size": 150297,
-        "sha256": "774ec9bd9ce373436fa9361ea379458abfb6df4e079950ad91954e8d1ccc9297"
+        "sha256": "93952d64fcb5ec2e5fa74f4fc1393e37018e95227a1864575eee976c703f0347"
       },
       {
         "path": "it/CDMP-DMF/data-warehousing-bi/img/gov-data-warehousing-bi-concepts.svg",
@@ -5832,7 +5832,7 @@
       {
         "path": "it/CDMP-DMF/data-warehousing-bi/index.html",
         "size": 150904,
-        "sha256": "b9da8dd5f0d31bed40b2a26260ce90a31463660de18f6af06cfd8408963c3716"
+        "sha256": "b35fcad94b24b36ae561a633e67386760be9fdc61a95e9b4b1095c524921364e"
       },
       {
         "path": "it/CDMP-DMF/gallery.json",
@@ -5852,7 +5852,7 @@
       {
         "path": "it/CDMP-DMF/glossary/index.html",
         "size": 145581,
-        "sha256": "2874cfa0f131f72141865d5da2f577f5da7bb223b49951e671103176df925764"
+        "sha256": "59c9a4aecc93cb82340574fad0e2765b9b0c679ac8f2adcfa474e70850cf5fd2"
       },
       {
         "path": "it/CDMP-DMF/governance/img/gov-governance-concepts.svg",
@@ -5882,7 +5882,7 @@
       {
         "path": "it/CDMP-DMF/governance/index.html",
         "size": 150688,
-        "sha256": "bfb24c2992c654fe1dd1b47dff9ae706455b43f3db758338cb210c2d89aca1ad"
+        "sha256": "cf138184c1f8de2dd3c89ce2d7a1c4d6928475e84828354436e26a78508142a2"
       },
       {
         "path": "it/CDMP-DMF/master-reference-data/img/gov-master-reference-data-concepts.svg",
@@ -5912,7 +5912,7 @@
       {
         "path": "it/CDMP-DMF/master-reference-data/index.html",
         "size": 150739,
-        "sha256": "e109e9c7a1bb32199afecb91704b5b2bfaf3d13b5fbb5f0d20590f5e33f5dcd6"
+        "sha256": "c4a3256c6365f0373945cbe16f21cc0a3bc558de4cfa17c5784d9dfbdc316ed7"
       },
       {
         "path": "it/CDMP-DMF/metadata/img/gov-metadata-concepts.svg",
@@ -5942,7 +5942,7 @@
       {
         "path": "it/CDMP-DMF/metadata/index.html",
         "size": 150848,
-        "sha256": "678d1389301b05191e934cde454393de9852b0260e4f89470e1f034d8f8e83c1"
+        "sha256": "a09bfa7fef3107a0ec0f5bac53906777c0ed74267d97976a76a95bc67bdeba77"
       },
       {
         "path": "it/CDMP-DMF/oracle-map/img/gov-map-architecture.svg",
@@ -5962,7 +5962,7 @@
       {
         "path": "it/CDMP-DMF/oracle-map/index.html",
         "size": 157267,
-        "sha256": "5e3dcddf5c5a1010907d202ecf0d0f31401842558d896dfa24bd5e7261ae9f9a"
+        "sha256": "f5393da2c7fb57304f886593f82505a0df9d8d188f918fa3c39681fb27b1be7f"
       },
       {
         "path": "it/CDMP-DMF/overview/img/gov-overview-contract.svg",
@@ -5977,7 +5977,7 @@
       {
         "path": "it/CDMP-DMF/overview/index.html",
         "size": 141737,
-        "sha256": "362b7dd42dc9e69a8f0f679218f8885d891721be2b6b316ba03c50322ea26967"
+        "sha256": "d1eb1a96c9c838fc1c4aa6857f3e4916e8bc23cd2b9714b5ddd10155b8bfb7bb"
       },
       {
         "path": "it/assets/1Z0-1085-26/questions.json",
@@ -6002,7 +6002,7 @@
       {
         "path": "it/assets/certichat/search.json",
         "size": 1361800,
-        "sha256": "8cdef170b432164e72510e48607e6ee63434149d8474833ddbf98094d11cd129"
+        "sha256": "b8acb7e19cf034baf515f34272c9b1db588d1b1e08d25e0c877906796ca07b5f"
       },
       {
         "path": "it/assets/certirss/editorial.json",
@@ -6017,177 +6017,177 @@
       {
         "path": "it/certichat/index.html",
         "size": 126492,
-        "sha256": "172ea14bc2af4f32fa19e130a4ac54c5ce8b22e9f75ea6db230bd8576b01f57d"
+        "sha256": "de08b91c81ca4c8a2538e8b95f1a7e81357f8b810837a8892d8c41b494dcd162"
       },
       {
         "path": "it/certichat/piloto/index.html",
         "size": 126490,
-        "sha256": "ed431df4e20533a54468dcb2b1c704684e8e88a181d4025e4fdde850dd85a9c0"
+        "sha256": "5bdae08c5c639be5bc4af4a0943fd5e8f854d69cbe87a8c1c422b67219a8e964"
       },
       {
         "path": "it/certiquiz/index.html",
         "size": 112945,
-        "sha256": "3ab9ac6b5074df2220297d34364a2a5524b5742ced161d92300a51d6ba2a5f8d"
+        "sha256": "27a86498031b7bed196c66ac7d0523808b1e130c2300114fd61829830bf418eb"
       },
       {
         "path": "it/certirss/index.html",
         "size": 122832,
-        "sha256": "46037208f92358183540a907a31d5fc81418e155e31db91eff30a25811c75eee"
+        "sha256": "afc35fc86e68fcdfbe7db67ad879bccb1b8a6a511452cb231a07654453ad7776"
       },
       {
         "path": "it/certisearch/banco/index.html",
         "size": 240134,
-        "sha256": "b7700d4eec0dff5e218233d79e03ede9f4600f834ee4db13791a7ef48cfa7cf7"
+        "sha256": "067266a08520bd6ee35efd363bf28d96077690115d4ae68e3d45b8a99929f26e"
       },
       {
         "path": "it/certisearch/index.html",
         "size": 125857,
-        "sha256": "857572e3d9dcb4914d788d5b3929ca9a0c48f7d9b9352a5a1b8d0a976883e581"
+        "sha256": "bf0af1751c74f223b9bfc1d3f7469a1cf4791ba5f703c06f094bd0996a9a7d6a"
       },
       {
         "path": "it/certitube/-6_1iZv_0_E/index.html",
         "size": 163273,
-        "sha256": "50ff1d97bc20c2723ca3790ed1cf599cb8bc4d43a4dd274a2af08bf0f5a57670"
+        "sha256": "00ecb4a5a08703cb9802cbd6aeaba573a545a37c306c79e3d8a8454969ea1986"
       },
       {
         "path": "it/certitube/01lvJGeFZ78/index.html",
         "size": 175639,
-        "sha256": "b939488f619ab579ec78652a12eebce2a71e81fe51c543df77439fa3ebe8bdc4"
+        "sha256": "c9277e6c2b4142015b98c84af9c8eb828886861193b2d992e4aed8f4932f5bc3"
       },
       {
         "path": "it/certitube/2qdNyl76opY/index.html",
         "size": 160690,
-        "sha256": "2283e5e5bcf65ff081c2dc69a14a5f9f8f5d1e0e82d5f6c0116f0ef7ef62be77"
+        "sha256": "36c87bed16350332b80b568441e5095d2e38fbb56295b13b5665e019b336b8cb"
       },
       {
         "path": "it/certitube/5dilnUUcgQE/index.html",
         "size": 164400,
-        "sha256": "25e938cb1bea0af63f6d45e1a005a8930403840482bf3c9513e760da42c057de"
+        "sha256": "7db0dacd165cba5e311b9d8e9f037ea773115373d1b94cc0c975d52aabf116d2"
       },
       {
         "path": "it/certitube/5tABMapyzvA/index.html",
         "size": 168229,
-        "sha256": "612d2a02398ccb75fa0a1edb6d7b3cbb442739f3086bdcb4097e2d6202c1ac25"
+        "sha256": "c2af80e45aeae8b9759cf2c1e67ae1a656c6a657f60072bb351f919bbb5862ef"
       },
       {
         "path": "it/certitube/6L1YmTRZNxM/index.html",
         "size": 168025,
-        "sha256": "1f7f459f228f9afa97ae6a715509e3ce25a8da1014ad6f11fb76498ad8f60fb3"
+        "sha256": "bdcb61a05dcc5f723db7f483c75a21347614969e882ff124c61eb7fa042a488f"
       },
       {
         "path": "it/certitube/6nujUlKb5z0/index.html",
         "size": 167311,
-        "sha256": "375276f5e7c695770b932f240f1eb5df2f2f1e23840b749acf1c2f4388aa8820"
+        "sha256": "e6310d7d249a24e6b8e81ba2c0f86f2176c5c9540868e70754fde1bb5ec6a5a1"
       },
       {
         "path": "it/certitube/7TtlKGNbBnc/index.html",
         "size": 168796,
-        "sha256": "d2f2a588acf62d88d40baec147577fffd5a918dc7da9ed36bdd57cc87f4f7c48"
+        "sha256": "c8d347ce1c3a5eeca10bf3f1e50c5e78016ebd0554dc45955674da22c7011f1a"
       },
       {
         "path": "it/certitube/91k_Uo3D3OQ/index.html",
         "size": 166446,
-        "sha256": "0099df403ad8ba6559dbbcde78f2832904e84cc647c9372063ae62b8e58d8c37"
+        "sha256": "f909cc73c608813c661aa93909159f66f0858318c0282f7a16340d653e7b165b"
       },
       {
         "path": "it/certitube/FLisHRFT1Xg/index.html",
         "size": 170760,
-        "sha256": "c12a507f3f2c8fb2c3d0799a4551aadc12c71d22efbec84eff6fbeca2cc00ec0"
+        "sha256": "85ae0d5dba96bad9dfd350b4fc258ebf1a38e51bae0baa2198bab421c53f97fa"
       },
       {
         "path": "it/certitube/HCUHwtTt5RI/index.html",
         "size": 161865,
-        "sha256": "10d9e2b8c1116eb8992f4b001c626db29bf3c90854a5ee0c19520745f214910b"
+        "sha256": "0baff898f90d26a9d3d3e07a32a35a04d8e8795f781a3f339b6cbbf822758a9e"
       },
       {
         "path": "it/certitube/Ha74VhpQwQo/index.html",
         "size": 164082,
-        "sha256": "9f4bf989ffa8193f08c545f17621d094d4dec0737447c0e6b47eac27d3cc7783"
+        "sha256": "40548f74bdf27e22769b552d386bb9b1ca10b49cefcf505c15fab7f1a581b02f"
       },
       {
         "path": "it/certitube/K4x0pGMfb5I/index.html",
         "size": 173477,
-        "sha256": "fb486b7e0b5a9f090f9746678bd72946be276d7be76f2d38babac8c36a7b9f81"
+        "sha256": "6649ba99644de86e58b731a1ee84e8c867d9f030f1d7fad91d6311b061815602"
       },
       {
         "path": "it/certitube/MWASexQNDVU/index.html",
         "size": 159985,
-        "sha256": "aae78bc90295cf5c5361f2ff7d4787fcb9a4c6e795e90254e327e8f634c126f7"
+        "sha256": "7dd8f4da943a2436eda5fae073ecf9f455582c96ae6f5521ac0b3aa9240382f1"
       },
       {
         "path": "it/certitube/R1dWXZ-iqc0/index.html",
         "size": 169088,
-        "sha256": "5bd556020133ac25f8aad13673f0f77bff2bc8993069b6f7675bce1e4a6bf06c"
+        "sha256": "73924a2633b9d30eb5d93a247b08d68946b49ddfddc176d3c7e197ce0b6a8c80"
       },
       {
         "path": "it/certitube/Wf5fisusQOc/index.html",
         "size": 162182,
-        "sha256": "f93a7e41301989435e0d8afd9de3d688098df17e733bde940f69af0ad81a4a55"
+        "sha256": "f84d7de8215c486dfdab1173e4ebe7ee28e72000e7f16fce827698cfb8303244"
       },
       {
         "path": "it/certitube/ZDRz7aCPs2g/index.html",
         "size": 177162,
-        "sha256": "ef6bf8d710360409d505ca07cd317bc1f81e77bab8930b58ed50cac3013a5336"
+        "sha256": "c3db51a16d510802a164c6011bb43387b9a1e72589af5fae904de1e3971cd19e"
       },
       {
         "path": "it/certitube/ZjfQUwUdpbI/index.html",
         "size": 164985,
-        "sha256": "8e38966da81e0acecb2e628cab6adb1cc075f680e3a76fac75e5c722270e9806"
+        "sha256": "845b88dde9d1261eb10aed098ced78957e18db504ecee03ef975f532d440ca13"
       },
       {
         "path": "it/certitube/aZV1wvcNK6s/index.html",
         "size": 162325,
-        "sha256": "5fe750d00a91bc2b62afde87f0b326832ae72eaa6d4286baba34a7561b92a7ee"
+        "sha256": "c603bc56e9e97398e0fadee8020880a8fa0dccd0d7c67b1bfcd64c7868e9e6ec"
       },
       {
         "path": "it/certitube/eo0FgqtuBRs/index.html",
         "size": 162358,
-        "sha256": "00bc2c0c1e0373654510ba8ad33ba27c5413d1f75b1d30de2a97b0e698c68466"
+        "sha256": "11918c020abfd7b0778b691ee7fd0e95fbe56105d762a1338460ee711f52152c"
       },
       {
         "path": "it/certitube/index.html",
         "size": 166398,
-        "sha256": "32868fa20ced2166bf09e1031b92be4150ba1a9346caf3d7bb3150335a87bd7f"
+        "sha256": "700532774aba03135b3aa5623ccc522cd45e94cd4fe4f48625d70ec13a8bb108"
       },
       {
         "path": "it/certitube/m__hzgjFwuk/index.html",
         "size": 165526,
-        "sha256": "7092c0262edc5e31e43aee51527e898989df77adc1e8e3391cbe3523c06b575d"
+        "sha256": "4be89671924b5662620ceae2e639be6067ff49c794c2e4f1818f466324699f98"
       },
       {
         "path": "it/certitube/rZi6U8B4HG0/index.html",
         "size": 170058,
-        "sha256": "c979b1f6e84e69d7b6ad3a95f3e5b9af717d85971a8fcd706a9c4011dd0483fe"
+        "sha256": "27a55cd7861fb8db465d6dd12b56cc1a9f85540b10f6636cf5db59b2ec7287f0"
       },
       {
         "path": "it/certitube/s7wmcm4hoGo/index.html",
         "size": 164473,
-        "sha256": "55dc92c05a43f215b833ed6c6ba963cd2005b66c4a7ec15e473392339d0c1e4e"
+        "sha256": "1823266a23aa1353cfa53fded8fd7b3d7b8717551ec0bd98379eb81b1acad8e0"
       },
       {
         "path": "it/certitube/xlymDCVWXoA/index.html",
         "size": 173566,
-        "sha256": "6a35b7826cad35ef6840929443ed3e999ad9af1001ce398e87f68c01379ccc33"
+        "sha256": "c80e9dac080841c15421852f5eca0d40aa6d6b064f8fb3e66ccbf0299ff2fda5"
       },
       {
         "path": "it/certitube/zIxA0ebo2v4/index.html",
         "size": 175479,
-        "sha256": "e7e70c43735fda24fab657d0c5f62bf2138443d1d64984dc1eb11fc4ba1098d5"
+        "sha256": "a9c40f41596a2b0ae9868f20e77da297cc21bf2cfc31f3c6d8a841a852d17597"
       },
       {
         "path": "it/certitube/zihZUTZAm6k/index.html",
         "size": 174435,
-        "sha256": "96cfdddff35ffbdb1345669427329dae9bc16d53325ec13703bedc529f1597e0"
+        "sha256": "0909b145ac63634e47e7199a9727f537018733db07f3252fd30d2bccbb8f577d"
       },
       {
         "path": "it/courses/index.html",
         "size": 144673,
-        "sha256": "42f01023e777791e2f99181dae0bf98013c863363f2716b5265cdca3865f9575"
+        "sha256": "e1f30ae0e83c240c4b2e3bed37bc930c0adb9b1d57b636b7efd1d0c0e0d7cadd"
       },
       {
         "path": "it/index.html",
         "size": 123197,
-        "sha256": "9a7f652d662e16cf549f505b466761d341f71909727ba83ab827493d3c651692"
+        "sha256": "782194b629dbd572d2d74ad16c316e55276b8111126a8852d36a7292b9b07513"
       },
       {
         "path": "pt/1Z0-1085-26/compute/img/ocif-compute-concepts.svg",
@@ -6227,12 +6227,12 @@
       {
         "path": "pt/1Z0-1085-26/compute/index.html",
         "size": 147277,
-        "sha256": "804d8f1dda5a895dd40a0d18ac363c13737497506b1379ad1e03b920618bdaff"
+        "sha256": "d98912a2de73e0124381c225051904e4ac06bc9b4e3e40e16b647491b90501d0"
       },
       {
         "path": "pt/1Z0-1085-26/exam-checklist/index.html",
         "size": 136557,
-        "sha256": "854715768490ad4f95a0740751ad443bcd36186a418aad11e057570589e65c54"
+        "sha256": "6bd3067f30e68c0d547df1ba7dbda14f1949ff9d38af8a5960e827b4e3036d3a"
       },
       {
         "path": "pt/1Z0-1085-26/gallery.json",
@@ -6242,7 +6242,7 @@
       {
         "path": "pt/1Z0-1085-26/glossary/index.html",
         "size": 139517,
-        "sha256": "224e91c2fe7bf2ac5f3552fffdbc938a77645fe3880743bae38611f219e9e123"
+        "sha256": "02f1f104bf19e23ea49bde3813b98f939f3d4a92cd13794f1a38acb79aa376e8"
       },
       {
         "path": "pt/1Z0-1085-26/governance/img/ocif-governance-concepts.svg",
@@ -6282,7 +6282,7 @@
       {
         "path": "pt/1Z0-1085-26/governance/index.html",
         "size": 146267,
-        "sha256": "a0b9bcfd27d65c9564c394f99e8661abd50a955bbb2c4646351d647d887a1def"
+        "sha256": "9e56377547b61ee573b9f06510cdf9f8697b8bbcc4fcbd47929644caf2d716c8"
       },
       {
         "path": "pt/1Z0-1085-26/iam/img/ocif-iam-concepts.svg",
@@ -6322,7 +6322,7 @@
       {
         "path": "pt/1Z0-1085-26/iam/index.html",
         "size": 146221,
-        "sha256": "8471e73ae7326296f0ae9466072bcbadf781094547a9e581718fca047592eea3"
+        "sha256": "49c9fc2010c8d7062d19954545d7acd3442a733579594c8efa24fb01825d2a39"
       },
       {
         "path": "pt/1Z0-1085-26/networking/img/ocif-network-balancing.svg",
@@ -6362,7 +6362,7 @@
       {
         "path": "pt/1Z0-1085-26/networking/index.html",
         "size": 146570,
-        "sha256": "b71ec2e34f6afd6c17d0058435bd8788bdb362eb440a65b2ec83367a3f168e64"
+        "sha256": "7304df51c84f468bb38dd0163658bf7ec90434875886138913130e7309a9cf0a"
       },
       {
         "path": "pt/1Z0-1085-26/oci-architecture/img/ocif-architecture-concepts.svg",
@@ -6402,17 +6402,17 @@
       {
         "path": "pt/1Z0-1085-26/oci-architecture/index.html",
         "size": 146113,
-        "sha256": "87a3e641d4c4b511495bbef95aea57099a0d060448b55cc031d795331661d422"
+        "sha256": "1ad58357709219d13c4c9ed8f0bd5aba51e53d977506b4a9263fa073e4825334"
       },
       {
         "path": "pt/1Z0-1085-26/overview/index.html",
         "size": 133961,
-        "sha256": "a6041247633283fa54f65f413a910f24f47ffc33625bf65a0e2396ef821f5857"
+        "sha256": "87bf81ef4aa327d29cd15d9ba903d61f5812a3d333cd85fe027278755ea583c8"
       },
       {
         "path": "pt/1Z0-1085-26/practice/index.html",
         "size": 131270,
-        "sha256": "2ed6f8e71ea7366604e09e2ac3f47e35b4f4a54a425cb0f91950fe77cc97f8c6"
+        "sha256": "aa881b27de46152c8469e12f98e12054156abfc3631d5a77e691f052c4e600d7"
       },
       {
         "path": "pt/1Z0-1085-26/security/img/ocif-security-concepts.svg",
@@ -6452,7 +6452,7 @@
       {
         "path": "pt/1Z0-1085-26/security/index.html",
         "size": 146038,
-        "sha256": "60df0676f6c06a53f92b4332a739441888b5578ce99b3da6f8039ecc974d25c9"
+        "sha256": "02f4d27616410b88375ac2a41c38ef784f23573c99831dd2b195571d852d82fa"
       },
       {
         "path": "pt/1Z0-1085-26/storage/img/ocif-storage-concepts.svg",
@@ -6492,7 +6492,7 @@
       {
         "path": "pt/1Z0-1085-26/storage/index.html",
         "size": 147072,
-        "sha256": "d6c0505720f551cb6671eb2733636ce3206d9f47d80bd35cd8d8cdb723237a50"
+        "sha256": "eff1042248862c8cfaa8491eff03dd8a168ebfecfb7956fac29c922989440bd8"
       },
       {
         "path": "pt/1Z0-1122-26/ai-basics/img/aif-ai-choice.svg",
@@ -6532,7 +6532,7 @@
       {
         "path": "pt/1Z0-1122-26/ai-basics/index.html",
         "size": 148285,
-        "sha256": "0b2afcabaa694fec79897d2173423f10959689a2fe2193597b36a10ed1823338"
+        "sha256": "9d69a6f387f5c7cdc61e369dad2ff91e6d34de998bd8c941df94687379a81210"
       },
       {
         "path": "pt/1Z0-1122-26/ai-portfolio/img/aif-portfolio-concepts.svg",
@@ -6572,7 +6572,7 @@
       {
         "path": "pt/1Z0-1122-26/ai-portfolio/index.html",
         "size": 148509,
-        "sha256": "10e13c14d90794f423b3be0ed13046a2f37cd02762ab365a18c6143586aa0c90"
+        "sha256": "994c9c4c9188bab57ae05b2b52abddf75e2b61aaafa05161af52b46c774303c8"
       },
       {
         "path": "pt/1Z0-1122-26/ai-services/img/aif-services-concepts.svg",
@@ -6612,7 +6612,7 @@
       {
         "path": "pt/1Z0-1122-26/ai-services/index.html",
         "size": 148924,
-        "sha256": "158774fc8a98e34e9abdd845a51c002f314e76bf780411fc6bbbb1317b6cb68f"
+        "sha256": "094e0edb5407a2026871b9dc6d9fc83a3dcd8f312f6fca6604a6b8d6d2f8cb34"
       },
       {
         "path": "pt/1Z0-1122-26/database-ai/img/aif-database-capabilities.svg",
@@ -6652,7 +6652,7 @@
       {
         "path": "pt/1Z0-1122-26/database-ai/index.html",
         "size": 148729,
-        "sha256": "342665285f904ebd2f06d859bcbc5ed3cc7b807aae291cdc2efbfad8efa17984"
+        "sha256": "bc57447df71ce90debf1e91a367f8b38732a88f0224aa42fa045632eb37bfcba"
       },
       {
         "path": "pt/1Z0-1122-26/deep-learning/img/aif-dl-cnn.svg",
@@ -6692,7 +6692,7 @@
       {
         "path": "pt/1Z0-1122-26/deep-learning/index.html",
         "size": 148286,
-        "sha256": "c4770420708362fd7f6c8eca587b92b8e98be8597a58739b136c1c962aad89e5"
+        "sha256": "90d5e3888f12926518788ce9ffa9e6ed962f3b6129c6cbba2c2db67e10c63d78"
       },
       {
         "path": "pt/1Z0-1122-26/enterprise-ai/img/aif-enterprise-concepts.svg",
@@ -6732,12 +6732,12 @@
       {
         "path": "pt/1Z0-1122-26/enterprise-ai/index.html",
         "size": 149094,
-        "sha256": "162dd2326be4e4e17613f81660b358191b0e89e43b4ef7e0abdf84115a5003ad"
+        "sha256": "39ca378f0f14dc856bba3e4d50c94d845c30aa0806eb2f9beac436a82d93bf94"
       },
       {
         "path": "pt/1Z0-1122-26/exam-checklist/index.html",
         "size": 140541,
-        "sha256": "e6b82315b6196518323ce16bb72e8a77634a5883493abd576837ef91058b3527"
+        "sha256": "3f58560911f4ac456697bcfeceedd742376b448419405722b357038c41a84853"
       },
       {
         "path": "pt/1Z0-1122-26/gallery.json",
@@ -6782,12 +6782,12 @@
       {
         "path": "pt/1Z0-1122-26/generative-ai/index.html",
         "size": 148853,
-        "sha256": "812ab9016477635961dce62e2c4f486e21687525a3817ea06c88a31bdd6eb130"
+        "sha256": "6396514d2db14a312a277ad9baf56eeef05ee2975e898362d5db8e30d1125c35"
       },
       {
         "path": "pt/1Z0-1122-26/glossary/index.html",
         "size": 141850,
-        "sha256": "13ee1334c8e35e404b73262a78b916771dcc323b24f0b4e645138e8cae38c827"
+        "sha256": "502f2837aec78793e682835f38eb8beea0c625f09b103b9514c3160409d6f617"
       },
       {
         "path": "pt/1Z0-1122-26/machine-learning/img/aif-ml-approaches.svg",
@@ -6827,7 +6827,7 @@
       {
         "path": "pt/1Z0-1122-26/machine-learning/index.html",
         "size": 148665,
-        "sha256": "eb7d2b0c6f74c152425f64202d3b9288226fc01e5346b7d7073fa7e09dc8fe4b"
+        "sha256": "2906a00b5dc37aaddc3166f11304b53aead578b360521f7d08b197589fe5a389"
       },
       {
         "path": "pt/1Z0-1122-26/oci-generative-ai/img/aif-oci-gen-concepts.svg",
@@ -6867,17 +6867,17 @@
       {
         "path": "pt/1Z0-1122-26/oci-generative-ai/index.html",
         "size": 148306,
-        "sha256": "9a52fcfd4c5cbe8e33e1d43ae2f9df6055ade3e35bda9bd41ba7af5a7af70d85"
+        "sha256": "a2bc20548b7f662d3b357109d60ee15359bcaae37ea09b3daaf45b302b62b1c3"
       },
       {
         "path": "pt/1Z0-1122-26/overview/index.html",
         "size": 137425,
-        "sha256": "9655e1b6c432cd8c6cd981183c46dece3c1974ea00344a39b8df2f906a38f8b9"
+        "sha256": "edb1597f2f311a31941a15b682fc7a0237b579b3989b42c4b9c1fb2d74737cfc"
       },
       {
         "path": "pt/1Z0-1122-26/practice/index.html",
         "size": 134743,
-        "sha256": "0ad221f39efed5fca1b8e4ce5af4665eada2ff9fee997997e000bc1faac86667"
+        "sha256": "4d31deef4abc658a81d0a4dc8327f55f5b89c2143ce6e79f762c4ff5d5c64cd1"
       },
       {
         "path": "pt/1Z0-1157-26/agents/img/agent-loop.svg",
@@ -6932,12 +6932,12 @@
       {
         "path": "pt/1Z0-1157-26/agents/index.html",
         "size": 152865,
-        "sha256": "0c25a282af6db900c75c1f7873fc0e43aa2ca7dfd7b3ff4bc4c455e0932fb1f2"
+        "sha256": "8caa34d238deda88f8cc6b15fb94fb2cc36aaafb13ae043a498870bbe4a71ca9"
       },
       {
         "path": "pt/1Z0-1157-26/exam-checklist/index.html",
         "size": 137886,
-        "sha256": "76c9c11003e52ce879c2d9d71ea661dd38063da2dd14a99564c69eedfc224cb7"
+        "sha256": "d84acecceda88a51c5a14efeae44649390f8e49743e265f476a17f40eb1745a8"
       },
       {
         "path": "pt/1Z0-1157-26/gallery.json",
@@ -6947,7 +6947,7 @@
       {
         "path": "pt/1Z0-1157-26/glossary/index.html",
         "size": 140569,
-        "sha256": "ea45804ecf1d00cca397d27f3cab437bc3f52e27102d7bc99b400d559c341249"
+        "sha256": "ed6489b4c06d92df14d311589a9ba0af1b9eeaab43ec81ee65c7878da05b0bd9"
       },
       {
         "path": "pt/1Z0-1157-26/langchain/img/langchain-building-blocks.svg",
@@ -6992,7 +6992,7 @@
       {
         "path": "pt/1Z0-1157-26/langchain/index.html",
         "size": 149149,
-        "sha256": "c2ee3e0c8049ec3683a907ac0c07c408a8a6bc5519986dcecbf6c7c94abbfe06"
+        "sha256": "c1f6dc110885c762ce5d7707cca3d78fa512e5f791489d8486f62ff8fa56a758"
       },
       {
         "path": "pt/1Z0-1157-26/mcp/img/mcp-architecture.svg",
@@ -7042,7 +7042,7 @@
       {
         "path": "pt/1Z0-1157-26/mcp/index.html",
         "size": 150651,
-        "sha256": "f65871040d4c76028715b16f963ea5b6262bd25f19745301cdc27fd9f8c76c0f"
+        "sha256": "ef80d2928e03eec1ce3108949572641f0d13c571d382fddf35c44253d0466b7b"
       },
       {
         "path": "pt/1Z0-1157-26/oci-enterprise/img/enterprise-agent.svg",
@@ -7102,7 +7102,7 @@
       {
         "path": "pt/1Z0-1157-26/oci-enterprise/index.html",
         "size": 156734,
-        "sha256": "c3ec922dd00758f8cb3ea084ace252f630432532ac8444ab4474ea424b4fef2a"
+        "sha256": "5761a56271570169713322fd47328b206f7902377e384e7010508f8405b60907"
       },
       {
         "path": "pt/1Z0-1157-26/openai/img/handoffs.svg",
@@ -7157,7 +7157,7 @@
       {
         "path": "pt/1Z0-1157-26/openai/index.html",
         "size": 152295,
-        "sha256": "b5f7023d7b3b8c7775a0276267509aec1a380136f912058dcc13968b9d8b193b"
+        "sha256": "336ccae8711e7be4fb3ce5f2c6273b31a9b32ded50d2e67e2fadfacac3935d33"
       },
       {
         "path": "pt/1Z0-1157-26/oracle-database/img/database-agent-factory.svg",
@@ -7222,22 +7222,22 @@
       {
         "path": "pt/1Z0-1157-26/oracle-database/index.html",
         "size": 160456,
-        "sha256": "ad8f6285354380288dd38983422ecced3efde424dbbedb864a667961c8690c35"
+        "sha256": "ef91af31c658b6ec9eef39ea56f7940c3b2c49d863b4c679d90a665775261518"
       },
       {
         "path": "pt/1Z0-1157-26/overview/index.html",
         "size": 135492,
-        "sha256": "bcb9a4d2f4864f5fcb859d0af2fcf31aead3f3765e2878a9270f97bfd7d90c58"
+        "sha256": "343d740e8d8544bb8e1c274a2e6560e575ce906791d2bddd34e500d42a18aaed"
       },
       {
         "path": "pt/1Z0-1157-26/practice/index.html",
         "size": 132863,
-        "sha256": "d8ac7ca7f05351ace1dfcf24238df7d248ce836e893a43ee868c07395148bd80"
+        "sha256": "73af6d9b55c5f17ba48b2a8f8950d814812c5c40814edb3dcef404aa40b51052"
       },
       {
         "path": "pt/404.html",
         "size": 111107,
-        "sha256": "1c7e05fa9679c0bf8723bcc8e678a4aa34693cbb16bb3cf7d2edc7f9f717f9a0"
+        "sha256": "a101251922f263e363c69710523a1ac0788204e24af4ac6e631c8b4af34aaf0f"
       },
       {
         "path": "pt/CDMP-DMF/case-study/img/gov-case-assets.svg",
@@ -7262,7 +7262,7 @@
       {
         "path": "pt/CDMP-DMF/case-study/index.html",
         "size": 150947,
-        "sha256": "669d9839c0dc61ab5a43e8791368762ac6ba11f9e22603522bb9b33c032d7e9a"
+        "sha256": "76595b57efdb7fab1039a4d27da7bc219b39545acbba119fb96d94d903ee20cb"
       },
       {
         "path": "pt/CDMP-DMF/content-management/img/gov-content-management-concepts.svg",
@@ -7292,7 +7292,7 @@
       {
         "path": "pt/CDMP-DMF/content-management/index.html",
         "size": 150015,
-        "sha256": "95f4d4c8758ebd64905cc851f797aaddd5ec07bf9bbb69b3288114ffd43e3f3d"
+        "sha256": "b5a0ca9b627ae3b8a1a666d7f5862669e4fe8dfdff8a8f4f6817abe217e96a5d"
       },
       {
         "path": "pt/CDMP-DMF/data-architecture/img/gov-data-architecture-concepts.svg",
@@ -7322,7 +7322,7 @@
       {
         "path": "pt/CDMP-DMF/data-architecture/index.html",
         "size": 150912,
-        "sha256": "3c869288a9bb6fb06b987f6ffb1a432fed8e9b497dae5cd3a067d8360b820e68"
+        "sha256": "f9d5dfd279670d3d08e01c0f2abf3ba6b72ae19f166af2bd364c4e889ec7b58b"
       },
       {
         "path": "pt/CDMP-DMF/data-integration/img/gov-data-integration-concepts.svg",
@@ -7352,7 +7352,7 @@
       {
         "path": "pt/CDMP-DMF/data-integration/index.html",
         "size": 150695,
-        "sha256": "20bad8035519fcb56487fe643e62a051769f0a4b557261153bc242d613da3097"
+        "sha256": "d6a4020398e60246651c2f346fb2b0a8b3f221a041130fbf6a114d7e11ce3a3c"
       },
       {
         "path": "pt/CDMP-DMF/data-modeling/img/gov-data-modeling-concepts.svg",
@@ -7382,7 +7382,7 @@
       {
         "path": "pt/CDMP-DMF/data-modeling/index.html",
         "size": 150310,
-        "sha256": "ddf64b6cd052d6025818b2004eda5af18e6178f66505876d1bf1c640a455bdfa"
+        "sha256": "95c5e54f53770f7d51a522bdffe2d68cbb306f2b0c4856c91e53069639e6bc08"
       },
       {
         "path": "pt/CDMP-DMF/data-operations/img/gov-data-operations-concepts.svg",
@@ -7412,7 +7412,7 @@
       {
         "path": "pt/CDMP-DMF/data-operations/index.html",
         "size": 149798,
-        "sha256": "79177eff72a8b0cad7c609fd8506d761315415c4e5f5b80a46e5939b226ec88e"
+        "sha256": "b91e01c901b296e0a1fb26fd0ea35223bd5a4140f9a69c81fca86dad9dbf981f"
       },
       {
         "path": "pt/CDMP-DMF/data-quality/img/gov-data-quality-concepts.svg",
@@ -7442,7 +7442,7 @@
       {
         "path": "pt/CDMP-DMF/data-quality/index.html",
         "size": 150151,
-        "sha256": "4d4226a1e554d84f9c5130ef3282bb4d3de73ced7cfcbb9011f5f270aaaad1c4"
+        "sha256": "0db7249c266fbad586d934496f0e8f7f88f7688f904e4db597db7ec22a464b12"
       },
       {
         "path": "pt/CDMP-DMF/data-security/img/gov-data-security-concepts.svg",
@@ -7472,7 +7472,7 @@
       {
         "path": "pt/CDMP-DMF/data-security/index.html",
         "size": 149685,
-        "sha256": "9fc63c8154a468c3ce1c491460a74ac7f36618db97d816a496113f423c5fbaf0"
+        "sha256": "0f90832746e70176b404788d4ead0f7f815e024ceb85091de100e592f65e3bd5"
       },
       {
         "path": "pt/CDMP-DMF/data-warehousing-bi/img/gov-data-warehousing-bi-concepts.svg",
@@ -7502,7 +7502,7 @@
       {
         "path": "pt/CDMP-DMF/data-warehousing-bi/index.html",
         "size": 150212,
-        "sha256": "88c4857600b3bc7cc6913e5e85924d634af8e561cf920e90db9e276eab8ba624"
+        "sha256": "cc4a8bd988574fecbd0f95c4a15aaf3626fcb7b3c2dcf208e8aefa04277816d6"
       },
       {
         "path": "pt/CDMP-DMF/gallery.json",
@@ -7522,7 +7522,7 @@
       {
         "path": "pt/CDMP-DMF/glossary/index.html",
         "size": 145212,
-        "sha256": "dc60bb3c1c4f5b3db241c151dd3c37ff5a96170ee7729b6c4a103f8b004344e3"
+        "sha256": "33a78390f0a128499737fbb2690398e9d49484b3dc4b2df475cfc4c9e79454c1"
       },
       {
         "path": "pt/CDMP-DMF/governance/img/gov-governance-concepts.svg",
@@ -7552,7 +7552,7 @@
       {
         "path": "pt/CDMP-DMF/governance/index.html",
         "size": 150054,
-        "sha256": "d5a089faaa033c65763f8db771d4e6f3fe0834fe92309da1c70616cccc374ea7"
+        "sha256": "36790a2afb3f8d54ccef036f5d900f1b6ef9b40a4ffbf5d853751423394f98a3"
       },
       {
         "path": "pt/CDMP-DMF/master-reference-data/img/gov-master-reference-data-concepts.svg",
@@ -7582,7 +7582,7 @@
       {
         "path": "pt/CDMP-DMF/master-reference-data/index.html",
         "size": 150238,
-        "sha256": "7e32ef8ce0702e615939f94b5c170177b2506e3fc1936c6201889ffe49d01101"
+        "sha256": "e48f7a4f97f4ba39367c93446d7b052b36d44da0cee3d1e6c60ee62ff2ad10dc"
       },
       {
         "path": "pt/CDMP-DMF/metadata/img/gov-metadata-concepts.svg",
@@ -7612,7 +7612,7 @@
       {
         "path": "pt/CDMP-DMF/metadata/index.html",
         "size": 150154,
-        "sha256": "e41c64f4e82db9cb8f071fbf7389c21041d72b2add7df6fcd0397bc5d04011e0"
+        "sha256": "4dca0695a60b55c3fd64d87b87418e6b6775bb9b6cfb7d794fb26df5dbb2a214"
       },
       {
         "path": "pt/CDMP-DMF/oracle-map/img/gov-map-architecture.svg",
@@ -7632,7 +7632,7 @@
       {
         "path": "pt/CDMP-DMF/oracle-map/index.html",
         "size": 156784,
-        "sha256": "5bb442ad1da3d6832af9036495e66856d5f6c516b128542992c18f2406f59a8f"
+        "sha256": "e8f8a468d67f158d450d095c6632ce917880754703be3ed816b69087ffa41967"
       },
       {
         "path": "pt/CDMP-DMF/overview/img/gov-overview-contract.svg",
@@ -7647,7 +7647,7 @@
       {
         "path": "pt/CDMP-DMF/overview/index.html",
         "size": 141334,
-        "sha256": "774fd28039f7533fb42929f272f40c8c2cf0cd21fd906efbdb7fab63c3aba2f7"
+        "sha256": "748dde8ca94770595a890decad47126a1ac9c87907dd4ebb0300e763d66bf709"
       },
       {
         "path": "pt/assets/1Z0-1085-26/questions.json",
@@ -7672,7 +7672,7 @@
       {
         "path": "pt/assets/certichat/search.json",
         "size": 1340441,
-        "sha256": "02e9d3314a7458727e9c06a50723a6bf2f46a4927e0fee15aca5cf9485643b13"
+        "sha256": "b0d1b2437e5aa02c8be29480798efa6245f3c6e25ac2345ca4605990e9467070"
       },
       {
         "path": "pt/assets/certirss/editorial.json",
@@ -7687,177 +7687,177 @@
       {
         "path": "pt/certichat/index.html",
         "size": 126144,
-        "sha256": "c7cece6efe72076cdca043f0b953755fc1a48327871b355f2f0571bcefa2f265"
+        "sha256": "f8d6a31295fc37cab0581809910d834ecb58d936f72ee9b90d2cc1ee86bb027f"
       },
       {
         "path": "pt/certichat/piloto/index.html",
         "size": 126124,
-        "sha256": "367875d5447fa3ef2b9cd05eabf59cbc83d05dccfd8a947924e5e947d1578ce8"
+        "sha256": "b609f21696e11ba47c7d3a7c7730f514d7c3f86d53511c8e9ea3ca6a2789e8a6"
       },
       {
         "path": "pt/certiquiz/index.html",
         "size": 112585,
-        "sha256": "7688eb1fafef6a462544c7a0705cd22e2737e22c6e738e81b227fd2dc394635f"
+        "sha256": "c78d525f8f318a8188134c0e937de61e628f8f5021ff0886d9cd221608ce2e09"
       },
       {
         "path": "pt/certirss/index.html",
         "size": 122471,
-        "sha256": "5cac79e9f3fa61c4a1f563066cc84a1ea5b31606642865bfa3bfcb679d121bb5"
+        "sha256": "ce5310e7bf6ced1af4a21d4e693208a6a0d723f47ce95270c8e7d45fea9f6f82"
       },
       {
         "path": "pt/certisearch/banco/index.html",
         "size": 239709,
-        "sha256": "7ce30fabeb3717112a3e47fc4adad5202e22bc31dcc27333ed59c38baa70f553"
+        "sha256": "43d83f8c7e5d6815cc506c79094be4f3d0de956d52338c112e397c73f1ec05bc"
       },
       {
         "path": "pt/certisearch/index.html",
         "size": 125456,
-        "sha256": "9b660a75285714c3a6f55f9abd75013f15c2065657ce79f9bc72d58451061657"
+        "sha256": "1c07672b4e442d0ef434f8ac460693e73910cb6a66b365eb36a210f80fbd3446"
       },
       {
         "path": "pt/certitube/-6_1iZv_0_E/index.html",
         "size": 162354,
-        "sha256": "2d48b0523031794cbb658624cb4e2ad2097b36e154201e34bd6385052643c6b7"
+        "sha256": "4512fadf152d13f3e4e916e52f0e9a5c96585f4d3ff29ac84dd275c91b3f1799"
       },
       {
         "path": "pt/certitube/01lvJGeFZ78/index.html",
         "size": 175069,
-        "sha256": "bd17dc42f0d1a9cedd9100341be16a8905062ed02435fea042e0e0c4087adeb7"
+        "sha256": "78686a277c9e245999c42566fbe8302f6d198101d6f5448e04c354b53c193e12"
       },
       {
         "path": "pt/certitube/2qdNyl76opY/index.html",
         "size": 159913,
-        "sha256": "ae48aa167a55c09f79faeccd00077162e21c86446a035378966778a27755c92b"
+        "sha256": "9ba173505644122138d0dde4ee94f07e64a03e46aaab3be32d321c3378575cef"
       },
       {
         "path": "pt/certitube/5dilnUUcgQE/index.html",
         "size": 163418,
-        "sha256": "2517ed2b858fbdb704052a580d631b1eaef87141679cc1ca011dcafe0bd33f5f"
+        "sha256": "df1563952dab2f95cccde6405cc1ab8b0d6afdf2dfcbd61df6ee7f8a56aeceee"
       },
       {
         "path": "pt/certitube/5tABMapyzvA/index.html",
         "size": 167345,
-        "sha256": "7a5d689700a95244a47462ba7a082fc34dd2ef1f5a80a7c958a3e2b88e02627e"
+        "sha256": "6197ac1087dff1f4289357fb0f9541c4573ed95ff1bd834d8abe94e923cdc838"
       },
       {
         "path": "pt/certitube/6L1YmTRZNxM/index.html",
         "size": 167169,
-        "sha256": "d3304ebbdfabbeceb5099fc62b8ad764c37166faa0616c8963691c09a9dc0c7b"
+        "sha256": "01d986ebcdfcaf6f9c8b17c44916074ca61a04c80a78d0aa3e196e20b733776b"
       },
       {
         "path": "pt/certitube/6nujUlKb5z0/index.html",
         "size": 166543,
-        "sha256": "312091fd1d1b68cfae74a496b5850688c2a8648ed376579b590df84fbb4332c5"
+        "sha256": "71d6567d859f724f4fca09b1315033ef012d743050800442c2121adca201c2a4"
       },
       {
         "path": "pt/certitube/7TtlKGNbBnc/index.html",
         "size": 167955,
-        "sha256": "f038fb94430e1cc7f6b79993ada5263735acd45a8d40e1bbcb167b2e27b3d3c1"
+        "sha256": "ebea229c81fbb16131c77ed78701c49a8b7040abf9e9ef9ff02602401bc590c2"
       },
       {
         "path": "pt/certitube/91k_Uo3D3OQ/index.html",
         "size": 165615,
-        "sha256": "14582760cd484af3b0aba9d983f9d124470e5d2046203ddb85ee41a18f133b74"
+        "sha256": "eb7a946cd9052f10d19d3536cd276336a3594025714092cd13cb9fb945ab64db"
       },
       {
         "path": "pt/certitube/FLisHRFT1Xg/index.html",
         "size": 170085,
-        "sha256": "c2da9094c93fa28ce03352d50a8dbc128a8d4eeb02e650bf09a923b486a35540"
+        "sha256": "2c2aaaa53b62048afa8781a58882c29d2d917777a1c16081c5edcebefcada20e"
       },
       {
         "path": "pt/certitube/HCUHwtTt5RI/index.html",
         "size": 161090,
-        "sha256": "6c95abe98f60b286c2dc3ba147735687d015e2ab5843aa19ab46e3b1643005c5"
+        "sha256": "1ef4609dda78b01b775ddabc2452fcfa190a592bd6586f5a5f2889f967591f85"
       },
       {
         "path": "pt/certitube/Ha74VhpQwQo/index.html",
         "size": 163281,
-        "sha256": "22e45c01a3e019643ae9b0d9c15decdfc9b839cad1b4dc17c3487256a5e3d5c9"
+        "sha256": "1f00c12247754742a2eb116a2055e476deec6197a5e060ccac80843b9eb11355"
       },
       {
         "path": "pt/certitube/K4x0pGMfb5I/index.html",
         "size": 172687,
-        "sha256": "61ad0f60936e1b9527517ea9e90117eb38da6432695de4c3503e4ddd59ff0b45"
+        "sha256": "5ec4669378e2ab0aae6e377c3ba152a294b7f9f49044b2ccbca21c675385b104"
       },
       {
         "path": "pt/certitube/MWASexQNDVU/index.html",
         "size": 159237,
-        "sha256": "dddf9487298ffdc2a270e38191d4b9d8f046b4bc22d6056e02787858001ca225"
+        "sha256": "02f6409a50c596e4001a32a85045a3a2518568e38c1e09063af1e79558092d49"
       },
       {
         "path": "pt/certitube/R1dWXZ-iqc0/index.html",
         "size": 168063,
-        "sha256": "8801201821b2abe523e8ef1ee1736bc20d9eee76e9f47cf515ecf5256e3f2d59"
+        "sha256": "20635e1399091865175e3f723dbf94b320323e2d2b455136886c28641c1747fb"
       },
       {
         "path": "pt/certitube/Wf5fisusQOc/index.html",
         "size": 161313,
-        "sha256": "1c724f4979c29428caa51eb3fa88a69c5524b53364aedc081c5dffab5ea4b3d4"
+        "sha256": "266d76f5bebffe4f7801b3b961218f0375326668a14f6a27b97bb67ce83162c6"
       },
       {
         "path": "pt/certitube/ZDRz7aCPs2g/index.html",
         "size": 176247,
-        "sha256": "501c15656a5830171de07b8e246a97f52a2ac5f18f7b76071fadb88c2f621786"
+        "sha256": "73dee5d61ae52a326721f7428694ed4f089202d209a2d726bc2508dbc06a002b"
       },
       {
         "path": "pt/certitube/ZjfQUwUdpbI/index.html",
         "size": 164227,
-        "sha256": "7df0377b733f867736f1f641f4ea57a36cb155168853d815aaffa678a8cef104"
+        "sha256": "26522fe35c3e0b52d5040384c59df7edeba63a8f17ab5e3e80710bd86f701f9e"
       },
       {
         "path": "pt/certitube/aZV1wvcNK6s/index.html",
         "size": 161436,
-        "sha256": "54527704b7e34fe780438ecbdf7bcd5d7c9bd42f7b38374672165b9a50dbd48a"
+        "sha256": "3e7e69ec5bd293330aa09a57aec100fc27b14b98d4121bf6e7babcc09c10423c"
       },
       {
         "path": "pt/certitube/eo0FgqtuBRs/index.html",
         "size": 161670,
-        "sha256": "503b0ea90df342067f50963104853b0d74908862265c285495888f81d3cb4bf9"
+        "sha256": "3e2bbca4ee6d06e221417f79f2b9ffceff94ab6510cf09d27e514751ad3355f0"
       },
       {
         "path": "pt/certitube/index.html",
         "size": 165567,
-        "sha256": "4f4b488012e00365130e0af111636ad0cf78c944a48fabdf309be99b1c8d6d8a"
+        "sha256": "a0509e372b4a9cae348ba9a58f74dc3fd73b762dd10f602f5e851a59ae51cf4c"
       },
       {
         "path": "pt/certitube/m__hzgjFwuk/index.html",
         "size": 164677,
-        "sha256": "271361bf71495d741958be0a57ebbb1e2d1feb273fd5ac8e6124e10e09279a55"
+        "sha256": "68123bc99ee2b78ab5a7a15d78bf448e2c89b076157a5f8ea0e4b1614985b813"
       },
       {
         "path": "pt/certitube/rZi6U8B4HG0/index.html",
         "size": 169522,
-        "sha256": "81a4806756e38895e8c41743d828208732b1770aa3a0078318b21c2beea0a654"
+        "sha256": "5a021458438ee40fc14cf68ea1030f9ce0d2be3aee9a04bb92360249f126e19f"
       },
       {
         "path": "pt/certitube/s7wmcm4hoGo/index.html",
         "size": 163539,
-        "sha256": "7b32783191ba381aa9fb36d56a2375a8402df37cfa88180f83bed1d35e73ae7c"
+        "sha256": "65adb0ef3eb595c21ebce15121c0a783cfcebf0efd608ead8389fa77f2892a51"
       },
       {
         "path": "pt/certitube/xlymDCVWXoA/index.html",
         "size": 172557,
-        "sha256": "75fbc7945376dd0f713aac332db5ffe3b0ee41bcddbbed1b7262d7a6c2770b0f"
+        "sha256": "0e7dc85a92cd141cdd463b34c84c96bcdf1884338f586311da9efd953b727464"
       },
       {
         "path": "pt/certitube/zIxA0ebo2v4/index.html",
         "size": 174681,
-        "sha256": "b35856a6096a8751bc6e222805f9950750fb60f395e46067a187b11047327052"
+        "sha256": "756cdbc1068b707396c7e93099c6aa141f7933d01bfa4cdf39d978e89cc3d093"
       },
       {
         "path": "pt/certitube/zihZUTZAm6k/index.html",
         "size": 173301,
-        "sha256": "d0a88a408b7612cfeca98bb683ece72d712c8292123b3c61f79851736d581e52"
+        "sha256": "7ded041f8ce8124c0c31edd1e5d7b471ed14dd01b2cee9156524ffa11df68040"
       },
       {
         "path": "pt/courses/index.html",
         "size": 144368,
-        "sha256": "2e6abff2474217e7f2c12f9392c5d1280a8f6370e400d03f547f4dd1c2672e93"
+        "sha256": "01f3589fd10909d2c48c39a6ca795ee3c6f4cdfffa09a267d39a0dab6c7a888a"
       },
       {
         "path": "pt/index.html",
         "size": 122899,
-        "sha256": "608d808f3c7ace1fc7a8ca0ba85cc59dd988c0210e688669fd3ee07b6ec3d1d3"
+        "sha256": "62cd0dd1053ec004279c1517a872bfbd3ef35f0b80c04ea0967899818e88aebd"
       }
     ]
   }
