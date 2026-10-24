@@ -1,4 +1,4 @@
-import { t, siteBase, prepareLocale } from "./i18n.js?v=283ef5ffed52";
+import { t, siteBase, prepareLocale } from "./i18n.js?v=c6c63c136710";
 
 let navigate;
 export function navigateSite(url, options) { return navigate ? navigate(url, options) : Promise.resolve(false); }
@@ -11,11 +11,11 @@ function supportedURL(value) {
 }
 async function pageModules(doc) {
   const mounts = [];
-  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=283ef5ffed52')).mountQuiz);
-  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=283ef5ffed52')).mountTube);
-  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=283ef5ffed52')).mountGraphPilot);
-  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=283ef5ffed52')).mountSearch);
-  if (doc.querySelector('[data-certirss]')) mounts.push((await import('../certirss/certirss.js?v=283ef5ffed52')).mountRss);
+  if (doc.querySelector('#quiz')) mounts.push((await import('../certitips/practica/practica.js?v=c6c63c136710')).mountQuiz);
+  if (doc.querySelector('[data-tube-player]')) mounts.push((await import('../certitube/certitube.js?v=c6c63c136710')).mountTube);
+  if (doc.querySelector('[data-graph-pilot]')) mounts.push((await import('../certichat/grafo/pilot.js?v=c6c63c136710')).mountGraphPilot);
+  if (doc.querySelector('[data-certisearch]')) mounts.push((await import('../certisearch/certisearch.js?v=c6c63c136710')).mountSearch);
+  if (doc.querySelector('[data-certirss]')) mounts.push((await import('../certirss/certirss.js?v=c6c63c136710')).mountRss);
   return mounts;
 }
 async function stylesFor(doc, signal) {
@@ -98,13 +98,9 @@ export function installPageNavigation(mountSite) {
   const remember = () => history.replaceState({ ...history.state, certitipsPage: { url: location.href, scroll: [scrollX, scrollY], tubeScroll: tubeScroll() } }, '', location.href);
   const mount = async (mounts, partial = false) => { const signal = AbortSignal.any([pageScope.signal, viewScope.signal]); if (!partial) mountSite(pageScope.signal); await Promise.all(mounts.map(fn => fn(signal))); if (!signal.aborted) document.body.dataset.pageReady = 'true'; };
   void pageModules(document).then(mount);
-  /** Keep native history for an active voice session or an explicit text action. */
-  function enableNavigation() {
-    if (enabled) return;
-    enabled = true; history.scrollRestoration = 'manual'; remember();
-  }
   window.addEventListener('certivoice:state', event => {
-    if (event.detail?.active) enableNavigation();
+    if (!event.detail?.active || enabled) return;
+    enabled = true; history.scrollRestoration = 'manual'; remember();
   });
   const reportFailure = () => {
     const main = document.querySelector('#main');
@@ -114,9 +110,7 @@ export function installPageNavigation(mountSite) {
   };
   navigate = async (value, options = {}) => {
     const target = supportedURL(value);
-    if (!target) return false;
-    if (options.source === 'text') enableNavigation();
-    if (!enabled && !readerModule(target)) return false;
+    if (!target || !enabled && !readerModule(target)) return false;
     request?.abort();
     if (target.pathname === currentURL.pathname && target.search === currentURL.search) {
       if (target.hash !== location.hash) location.hash = target.hash;
@@ -147,7 +141,7 @@ export function installPageNavigation(mountSite) {
       if (options.history !== 'pop') { clearTimeout(scrollTimer); remember(); }
       let retainPlaylist;
       if (partial && fresh.querySelector(reader === 'certitube' ? '[data-tube-player]' : '[data-certirss]') && fresh.body.dataset.locale === document.body.dataset.locale) {
-        const controller = reader === 'certitube' ? await import('../certitube/certitube.js?v=283ef5ffed52') : await import('../certirss/certirss.js?v=283ef5ffed52');
+        const controller = reader === 'certitube' ? await import('../certitube/certitube.js?v=c6c63c136710') : await import('../certirss/certirss.js?v=c6c63c136710');
         if (signal.aborted) throw new DOMException('Navigation canceled', 'AbortError');
         viewScope.abort();
         retainPlaylist = (controller.replaceTube || controller.replaceRss)(fresh);

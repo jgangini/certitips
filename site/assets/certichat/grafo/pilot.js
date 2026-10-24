@@ -1,6 +1,6 @@
-import { t, localizedURL, language } from '../../site/i18n.js?v=283ef5ffed52';
-import { readTrace, sourcePath } from '../trace.js?v=283ef5ffed52';
-import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=283ef5ffed52';
+import { t, localizedURL, language } from '../../site/i18n.js?v=c6c63c136710';
+import { readTrace, sourcePath } from '../trace.js?v=c6c63c136710';
+import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=c6c63c136710';
 
 let mounted;
 const instances = new WeakMap();
@@ -302,12 +302,6 @@ export function mountGraphPilot(scope = document) {
   }
   const tasks = [];
   if (root.dataset.graphUrl) tasks.push(json(root.dataset.graphUrl).then(data => install(data)));
-  if (root.dataset.localBanksUrl) {
-    tasks.push(json(root.dataset.localBanksUrl).then(data => {
-      banks = data;
-      if (state && setPilotBanks(state, banks)) render(false);
-    }).catch(() => {}));
-  }
   if (apiBase) {
     snapshotRequest = json(`${apiBase}/api/graph`, true).then(data => { install(data, true); nextSnapshotCheck = Date.now() + 300000; }).catch(error => { snapshotRetry = true; throw error; }).finally(() => { snapshotRequest = null; serverSettled = true; if (state && !signal.aborted) render(false); });
     tasks.push(snapshotRequest);
@@ -372,7 +366,7 @@ export function mountGraphPilot(scope = document) {
     const revision = ++sceneRevision; scene?.destroy(); scene = undefined; discoveryCounts = { nodes: 0, edges: 0 };
     if (compact.matches) { availability(false); return; }
     try {
-      const { createPilotScene } = await import('./scene.js?v=283ef5ffed52');
+      const { createPilotScene } = await import('./scene.js?v=c6c63c136710');
       if (signal.aborted || revision !== sceneRevision) return;
       availability(true); canvas.dataset.disposed = 'false';
       scene = createPilotScene(canvas, labels, select, () => { follow = false; root.dataset.followPaused = 'true'; }, availability, anchorCard, value => { zoom.textContent = `${Math.round(value * 100)}%`; }, (running, bank = '') => {

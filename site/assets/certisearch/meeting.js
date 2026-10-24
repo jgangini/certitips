@@ -44,7 +44,7 @@ export function journalFromHistory(current,journal=[]) {
   }
   return validateMeetingJournal(next);
 }
-export const caseDialogue = journal => journal.filter(entry=>!entry.meetingId&&entry.role).slice(-80).map(({id,role,text,createdAt})=>({id,role,text,createdAt}));
+export const caseDialogue = journal => journal.filter(entry=>!entry.meetingId&&entry.role).slice(-80).map(({role,text,createdAt})=>({role,text,createdAt}));
 
 export function appendMeetingSegment(journal, segment) {
   const prior = journal.find(entry => entry.id === segment.id || segment.meetingId&&entry.meetingId === segment.meetingId && entry.sequence === segment.sequence);

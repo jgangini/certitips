@@ -1205,7 +1205,7 @@ progress::-webkit-progress-value {
 .prose blockquote p:last-child {
   margin-bottom: 0;
 }
-.prose code, .rss-summary code {
+.prose code {
   background: var(--code-bg);
   border-radius: 4px;
   padding: 2px 5px;

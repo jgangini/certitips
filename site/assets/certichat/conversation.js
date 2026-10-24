@@ -17,18 +17,17 @@ export function chatRoom(pageURL, siteRoot) {
   return { profile: 'instructor', label: 'Instructor de aprendizaje', module: 'CertiTips' };
 }
 
-/** Journal identity survives rendered references and the bounded dialogue projection. */
+/** Merge restored case messages by their stable case position; never renew an existing turn. */
 export function mergeCaseHistory(messages, advisor, now = Date.now(), clearedAt = 0) {
   if (!advisor?.id) return messages;
-  const result = messages.map(item => ({ ...item }));
+  const result = [...messages];
   advisor.history.forEach((item, caseIndex) => {
     const timestamp = Date.parse(item.createdAt || advisor.updatedAt);
     const at = Number.isFinite(timestamp) ? timestamp : now;
     if (!retainedAt(at, now, clearedAt)) return;
-    const message = { role: item.role, text: item.text, caseId: advisor.id, caseIndex, ...(item.id ? { caseEntryId: item.id } : {}), at };
-    const existing = result.find(previous => sameCasePosition(previous, message));
-    if (existing) Object.assign(existing, { caseIndex, ...(item.id ? { caseEntryId: item.id } : {}), at: Math.min(existing.at || at, at) });
-    else result.push(message);
+    if (!result.some(previous => previous.caseId === advisor.id && previous.caseIndex === caseIndex && previous.text === item.text)) {
+      result.push({ role: item.role, text: item.text, caseId: advisor.id, caseIndex, at });
+    }
   });
   return result;
 }
@@ -46,47 +45,33 @@ export function retainMessageMetadata(message, previous, now = Date.now()) {
 }
 
 /** Scope a newly sent case message; older shared messages keep their own identity. */
-export function latestCaseScope(message, advisor, context = {}) {
+export function latestCaseScope(message, advisor) {
   if (!advisor) return {};
-  if (context.caseId && context.caseId !== advisor.id) return {};
-  const caseEntryId = context.caseId === advisor.id && context.journalEntryIds?.[message.role];
-  const at = Date.parse(context.journalCreatedAt);
-  if (caseEntryId) return { caseId: advisor.id, caseEntryId,
-    ...(Number.isFinite(at) ? { at: Math.min(Number.isFinite(message.at) ? message.at : at, at) } : {}) };
-  if (context.journalEntryIds) return {};
   const caseIndex = advisor.history.findLastIndex(item => item.role === message.role && item.text === message.text);
-  const item = advisor.history[caseIndex];
-  return caseIndex < 0 ? {} : { caseId: advisor.id, caseIndex, ...(item.id ? { caseEntryId: item.id } : {}) };
+  return caseIndex < 0 ? {} : { caseId: advisor.id, caseIndex };
 }
 
 function sameCasePosition(left, right) {
-  if (!right.caseId || left.caseId !== right.caseId || left.role !== right.role) return false;
-  if (left.caseEntryId && right.caseEntryId) return left.caseEntryId === right.caseEntryId;
-  return Number.isInteger(right.caseIndex) && left.caseIndex === right.caseIndex && left.text === right.text;
+  return Boolean(right.caseId && left.caseId === right.caseId && left.caseIndex === right.caseIndex && left.text === right.text);
 }
 
 function serverMessages(turn, renderAnswer, at) {
   const scope = turn.context || {}, roles = scope.resume ? ['ai'] : ['user', 'ai'];
   return roles.map(role => ({ role, at, requestId: turn.request_id,
-    text: role === 'user' ? turn.question : scope.profile === 'solution-advisor' && !scope.publicKnowledge ? turn.answer : renderAnswer(turn.answer, turn.sources),
-    ...(scope.caseId ? { caseId: scope.caseId,
-      ...(scope.journalEntryIds?.[role] ? { caseEntryId: scope.journalEntryIds[role] } : {}),
-      ...(Number.isInteger(scope.historyOffset) ? { caseIndex: scope.historyOffset + (role === 'ai' && !scope.resume ? 1 : 0) } : {}) } : {}) }));
+    text: role === 'user' ? turn.question : scope.profile === 'solution-advisor' ? turn.answer : renderAnswer(turn.answer, turn.sources),
+    ...(scope.caseId ? { caseId: scope.caseId, caseIndex: scope.historyOffset + (role === 'ai' && !scope.resume ? 1 : 0) } : {}) }));
 }
 
 /** Reconcile private server turns with the visible copy without renewing or resurrecting messages. */
 export function mergeServerHistory(messages, turns, renderAnswer, now = Date.now(), clearedAt = 0) {
   const merged = messages.map(item => ({ ...item }));
   for (const turn of turns) {
-    const original = Date.parse(turn.context?.journalCreatedAt);
-    const at = Math.min(Date.parse(turn.created_at), Number.isFinite(original) ? original : Infinity);
+    const at = Date.parse(turn.created_at);
     if (!retainedAt(at, now, clearedAt)) continue;
     for (const message of serverMessages(turn, renderAnswer, at)) {
       const existing = merged.find(item => item.role === message.role && (item.requestId === message.requestId || sameCasePosition(item, message)));
       if (existing) {
         existing.requestId = message.requestId;
-        if (message.caseId) Object.assign(existing, { caseId: message.caseId, ...(message.caseEntryId ? { caseEntryId: message.caseEntryId } : {}) });
-        if (turn.context?.publicKnowledge) existing.text = message.text;
         existing.at = Math.min(existing.at || at, at);
       } else merged.push(message);
     }

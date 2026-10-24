@@ -1,4 +1,4 @@
-import { t } from "../../site/i18n.js?v=283ef5ffed52";
+import { t } from "../../site/i18n.js?v=c6c63c136710";
 
 // A native rerender creates a new form/dialog: an old voice choice cannot authorize its replacement.
 const identities = new WeakMap(), selections = new WeakMap(), departures = new WeakMap();
@@ -24,7 +24,7 @@ function readPractice(root) {
 
 export function guardPracticeNavigation(action, destination, doc = document) {
   // A locale change restores the same persisted attempt; only study_concept is a deliberate study detour.
-  if (!["home", "catalog", "videos", "quiz", "chat", "open_source", "open_course", "open_module", "course_presentation", "next_page", "previous_page", "practice"].includes(action.name)) return null;
+  if (!["home", "catalog", "videos", "quiz", "chat", "open_course", "open_module", "course_presentation", "next_page", "previous_page", "practice"].includes(action.name)) return null;
   const root = doc.querySelector("#quiz"), form = root?.querySelector("#question-form"), finish = root?.querySelector("[data-finish]");
   if (!form || !finish || finish.disabled) return null;
   const existing = root.querySelector("dialog.confirmation[open]");
