@@ -1,6 +1,26 @@
-import { mountChapterScroll } from '../site/chapter-scroll.js?v=c6c63c136710';
-import { t, language } from '../site/i18n.js?v=c6c63c136710';
+import { mountChapterScroll } from '../site/chapter-scroll.js?v=283ef5ffed52';
+import { t, language } from '../site/i18n.js?v=283ef5ffed52';
 let youtubeReady;
+let pausedReference;
+
+/** An explicit assistant opening selects a verified chapter paused, including a native page load. */
+export function rememberPausedReference(value) {
+  try {
+    const url = new URL(value, location.href);
+    if (url.origin !== location.origin || !/\/certitube\/[\w-]{11}\/$/.test(url.pathname) || !/^#t-(0|[1-9]\d*)$/.test(url.hash)) return;
+    pausedReference = { url: url.href, at: Date.now() };
+    sessionStorage.setItem('certitube:paused-reference', JSON.stringify(pausedReference));
+  } catch { /* Chapter navigation remains available without optional storage. */ }
+}
+
+function consumePausedReference() {
+  const local = pausedReference; pausedReference = undefined;
+  try {
+    const saved = local || JSON.parse(sessionStorage.getItem('certitube:paused-reference'));
+    sessionStorage.removeItem('certitube:paused-reference');
+    return saved?.url === location.href && Number.isFinite(saved.at) && Date.now() >= saved.at && Date.now() - saved.at < 30000;
+  } catch { return true; } // Without storage, an initial fragment stays paused until a real play request.
+}
 
 function loadYouTube() {
   if (window.YT?.Player) return Promise.resolve(window.YT);
@@ -84,6 +104,7 @@ export function mountPlayer(root, signal = new AbortController().signal) {
   const external = root.querySelector("[data-tube-external]"), status = root.querySelector("[data-tube-status]"), message = root.querySelector("[data-tube-message]");
   const spinner = root.querySelector("[data-tube-loading]");
   const duration = Number(root.dataset.duration), videoId = root.dataset.videoId;
+  let pausedHash = consumePausedReference() ? location.hash : undefined;
   const moments = new Map([...document.querySelectorAll("[data-tube-time]")].map(link => [Number(link.dataset.tubeTime), { seconds: Number(link.dataset.tubeTime), label: link.querySelector("span").textContent }]));
   let player, playback, ready = false, pending, wanted = false, failed = false, autoplay = true, voiceFullscreen = false;
   const announcePlayback = playing => {
@@ -105,8 +126,13 @@ export function mountPlayer(root, signal = new AbortController().signal) {
     if (actualDuration > 0 && seconds >= actualDuration) {
       wanted = false; player.pauseVideo(); inform(t("Este momento ya no está disponible en el video.")); return;
     }
-    player.seekTo(seconds, true);
-    if (autoplay) player.playVideo(); else player.pauseVideo();
+    if (autoplay) {
+      player.seekTo(seconds, true);
+      player.playVideo();
+    } else {
+      // Cueing selects the moment without requesting playback from an unstarted player.
+      player.cueVideoById({ videoId, startSeconds: seconds });
+    }
   }
 
   function select(moment, play = true) {
@@ -121,9 +147,10 @@ export function mountPlayer(root, signal = new AbortController().signal) {
     playMoment();
   }
 
-  function fromHash() {
+  function fromHash(play = false) {
+    if (play === true) pausedHash = undefined;
     const moment = selectedMoment(location.hash, moments);
-    select(moment && moment.seconds < duration ? moment : undefined);
+    select(moment && moment.seconds < duration ? moment : undefined, pausedHash !== location.hash);
   }
 
   const events = {
@@ -168,7 +195,7 @@ export function mountPlayer(root, signal = new AbortController().signal) {
       })();
     }
   }, { signal });
-  document.addEventListener("click", event => onMomentLink(event, moments, fromHash), { signal });
+  document.addEventListener("click", event => onMomentLink(event, moments, () => fromHash(true)), { signal });
   window.addEventListener("hashchange", fromHash, { signal });
   // Native initial-fragment/history scrolling happens after module initialization.
   window.addEventListener("pageshow", event => {
