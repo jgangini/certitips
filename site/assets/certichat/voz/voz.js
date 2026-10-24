@@ -1,14 +1,14 @@
-import { navigateSite } from "../../site/navigation.js?v=c6c63c136710";
-import { t, locale, language, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=c6c63c136710";
-import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./audio.js?v=c6c63c136710";
-import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./actions.js?v=c6c63c136710";
-import { diagramPointer } from "./pointer.js?v=c6c63c136710";
-import { clearVoiceHighlight } from "./study.js?v=c6c63c136710";
-import { activityTrail } from "../activity.js?v=c6c63c136710";
-import { voiceDiagnostics } from "./telemetry.js?v=c6c63c136710";
-import { runtimeClient, runtimeCapability } from '../runtime.js?v=c6c63c136710';
-import { getSearchAdvisor } from "../../certisearch/api-client.js?v=c6c63c136710";
-import { MeetingAudioBuffer, MEETING_DURATION } from "../../certisearch/meeting.js?v=c6c63c136710";
+import { navigateSite } from "../../site/navigation.js?v=283ef5ffed52";
+import { t, locale, language, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=283ef5ffed52";
+import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./audio.js?v=283ef5ffed52";
+import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./actions.js?v=283ef5ffed52";
+import { diagramPointer } from "./pointer.js?v=283ef5ffed52";
+import { clearVoiceHighlight } from "./study.js?v=283ef5ffed52";
+import { activityTrail } from "../activity.js?v=283ef5ffed52";
+import { voiceDiagnostics } from "./telemetry.js?v=283ef5ffed52";
+import { runtimeClient, runtimeCapability } from '../runtime.js?v=283ef5ffed52';
+import { getSearchAdvisor } from "../../certisearch/api-client.js?v=283ef5ffed52";
+import { MeetingAudioBuffer, MEETING_DURATION } from "../../certisearch/meeting.js?v=283ef5ffed52";
 
 const root = typeof document === "undefined" ? null : document.querySelector("[data-certivoice]");
 if (root) {
@@ -515,7 +515,7 @@ if (root) {
       if (result.action) aside = null;
       const explanation = result.educational === true && !result.action ? await explainAside(result, token) : null;
       const previousDialog=document.querySelector('#quiz dialog.confirmation[open]');
-      const action = await performVoiceAction(result.action);
+      const action = await performVoiceAction(result.action, document, result.sources);
       const dialog=document.querySelector('#quiz dialog.confirmation[open][data-finish-confirm]');
       if(result.action&&dialog&&dialog!==previousDialog){
         deferredAction=result;
@@ -582,6 +582,7 @@ if (root) {
           await acknowledgeAction(receipt,true);
           if (token !== epoch || !active) return;
           const next = action.afterNavigation && await performVoiceAction(action.afterNavigation);
+          if (receipt?.action?.name === 'open_source' && document.querySelector('[data-tube-player]') && /^#t-\d+$/.test(location.hash)) offerVideo();
           await say(next?.error || t("Página abierta: {title}", { title: document.querySelector("h1")?.textContent || document.title }), null, undefined, token);
           return;
         }
@@ -630,7 +631,7 @@ if (root) {
   });
   window.addEventListener("certivoice:practice-followup", async event => {
     if (!active || !event.detail?.action) return;
-    const token = epoch, action = await performVoiceAction(event.detail.action);
+    const token = epoch, action = await performVoiceAction(event.detail.action, document, deferredAction?.sources);
     if (token !== epoch || !active) return;
     const receipt=deferredAction;deferredAction=null;
     if (action.navigation) await navigate(action,receipt);

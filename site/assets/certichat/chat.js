@@ -1,17 +1,17 @@
-import { navigateSite } from "../site/navigation.js?v=c6c63c136710";
-import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=c6c63c136710";
-import { readStored, writeStored } from "../site/storage.js?v=c6c63c136710";
-import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=c6c63c136710";
-import { installVoiceChatControls } from "./voz/chat.js?v=c6c63c136710";
-import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=c6c63c136710";
-import { activityTrail, validActivityTrail } from "./activity.js?v=c6c63c136710";
-import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=c6c63c136710";
-import { runtimeClient, runtimeCapability, runtimeOperation } from './runtime.js?v=c6c63c136710';
-import { watchChatPresentation } from './presentation.js?v=c6c63c136710';
-import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=c6c63c136710';
-import { chatRoom, latestCaseScope, mergeCaseHistory, mergeServerHistory, retainMessageMetadata, sameTurnContext } from './conversation.js?v=c6c63c136710';
-import { voiceDiagnostics } from './voz/telemetry.js?v=c6c63c136710';
-export { safeSourceURL } from "./trace.js?v=c6c63c136710";
+import { navigateSite } from "../site/navigation.js?v=283ef5ffed52";
+import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=283ef5ffed52";
+import { readStored, writeStored } from "../site/storage.js?v=283ef5ffed52";
+import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=283ef5ffed52";
+import { installVoiceChatControls } from "./voz/chat.js?v=283ef5ffed52";
+import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=283ef5ffed52";
+import { activityTrail, validActivityTrail } from "./activity.js?v=283ef5ffed52";
+import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=283ef5ffed52";
+import { runtimeClient, runtimeCapability, runtimeOperation } from './runtime.js?v=283ef5ffed52';
+import { watchChatPresentation } from './presentation.js?v=283ef5ffed52';
+import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=283ef5ffed52';
+import { chatRoom, latestCaseScope, mergeCaseHistory, mergeServerHistory, retainMessageMetadata, sameTurnContext } from './conversation.js?v=283ef5ffed52';
+import { voiceDiagnostics } from './voz/telemetry.js?v=283ef5ffed52';
+export { safeSourceURL } from "./trace.js?v=283ef5ffed52";
 
 const escapeChat = text => String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const responseIdPattern = /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -80,11 +80,13 @@ export function restoreChat(value, siteRoot, now = Date.now()) {
   // Remove the operational notice stored by the earlier voice preview; retain user text and educational replies.
   const voiceNotice = "El modo voz todavía no está habilitado. Puedes seguir usando el chat.";
   let traceBytes = 0;
-  const messages = (Array.isArray(value.messages) ? value.messages : []).filter(item => item && ["user", "ai"].includes(item.role) && typeof item.text === "string" && item.text.trim() && item.text.length <= (item.role === "user" ? 1500 : 12000) && Number.isFinite(item.at ?? value.updatedAt) && (item.at ?? value.updatedAt) <= now && now - (item.at ?? value.updatedAt) < 86400000 && !(item.role === "ai" && [voiceNotice, t(voiceNotice)].includes(item.text))).reverse().map(({ role, text, graphTrace, requestId, rating, at, caseId, caseIndex }) => {
+  const messages = (Array.isArray(value.messages) ? value.messages : []).filter(item => item && ["user", "ai"].includes(item.role) && typeof item.text === "string" && item.text.trim() && item.text.length <= (item.role === "user" ? 1500 : 12000) && Number.isFinite(item.at ?? value.updatedAt) && (item.at ?? value.updatedAt) <= now && now - (item.at ?? value.updatedAt) < 86400000 && !(item.role === "ai" && [voiceNotice, t(voiceNotice)].includes(item.text))).reverse().map(({ role, text, graphTrace, requestId, rating, at, caseId, caseIndex, caseEntryId }) => {
     const trace = role === "ai" && normalizeTrace(graphTrace, siteRoot);
     // ponytail: retain newest graph evidence up to 500 KiB; older answer text remains available.
     return { role, text, ...(at === undefined ? {} : { at }),
-      ...(typeof caseId === 'string' && caseId.length <= 96 && Number.isInteger(caseIndex) && caseIndex >= 0 ? { caseId, caseIndex } : {}),
+      ...(typeof caseId === 'string' && caseId.length <= 96 ? { caseId,
+        ...(Number.isInteger(caseIndex) && caseIndex >= 0 ? { caseIndex } : {}),
+        ...(typeof caseEntryId === 'string' && /^[\w-]{1,96}$/.test(caseEntryId) ? { caseEntryId } : {}) } : {}),
       ...(trace && (traceBytes += JSON.stringify(trace).length * 2) <= 512000 ? { graphTrace: trace } : {}),
       ...(responseIdPattern.test(requestId) ? { requestId } : {}),
       ...(role === "ai" && [1, -1].includes(rating) ? { rating } : {}) };
@@ -225,7 +227,7 @@ if (root) {
       try { sessionStorage.setItem(`${storageKey}:scroll`, String(scroller.scrollTop)); } catch { /* Reading position is optional. */ }
     }
   });
-  let pendingRequest = saved.pendingRequest, accessError = "", completedRequest, completedTrace, quota, textNavigation, textNavigating = false, referenceNavigation;
+  let pendingRequest = saved.pendingRequest, accessError = "", completedRequest, completedContext, completedUserIndex, completedTrace, quota, textNavigation, textNavigating = false, referenceNavigation;
   const waitingTurns = [];
   let queuedDispatch, queueTimer,conversationEpoch=0,inputVersion=0;
   const queueView = document.createElement('ol'); queueView.dataset.chatQueue = ''; queueView.setAttribute('aria-live', 'polite'); queueView.hidden = true;
@@ -405,13 +407,14 @@ if (root) {
     const advisor = getSearchAdvisor(), visible = chat.getMessages(), lastUser = visible.findLastIndex(item => item.role === 'user');
     const messages = visible.map((message, position) => {
       const retained = retainMessageMetadata(message, saved.messages[position]);
-      if (!retained.caseId && position >= lastUser) Object.assign(retained, latestCaseScope(message, advisor));
-      if (position === lastUser) retained.requestId = pendingRequest?.requestId || completedRequest || retained.requestId;
+      if (position === lastUser && pendingRequest) retained.requestId = pendingRequest.requestId;
+      if (position === completedUserIndex) retained.requestId = completedRequest || retained.requestId;
       if (message.role === 'ai') {
         retained.requestId = responseRequests[index];
         retained.graphTrace = responseTraces[index];
         retained.rating = responseRatings[index++] || undefined;
       }
+      if (completedContext && completedRequest && retained.requestId === completedRequest) Object.assign(retained, latestCaseScope(retained, advisor, completedContext));
       return retained;
     });
     saved.messages = messages;
@@ -448,7 +451,7 @@ if (root) {
     const pending = textNavigation;
     if (!pending?.ready || !pending.approved || busy) return;
     textNavigation = undefined;
-    const result = pending.navigation ? pending : await performVoiceAction(pending.action);
+    const result = pending.navigation ? pending : await performVoiceAction(pending.action, document, pending.sources);
     if (!result.navigation) return;
     persist();
     if (openPreference !== "false") {
@@ -630,7 +633,7 @@ if (root) {
   async function initialize() {
     const epoch = accessEpoch;
     if (!chat) {
-      await import("../deep-chat.js?v=c6c63c136710");
+      await import("../deep-chat.js?v=283ef5ffed52");
       window.remarkable_plugins = [{ plugin: markdown => configureChatMarkdown(markdown, root.dataset.siteRoot) }];
       chat = document.createElement("deep-chat");
       chat.chatStyle = { border: "none", width: "100%", height: "100%", backgroundColor: "var(--paper)", color: "var(--ink)", fontFamily: "inherit" };
@@ -722,7 +725,7 @@ if (root) {
           if (profileRefreshPending) queueMicrotask(() => syncAdvisor(true));
         }
         persist();
-        if (message.role === 'ai') completedRequest = undefined;
+        if (message.role === 'ai') { completedRequest = undefined; completedContext = undefined; completedUserIndex = undefined; }
         finishTextNavigation();
       };
       chat.errorMessages = { displayServiceErrorMessages: true };
@@ -782,8 +785,10 @@ if (root) {
         refreshVoice(busy);
         completedTrace = undefined;
         completedRequest = undefined;
+        completedContext = undefined;
+        completedUserIndex = undefined;
         publishTrace(root.dataset.siteRoot, "loading");
-        let answer, localNavigation, responseRequest, responseTrace;
+        let answer, localNavigation, responseRequest, responseTrace, responseSources, responseUserIndex;
         const queued = queuedDispatch; queuedDispatch = undefined;
         const requestedAdvisor = queued ? queued.advisor : getSearchAdvisor(), requestedSearch = queued?.search ?? isSearchPage();
         const requestedCaseId=requestedSearch?(queued?.caseId??requestedAdvisor?.id):undefined;
@@ -792,14 +797,16 @@ if (root) {
         textNavigation = undefined;
         try {
           const message = body.messages?.at(-1)?.text?.trim() || "";
+          responseUserIndex = chat.getMessages().findLastIndex(item => item.role === 'user' && item.text?.trim() === message);
           let resolvedAction;
           if (requestedSearch) {
             if (!requestedAdvisor) throw new Error(t("Cargando el banco de preguntas…"));
             const queuedResult=queued?.result&&await queued.result;if(queuedResult?.error)throw queuedResult.error;
             const result = queuedResult?.value||await requestedAdvisor.send(message);
-            const userIndex=chat.getMessages().findLastIndex(item=>item.role==='user'&&item.text===message);
-            if(requestIsCurrent()&&userIndex>=0&&typeof result.submittedMessage==='string'&&result.submittedMessage!==message)chat.updateMessage({text:result.submittedMessage},userIndex);
-            answer = result.answer; responseRequest = result.requestId; updateQuota(result.quota); if(requestIsCurrent())setStatus("");
+            completedContext = result.conversationContext;
+            if(requestIsCurrent()&&responseUserIndex>=0&&typeof result.submittedMessage==='string'&&result.submittedMessage!==message)chat.updateMessage({text:result.submittedMessage},responseUserIndex);
+            answer = result.publicKnowledge ? answerWithReferences(result.answer, result.sources, root.dataset.siteRoot) : result.answer;
+            responseSources = result.sources; responseRequest = result.requestId; updateQuota(result.quota); if(requestIsCurrent())setStatus("");
             resolvedAction=result.action;
           } else if (!verified || !available) {
             answer = accessError || (available ? t("Completa la verificación de acceso para enviar tu consulta.") : t("El servicio no está disponible. Pulsa Reintentar conexión."));
@@ -815,6 +822,7 @@ if (root) {
             persist();
             const queuedResult=queued?.result&&await queued.result;if(queuedResult?.error)throw queuedResult.error;
             const result = queuedResult?.value||await api("chat", pendingRequest);
+            responseSources = result.sources;
             responseRequest = queued?.requestId||pendingRequest.requestId;
             responseTrace = normalizeTrace(result.graphTrace, root.dataset.siteRoot);
             answer = answerWithReferences(String(result.answer || t("No encontré una respuesta en las guías disponibles.")), result.sources, root.dataset.siteRoot);
@@ -823,11 +831,11 @@ if (root) {
             resolvedAction=result.action;
           }
           if(resolvedAction&&requestedInput===inputVersion&&requestIsCurrent()&&requestedPage===voicePageURL(document)){
-            const previous=document.querySelector('#quiz dialog.confirmation[open]'),action=await performVoiceAction(resolvedAction);
+            const previous=document.querySelector('#quiz dialog.confirmation[open]'),action=await performVoiceAction(resolvedAction,document,responseSources);
             if(action.error||action.confirmation)answer=action.error||action.confirmation;
             const dialog=document.querySelector('#quiz dialog.confirmation[open][data-finish-confirm]');
             if(action.navigation||(dialog&&dialog!==previous)){
-              textNavigation=localNavigation={requestId:responseRequest,action:resolvedAction,navigation:action.navigation,approved:Boolean(action.navigation),ready:false};
+              textNavigation=localNavigation={requestId:responseRequest,action:resolvedAction,sources:responseSources,navigation:action.navigation,approved:Boolean(action.navigation),ready:false};
               dialog?.addEventListener('close',()=>{if(dialog.returnValue!=='finish'&&textNavigation===localNavigation){textNavigation=undefined;void acknowledgeAction(localNavigation.requestId,resolvedAction,false);}},{once:true});
             }else await acknowledgeAction(responseRequest,resolvedAction,!action.error);
           }else if(resolvedAction)await acknowledgeAction(responseRequest,resolvedAction,false);
@@ -844,7 +852,7 @@ if (root) {
           // A non-streaming handler finishes via onResponse; [] releases Deep Chat without inserting a stale answer.
           await signals.onResponse([]);busy = false; syncClear(); syncAdvisor();scheduleWaitingTurn(); return;
         }
-        completedRequest=responseRequest;completedTrace=responseTrace;
+        completedRequest=responseRequest;completedUserIndex=responseUserIndex;completedTrace=responseTrace;
         chat.shadowRoot.querySelector('.input-button.inside-end:not(.custom-button)')?.setAttribute("aria-label", t("Detener respuesta"));
         if (completedRequest && document.querySelector('[data-graph-pilot]')) presentation = watchChatPresentation(chat, completedRequest, answer.length, detail => window.dispatchEvent(new CustomEvent('certichat:presentation', { detail })));
         await signals.onResponse({ text: answer });
@@ -1213,7 +1221,7 @@ if (root) {
       writeStored(`${storageKey}:clearedAt`, clearedAt);
       if (clearingAdvisor && clearingAdvisor === getSearchAdvisor() && clearingSearch === isSearchPage()) await clearingAdvisor.clear();
       profileRefreshPending = clearingSearch || isSearchPage();
-      chat.clearMessages(); saved.messages = []; responseTraces.length = 0; responseRequests.length = 0; responseRatings.length = 0; completedTrace = undefined; completedRequest = undefined; pendingRequest = undefined; textNavigation = undefined; persist();
+      chat.clearMessages(); saved.messages = []; responseTraces.length = 0; responseRequests.length = 0; responseRatings.length = 0; completedTrace = undefined; completedRequest = undefined; completedContext = undefined; completedUserIndex = undefined; pendingRequest = undefined; textNavigation = undefined; persist();
       window.dispatchEvent(new CustomEvent("certichat:cleared"));
       publishTrace(root.dataset.siteRoot, "idle");
       updateQuota(result.quota); if (!preview) setStatus(""); confirmation.close();
@@ -1235,10 +1243,11 @@ if (root) {
     if (!result || voiceResponses.has(result.requestId) || typeof result.transcript !== "string" || typeof result.answer !== "string" || result.transcript.length > 1500 || result.answer.length > 12000) return;
     if (result.profile === "certisearch" && !getSearchAdvisor() || result.profile !== "certisearch" && (getSearchAdvisor() || isSearchPage())) return;
     voiceResponses.add(result.requestId);
-    const pair = [...(result.transcript.trim() ? [{ role: "user", text: result.transcript }] : []), ...(result.answer.trim() ? [{ role: "ai", text: result.profile === "certisearch" ? result.answer : answerWithReferences(result.answer, result.sources, root.dataset.siteRoot) }] : [])];
-    if (chat) { completedRequest = result.requestId; completedTrace = normalizeTrace(result.graphTrace, root.dataset.siteRoot); pair.forEach(message => chat.addMessage(message, true)); }
+    const pair = [...(result.transcript.trim() ? [{ role: "user", text: result.transcript }] : []), ...(result.answer.trim() ? [{ role: "ai", text: result.profile === "certisearch" && !result.publicKnowledge ? result.answer : answerWithReferences(result.answer, result.sources, root.dataset.siteRoot) }] : [])];
+    if (chat) { completedRequest = result.requestId; completedContext = result.conversationContext; completedUserIndex = result.transcript.trim() ? chat.getMessages().length : undefined; completedTrace = normalizeTrace(result.graphTrace, root.dataset.siteRoot); pair.forEach(message => chat.addMessage(message, true)); }
     else {
-      saved.messages = restoreChat({ updatedAt: Date.now(), messages: [...saved.messages, ...pair] }, root.dataset.siteRoot).messages;
+      saved.messages = restoreChat({ updatedAt: Date.now(), messages: [...saved.messages, ...pair.map(message => ({ ...message,
+        requestId: result.requestId, ...latestCaseScope(message, getSearchAdvisor(), result.conversationContext) }))] }, root.dataset.siteRoot).messages;
       responseTraces.splice(0, responseTraces.length, ...saved.messages.filter(message => message.role === "ai").map(message => message.graphTrace));
       responseRequests.splice(0, responseRequests.length, ...saved.messages.filter(message => message.role === "ai").map(message => message.requestId));
       responseRatings.splice(0, responseRatings.length, ...saved.messages.filter(message => message.role === "ai").map(message => message.rating || 0));

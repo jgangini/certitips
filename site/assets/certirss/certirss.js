@@ -1,5 +1,5 @@
-import { highlightSearch } from '../site/content-search.js?v=c6c63c136710';
-import { t, locale } from '../site/i18n.js?v=c6c63c136710';
+import { highlightSearch } from '../site/content-search.js?v=283ef5ffed52';
+import { t, locale } from '../site/i18n.js?v=283ef5ffed52';
 
 const snapshots = new WeakMap();
 
@@ -54,7 +54,9 @@ function articleAuthor(author) {
 function articleCover(row) {
   if (!row.cover) return {};
   const prefix = `/certitips/assets/certirss/articles/${row.id}/img/cover-`;
-  if (row.cover.wide !== prefix + 'wide.webp' || row.cover.thumbnail !== prefix + 'thumb.webp' || typeof row.cover.alt !== 'string' || row.cover.alt.length > 240) throw new Error('Invalid article cover');
+  const vector = `/certitips/assets/certirss/articles/${row.id}/img/cover.svg`;
+  const validPair = [[prefix + 'wide.webp', prefix + 'thumb.webp'], [vector, vector]].some(([wide, thumb]) => row.cover.wide === wide && row.cover.thumbnail === thumb);
+  if (!validPair || typeof row.cover.alt !== 'string' || row.cover.alt.length > 240) throw new Error('Invalid article cover');
   return { cover: { wide: row.cover.wide, thumbnail: row.cover.thumbnail, alt: row.cover.alt } };
 }
 
@@ -144,23 +146,41 @@ function newsDetail(root, item, ordinal) {
   published.textContent = `${label} · ${formatDate(item.publishedAt || item.firstSeenAt)}`;
   published.dateTime = item.publishedAt || item.firstSeenAt;
   published.dataset.rssPublished = ''; summaryHeader.append(summaryHeading, published); body.append(summaryHeader);
-  for (const text of (item.content || item.summary).split(/\n\s*\n/)) {
-    const paragraph = document.createElement('p'); paragraph.textContent = text; paragraph.translate = false; body.append(paragraph);
-  }
+  for (const text of (item.content || item.summary).split(/\n\s*\n/)) body.append(articleParagraph(text));
   link.href = item.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = t('Abrir la fuente original');
   const related = document.createElement('section'), resourceHeading = document.createElement('h2'), links = document.createElement('ul'), row = document.createElement('li');
-  related.className = 'tube-resources'; related.dataset.rssOriginal = ''; resourceHeading.textContent = t('Recursos relacionados'); links.className = 'resource-list';
+  related.className = 'tube-resources'; related.dataset.rssOriginal = ''; resourceHeading.textContent = t('Recursos'); links.className = 'resource-list';
   const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg'), use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
   icon.setAttribute('viewBox', '0 0 16 16'); icon.setAttribute('aria-hidden', 'true'); use.setAttribute('href', new URL('../icons/resource-link.svg', import.meta.url).href + '#resource-link'); icon.append(use);
   row.append(icon, link); links.append(row); related.append(resourceHeading, links);
   const metadata = document.createElement('div'); metadata.className = 'rss-article-meta'; metadata.append(related);
-  if (item.author) {
-    const author = document.createElement('section'), heading = document.createElement('h2'), name = document.createElement('p');
-    author.className = 'tube-resources rss-author'; author.dataset.rssAuthor = '';
-    heading.textContent = t('Autor'); name.textContent = item.author; name.translate = false;
-    author.append(heading, name); metadata.append(author);
-  }
+  metadata.append(articleReference(item));
   content.replaceChildren(cover, body, metadata);
+}
+
+/** Presenta la fuente registrada como referencia, sin interpretar HTML ni inferir autoría. */
+function articleReference(item) {
+  const section = document.createElement('section'), heading = document.createElement('h2');
+  const line = document.createElement('p'), sourceName = document.createElement('span');
+  section.className = 'tube-resources rss-reference'; section.dataset.rssReference = '';
+  heading.textContent = t('Referencia');
+  sourceName.dataset.rssCurrentSource = ''; sourceName.translate = false; sourceName.textContent = item.sourceName;
+  line.append(document.createTextNode(t('Fuente') + ': '), sourceName);
+  section.append(heading, line);
+  return section;
+}
+
+/** Sólo interpreta código en línea; todo contenido externo restante sigue siendo texto inerte. */
+function articleParagraph(text) {
+  const paragraph = document.createElement('p'); paragraph.translate = false;
+  let offset = 0;
+  for (const match of text.matchAll(/`([^`\r\n]+)`/g)) {
+    const code = document.createElement('code'); code.textContent = match[1];
+    paragraph.append(document.createTextNode(text.slice(offset, match.index)), code);
+    offset = match.index + match[0].length;
+  }
+  paragraph.append(document.createTextNode(text.slice(offset)));
+  return paragraph;
 }
 
 function newsCard(item, coverURL, selected, ordinal, query) {
@@ -195,7 +215,6 @@ function drawNews(root, snapshot, query) {
   keepListPosition(list, selected?.id, () => list.replaceChildren(...items.map(item => newsCard(item, root.dataset.rssCover, selected?.id, ordinals.get(item.id), query.value))));
   newsDetail(root, selected, ordinals.get(selected?.id));
   statusMessage(root, !snapshot.sources.length ? t('Todavía no hay fuentes disponibles.') : !items.length ? t('No hay novedades para estos filtros.') : '');
-  find('current-source').textContent = selected?.sourceName || 'CertiRSS';
   drawSourceStatuses(find('health'), snapshot.sources);
 }
 
@@ -280,7 +299,6 @@ export function mountRss(signal) {
   const editorial = ['article-heading', 'article-content'].map(name => find(name).cloneNode(true));
   const renderLibrary = () => {
     for (const node of editorial) find(node.hasAttribute('data-rss-article-heading') ? 'article-heading' : 'article-content').replaceChildren(...[...node.childNodes].map(child => child.cloneNode(true)));
-    find('current-source').textContent = root.dataset.rssSource || 'CertiRSS';
     drawLibrary(root, cards, query);
   };
   const renderNews = () => drawNews(root, snapshot, query);

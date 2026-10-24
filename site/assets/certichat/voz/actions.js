@@ -1,6 +1,8 @@
-import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=c6c63c136710";
-import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=c6c63c136710";
-import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=c6c63c136710";
+import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=283ef5ffed52";
+import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=283ef5ffed52";
+import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=283ef5ffed52";
+import { sourcePath } from '../trace.js?v=283ef5ffed52';
+import { rememberPausedReference } from '../../certitube/certitube.js?v=283ef5ffed52';
 
 function nextPresentationSlide(doc) {
   const slides = [...doc.querySelectorAll('#diagram-viewer[open].is-presenting .diagram-presentation-nav button[data-slide-number][data-source-id]')];
@@ -170,13 +172,36 @@ export function shouldResumeNavigation(value, current, base, now = Date.now()) {
     && pending.url === new URL(current).href);
 }
 
-export async function performVoiceAction(action, doc = document) {
+/** Resolve a returned evidence ID on the current origin and language, preserving native guards. */
+function openSourceAction(action, doc, sources) {
+  // Only server-returned evidence can resolve a target; action URLs/seconds are ignored.
+  const matches = Array.isArray(sources) ? sources.filter(source => source?.id === action.targetId) : [];
+  const source = matches.length === 1 && /^[a-f0-9]{64}-\d{4}$/.test(action.targetId || '') && matches[0];
+  const root = doc.querySelector('[data-certichat]')?.dataset.siteRoot || new URL(siteBase, 'https://jgangini.github.io').href;
+  const path = source && sourcePath(source.url, root);
+  const language = location.pathname.slice(siteBase.length).split('/')[0];
+  const url = path && validVoiceNavigation(localizedURL(path, ['es', 'en', 'pt', 'it'].includes(language) ? language : 'es'), location.href, siteBase);
+  if (!url) return { error: t('No hay un destino disponible para esa acción.') };
+  const guarded = guardPracticeNavigation(action, source.title, doc);
+  if (guarded) return guarded;
+  const player = doc.querySelector('[data-tube-player]');
+  if (url.pathname === location.pathname && player && /^#t-(0|[1-9]\d*)$/.test(url.hash)) {
+    const detail = { name: 'chapter', seconds: Number(url.hash.slice(3)), accepted: false };
+    player.dispatchEvent(new CustomEvent('certitube:command', { detail }));
+    return detail.accepted ? { video: { name: 'chapter', videoId: player.dataset.videoId, seconds: detail.seconds }, confirmation: source.title } : { error: t('No hay un destino disponible para esa acción.') };
+  }
+  rememberPausedReference(url.href);
+  return { navigation: url.href };
+}
+
+export async function performVoiceAction(action, doc = document, sources = []) {
   if (!action) return {};
   // Native practice dialogs remain in the DOM during their closing animation.
   // Wait for their existing cleanup before invoking the same control again.
   const closing=doc.querySelector('#quiz dialog.confirmation:not([open])');
   if(closing?.getAnimations)await Promise.allSettled(closing.getAnimations().map(animation=>animation.finished));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (action.name === 'open_source') return openSourceAction(action, doc, sources);
   if (["stop", "continue"].includes(action.name)) return { control: action.name };
   if (action.name === "return_practice") {
     const url = validVoiceNavigation(practiceReturnURL(), location.href, siteBase);

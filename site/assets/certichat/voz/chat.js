@@ -1,5 +1,5 @@
-import { t } from "../../site/i18n.js?v=c6c63c136710";
-import { voiceContext } from "./actions.js?v=c6c63c136710";
+import { t } from "../../site/i18n.js?v=283ef5ffed52";
+import { voiceContext } from "./actions.js?v=283ef5ffed52";
 
 /** Commands recheck availability at activation, beyond Deep Chat's visual disabled state. */
 function voiceCommandBlocked(command, state, busy, quotaBlocked) {
@@ -26,8 +26,9 @@ export function installVoiceChatControls(chat) {
   }
   hintPointer.addEventListener("change", () => { if (!hintPointer.matches) hideHints(); });
   function hintExamples() {
-    if (document.querySelector('[data-certisearch]')) return [t('Resume el caso'), t('Compara las alternativas'), t('Qué falta para estimar')];
-    const context = voiceContext(), has = action => context.targets.some(target => target.action === action), examples = [];
+    const library = [t("Busca material de estudio sobre RAG"), t("Llévame a un capítulo sobre RAG")];
+    if (document.querySelector('[data-certisearch]')) return [t('Resume el caso'), t('Compara las alternativas'), t('Qué falta para estimar'), ...library];
+    const context = voiceContext(), has = action => context.targets.some(target => target.action === action), examples = [...library];
     const viewer = document.querySelector("#diagram-viewer[open]");
     if (has("practice_read")) examples.push(document.querySelector("#quiz dialog[open]") ? t("Lee la confirmación") : t("Lee la pregunta"));
     if (has("practice_explanation")) examples.push(t("Explícame esta respuesta"));
