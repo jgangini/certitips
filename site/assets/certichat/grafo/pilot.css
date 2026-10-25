@@ -38,6 +38,11 @@
 [data-graph-pilot] .chat-graph-evidence, [data-graph-pilot] .chat-graph-footer { flex-shrink: 0; }
 [data-graph-pilot] .chat-graph-footer { min-height: 32px; }
 .graph-pilot-render-status { padding: 16px; font-size: 14px; }
+.graph-pilot-load-error:not([hidden]) { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px 24px; background: var(--paper); }
+.graph-pilot-load-error h2 { display: flex; align-items: center; justify-content: center; gap: 18px; font-size: clamp(28px, 4vw, 44px); line-height: 1.08; letter-spacing: -.045em; margin: 14px 0 20px; }
+.graph-pilot-load-error h2 svg { width: 46px; height: 46px; flex: 0 0 auto; fill: currentColor; }
+.graph-pilot-load-error p { margin: 0 0 24px; }
+.graph-pilot-load-error .graph-pilot-retry-hint { font-size: 14px; margin: 8px 0 0; }
 .graph-pilot-freshness:not([hidden]) { display: inline-block; width: 12px; height: 12px; margin-inline-start: 4px; vertical-align: -2px; background: currentColor; mask: url("../../icons/alert.svg") center / contain no-repeat; }
 [data-graph-pilot][data-renderer="fallback"] { height: auto; }
 [data-graph-pilot][data-renderer="fallback"] .graph-pilot-viewport { flex: none; min-height: 0; }

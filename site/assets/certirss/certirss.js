@@ -1,5 +1,5 @@
-import { highlightSearch } from '../site/content-search.js?v=e0dd86d53568';
-import { t, locale } from '../site/i18n.js?v=e0dd86d53568';
+import { highlightSearch } from '../site/content-search.js?v=c4308aee0381';
+import { t, locale } from '../site/i18n.js?v=c4308aee0381';
 
 const snapshots = new WeakMap();
 const mobileList = root => matchMedia('(max-width: 800px)').matches && root.dataset.rssMobile === 'list';
@@ -209,7 +209,9 @@ function drawNews(root, snapshot, query) {
   if (!snapshot) return;
   const find = name => root.querySelector(`[data-rss-${name}]`);
   const ordinals = new Map(selectItems(snapshot.items, {}).map((item, index) => [item.id, index + 1]));
-  const items = selectItems(snapshot.items, { query: query.value });
+  // Keep existing article numbers while putting newly detected entries first.
+  const items = selectItems(snapshot.items, { query: query.value }).sort((a, b) =>
+    b.firstSeenAt.localeCompare(a.firstSeenAt) || ordinals.get(b.id) - ordinals.get(a.id));
   const requested = location.hash.split('/')[1], selected = items.find(item => item.id === requested) || items[0];
   if (selected && requested && selected.id !== requested) history.replaceState(history.state, '', `#novedades/${selected.id}`);
   const list = find('items');
@@ -298,6 +300,44 @@ function syncMobileView(root, tabs, view) {
     target?.focus({ preventScroll: true });
   }
 }
+const mobileReturnControls = 'a, button, input, textarea, select, summary, [contenteditable], pre, code';
+/** Ignore selections, controls, multiple fingers and the browser's native edge gesture. */
+function swipeStart(event) {
+  if (event.touches.length !== 1 || !event.target.closest('[data-rss-detail]') || event.target.closest(mobileReturnControls) || !window.getSelection()?.isCollapsed) return;
+  const touch = event.touches[0];
+  if (touch.clientX < 20) return;
+  return { id: touch.identifier, x: touch.clientX, y: touch.clientY, time: event.timeStamp };
+}
+function isRightSwipe(event, start) {
+  if (!start || event.touches.length || !window.getSelection()?.isCollapsed) return false;
+  const touch = [...event.changedTouches].find(touch => touch.identifier === start.id);
+  if (!touch) return false;
+  const dx = touch.clientX - start.x, dy = touch.clientY - start.y;
+  return dx >= 60 && dx > Math.abs(dy) * 1.5 && event.timeStamp - start.time < 800;
+}
+/** Return through the existing link, preserving direct-entry navigation and list state. */
+function mountMobileReturn(root, signal) {
+  const active = () => matchMedia('(max-width: 800px)').matches && root.dataset.rssMobile === 'article';
+  const back = () => root.querySelector('[data-rss-list]').click();
+  let start;
+  root.addEventListener('touchstart', event => { start = active() ? swipeStart(event) : undefined; }, { passive: true, signal });
+  root.addEventListener('touchmove', event => {
+    if (!start) return;
+    const touch = [...event.touches].find(touch => touch.identifier === start.id);
+    if (event.touches.length !== 1 || !touch || Math.abs(touch.clientY - start.y) > Math.max(12, Math.abs(touch.clientX - start.x))) start = undefined;
+  }, { passive: true, signal });
+  root.addEventListener('touchcancel', () => { start = undefined; }, { passive: true, signal });
+  root.addEventListener('touchend', event => {
+    const initial = start;
+    start = undefined;
+    if (active() && isRightSwipe(event, initial)) { event.preventDefault(); back(); }
+  }, { passive: false, signal });
+  root.addEventListener('keydown', event => {
+    if (active() && event.key === 'Escape' && !event.defaultPrevented && !event.target.closest(mobileReturnControls)) {
+      event.preventDefault(); back();
+    }
+  }, { signal });
+}
 /** Monta pestañas accesibles y lecturas cancelables; los enlaces externos se muestran como texto inerte. */
 export function mountRss(signal) {
   const root = document.querySelector('[data-certirss]');
@@ -345,6 +385,7 @@ export function mountRss(signal) {
   refresh.addEventListener('click', load, { signal });
   find('clear').addEventListener('click', () => { query.value = ''; query.focus(); render(); }, { signal });
   mountTabs(tabs, setView, signal);
+  mountMobileReturn(root, signal);
   window.addEventListener('hashchange', () => setView(location.hash.slice(1)), { signal });
   matchMedia('(max-width: 800px)').addEventListener('change', () => setView(location.hash.slice(1)), { signal });
   signal.addEventListener('abort', () => request?.abort(), { once: true });

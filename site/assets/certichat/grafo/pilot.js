@@ -1,6 +1,6 @@
-import { t, localizedURL, language } from '../../site/i18n.js?v=e0dd86d53568';
-import { readTrace, sourcePath } from '../trace.js?v=e0dd86d53568';
-import { createPilotState, validatePilotSnapshot, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=e0dd86d53568';
+import { t, localizedURL, language } from '../../site/i18n.js?v=c4308aee0381';
+import { readTrace, sourcePath } from '../trace.js?v=c4308aee0381';
+import { createPilotState, validatePilotSnapshot, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=c4308aee0381';
 
 let mounted;
 const instances = new WeakMap();
@@ -24,7 +24,7 @@ export function mountGraphPilot(scope = document) {
   let labels = root.querySelector('[data-pilot-labels]');
   if (!labels) { labels = element('div'); labels.dataset.pilotLabels = ''; viewport.append(labels); }
   labels.classList.add('graph-pilot-labels');
-  const renderStatus = element('p'); renderStatus.className = 'graph-pilot-render-status'; renderStatus.setAttribute('role', 'status'); renderStatus.hidden = true; viewport.append(renderStatus);
+  const renderStatus = element('div'); renderStatus.className = 'graph-pilot-render-status'; renderStatus.setAttribute('role', 'status'); renderStatus.hidden = true; viewport.append(renderStatus);
   const concepts = root.querySelector('[data-pilot-concepts]'), relations = root.querySelector('[data-pilot-relations]');
   const card = root.querySelector('[data-pilot-card]'), connector = root.querySelector('[data-pilot-card-connector]');
   const contactCards = new Map();
@@ -297,6 +297,7 @@ export function mountGraphPilot(scope = document) {
     const next = createPilotState(snapshot, matchingBanks, siteRoot);
     if (!next.graph.nodes.length) throw new Error('Graph empty');
     if (events.length) for (const event of events) applyPilotProgress(next, event); else { const saved = readTrace(siteRoot); if (saved) showPilotTrace(next, saved); }
+    renderStatus.classList.remove('graph-pilot-load-error');
     generatedAt = snapshot.generatedAt; state = next; banks = matchingBanks; serverLoaded ||= server;
     if (selectedId && !state.graph.byId.has(selectedId)) selectedId = undefined;
     const recovering=loadFailed; loadFailed=false;
@@ -370,9 +371,18 @@ export function mountGraphPilot(scope = document) {
     labels.hidden = true; syncContactCards([]); card.hidden = true; connector.hidden = true;
     for (const button of root.querySelectorAll('.chat-graph-toolbar > button, .chat-graph-legend > button')) button.disabled = true;
     status.textContent = t('No se pudo cargar la instantánea del mapa. Actualiza la página para volver a intentarlo.');
-    const retry = element('button', t('Reintentar conexión')); retry.type = 'button'; retry.className = 'button button-secondary';
-    retry.addEventListener('click', () => { retry.disabled = true; refreshHealth()?.finally(() => { retry.disabled = false; }); }, { signal });
-    renderStatus.replaceChildren(document.createTextNode(status.textContent + ' '), retry);
+    renderStatus.classList.add('graph-pilot-load-error');
+    const heading = element('h2', t('Mapa no disponible'));
+    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    icon.setAttribute('viewBox', '0 0 512 512'); icon.setAttribute('aria-hidden', 'true'); icon.setAttribute('focusable', 'false');
+    const use = document.createElementNS(icon.namespaceURI, 'use');
+    const iconURL = new URL('../../icons/certichat-brain.svg', import.meta.url); iconURL.hash = 'certichat-brain';
+    use.setAttribute('href', iconURL.href);
+    icon.append(use); heading.prepend(icon);
+    const detail = element('p', t('No se pudo conectar con el mapa de conocimiento.'));
+    const hint = element('p'); hint.className = 'graph-pilot-retry-hint';
+    hint.append(document.createTextNode(t('Pulsa') + ' '), element('kbd', 'F5'), document.createTextNode(' ' + t('para volver a intentar la conexión.')));
+    renderStatus.replaceChildren(heading, detail, hint);
   }
   Promise.allSettled(tasks).then(() => { if (!signal.aborted && !state) loadFailure(); });
   function availability(available) {
@@ -386,7 +396,7 @@ export function mountGraphPilot(scope = document) {
     const revision = ++sceneRevision; scene?.destroy(); scene = undefined; discoveryCounts = { nodes: 0, edges: 0 };
     if (compact.matches) { availability(false); return; }
     try {
-      const { createPilotScene } = await import('./scene.js?v=e0dd86d53568');
+      const { createPilotScene } = await import('./scene.js?v=c4308aee0381');
       if (signal.aborted || revision !== sceneRevision) return;
       availability(true); canvas.dataset.disposed = 'false';
       scene = createPilotScene(canvas, labels, select, () => { follow = false; root.dataset.followPaused = 'true'; }, availability, anchorCard, value => { zoom.textContent = `${Math.round(value * 100)}%`; }, (running, bank = '') => {

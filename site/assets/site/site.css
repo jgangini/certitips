@@ -2446,7 +2446,7 @@ html[data-theme="dark"] .quiz-heading .eyebrow {
 .status-page .loading-full h1, .certiquiz-app .loading-full h1 { display: flex; align-items: center; justify-content: center; gap: 18px; font-size: clamp(28px, 4vw, 44px); }
 .status-page .loading-full h1 svg, .certiquiz-app .loading-full h1 svg { width: 46px; height: 46px; flex: 0 0 auto; color: var(--ink); animation: certiquiz-rocket-float 3s ease-in-out infinite; }
 .status-page .loading-error .hint, .certiquiz-app .loading-error .hint { margin-bottom: 0; }
-.status-page kbd, .certiquiz-app kbd { display: inline-flex; align-items: center; padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; background: var(--chrome-bg); color: var(--muted); font-size: 0.62rem; white-space: nowrap; }
+.graph-pilot-retry-hint kbd, .status-page kbd, .certiquiz-app kbd { display: inline-flex; align-items: center; padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; background: var(--chrome-bg); color: var(--muted); font-size: 0.62rem; white-space: nowrap; }
 @keyframes certiquiz-rocket-float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(2px, -3px); } }
 .status-page .loading-full h1 { line-height: 1.08; letter-spacing: -.045em; margin: 14px 0 20px; }
 .status-page p { color: var(--muted); overflow-wrap: anywhere; }
@@ -2469,3 +2469,7 @@ html[data-theme="dark"] .quiz-heading .eyebrow {
 }
 
 @media (max-width: 800px) { .site-header .language-panel { position: fixed; top: calc(var(--header) + 8px); right: 12px; left: auto; } }
+
+@media (max-width: 800px) {
+  :is([data-page="courses"], [data-page="certiquiz"]) > #main { border-top: 4px solid var(--red); }
+}
