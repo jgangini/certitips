@@ -168,20 +168,27 @@ class RuntimeConnection {
   async admit(path, body, kind, signal) {
     return this.follow(await this.accept(path, body, kind, signal), signal);
   }
-  /** Follow derived work too; only metadata cursor persists and snapshots remain server owned. */
+  /** Follow derived work without admitting it. A new session has no conversation until
+   * its first admission; wait on that explicit 404 while preserving real access/transport errors.
+   * Only the metadata cursor persists and snapshots remain server owned.
+   */
   async watchConversation(signal,receive){
     let failures=0;
     while(!signal.aborted){
-      const before=this.conversationCursor;
+      const before=this.conversationCursor;let idle=false;
       try{
         const response=await this.events(`conversations/${encodeURIComponent(this.conversationId||'shared')}/events?after=${this.conversationCursor}`, undefined, signal);
         await readRuntimeEvents(response,this.conversationCursor,async event=>{
           await receive(event);this.conversationCursor=event.seq;this.conversationCursorAt=Date.now();this.save();
         },{terminalEvents:false});
         failures=0;
-      }catch(error){if(signal.aborted)return;if(error.status&&error.status<500||++failures>=8)throw error;}
+      }catch(error){
+        if(signal.aborted)return;
+        if(error.status===404&&error.code==='conversation_expired'){idle=true;failures=0;}
+        else if(error.status&&error.status<500||++failures>=8)throw error;
+      }
       if(signal.aborted)return;
-      try { await reconnectDelay(this.conversationCursor>before?250:Math.min(5000,500*2**failures), signal); }
+      try { await reconnectDelay(idle?5000:this.conversationCursor>before?250:Math.min(5000,500*2**failures), signal); }
       catch(error) { if (!signal.aborted) throw error; }
     }
   }

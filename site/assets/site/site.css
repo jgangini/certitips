@@ -2463,3 +2463,9 @@ html[data-theme="dark"] .quiz-heading .eyebrow {
 .chat-graph-meta dd { flex: 1; justify-content: flex-end; color: var(--ink); white-space: nowrap; }
 @container (max-width: 660px) { .chat-graph-meta { grid-template-columns: 1fr 1fr; } .chat-graph-stamp { justify-self: stretch; } }
 @container (max-width: 430px) { .chat-graph-meta { grid-template-columns: 1fr; } }
+
+@media (max-width: 800px) {
+  .site-header > .header-app-link:is([aria-label="CertiSearch"], [aria-label="CertiChat"]) { display: none; }
+}
+
+@media (max-width: 800px) { .site-header .language-panel { position: fixed; top: calc(var(--header) + 8px); right: 12px; left: auto; } }

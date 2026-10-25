@@ -1,5 +1,5 @@
-import { indexGraph } from './model.js?v=283ef5ffed52';
-import { normalizeTrace } from '../trace.js?v=283ef5ffed52';
+import { indexGraph } from './model.js?v=e0dd86d53568';
+import { normalizeTrace } from '../trace.js?v=e0dd86d53568';
 
 export const collectionIds = ['certitips', 'certiquiz', 'certitube', 'certirss', 'certisearch'];
 export const pilotPreviewIds = [...collectionIds, 'cognee'];
@@ -31,6 +31,30 @@ export function pilotPreviewZone(state, bank) {
 export const relationKey = edge => JSON.stringify([edge.source, edge.target, edge.label]);
 export const collectionCenters = { certitips: [-330, 30, 0], certiquiz: [40, 250, -60], certitube: [290, 75, 160], certirss: [-250, -180, 210], certisearch: [20, -120, -320], unknown: [0, 0, 50] };
 
+function validBank(bank) {
+  return collectionIds.includes(bank.id) && Number.isSafeInteger(bank.documentCount) &&
+    Number.isSafeInteger(bank.indexedDocumentCount) && bank.indexedDocumentCount>=0 &&
+    bank.indexedDocumentCount<=bank.documentCount;
+}
+function validMembership(row,ids) {
+  return ids.has(row.nodeId) && Array.isArray(row.banks) && row.banks.length>0 &&
+    row.banks.every(id=>collectionIds.includes(id));
+}
+/** Reject mixed API snapshots before rendering; translation catalogs never supply geometry. */
+export function validatePilotSnapshot(snapshot, banks, identity) {
+  const graph=indexGraph(snapshot), ids=new Set(graph.nodes.map(node=>node.id));
+  if(!/^[a-f0-9]{64}$/.test(snapshot?.version || '') || banks?.version!==snapshot.version ||
+      !/^[a-f0-9]{64}$/.test(banks.contentVersion || ''))
+    throw new Error('Graph and memberships are not coherent');
+  if(!Array.isArray(banks.banks) || banks.banks.length!==collectionIds.length ||
+      new Set(banks.banks.map(bank=>bank.id)).size!==collectionIds.length || !banks.banks.every(validBank))
+    throw new Error('Graph banks are not coherent');
+  if(!Array.isArray(banks.memberships) || !banks.memberships.every(row=>validMembership(row,ids)))
+    throw new Error('Graph memberships are not coherent');
+  if(identity && (identity.graphVersion!==snapshot.version || identity.version!==banks.contentVersion))
+    throw new Error('Graph identity is not coherent');
+  return true;
+}
 export function createPilotState(snapshot, banks, siteRoot) {
   if (!/^[a-f0-9]{64}$/.test(snapshot?.version)) throw new Error('Invalid graph version');
   const graph = indexGraph(snapshot);

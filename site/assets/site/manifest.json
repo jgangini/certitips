@@ -1,0 +1,14 @@
+{
+  "id": "../../",
+  "name": "CertiTips",
+  "short_name": "CertiTips",
+  "start_url": "../../",
+  "scope": "../../",
+  "display": "standalone",
+  "theme_color": "#c74634",
+  "background_color": "#ffffff",
+  "icons": [
+    { "src": "../icons/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "../icons/share-logo-square.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

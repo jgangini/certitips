@@ -1,7 +1,8 @@
-import { highlightSearch } from '../site/content-search.js?v=283ef5ffed52';
-import { t, locale } from '../site/i18n.js?v=283ef5ffed52';
+import { highlightSearch } from '../site/content-search.js?v=e0dd86d53568';
+import { t, locale } from '../site/i18n.js?v=e0dd86d53568';
 
 const snapshots = new WeakMap();
+const mobileList = root => matchMedia('(max-width: 800px)').matches && root.dataset.rssMobile === 'list';
 
 const normalize = value => String(value).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 const timestamp = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}(?:T.*(?:Z|[+-]\d{2}:\d{2}))?$/.test(value) && Number.isFinite(Date.parse(value));
@@ -106,7 +107,7 @@ function drawLibrary(root, cards, query) {
   for (const card of cards) {
     card.hidden = !terms.every(term => normalize(`${card.querySelector('h2').textContent} ${card.querySelector('[data-rss-description]').textContent} ${card.dataset.source} ${card.dataset.category}`).includes(term));
     const title = card.querySelector('h2'); highlightSearch(title, title.textContent, query.value);
-    markCurrent(card, card.dataset.rssId === root.dataset.rssSelected, !query.value.trim());
+    markCurrent(card, !mobileList(root) && card.dataset.rssId === root.dataset.rssSelected, !query.value.trim());
     if (!card.hidden) count++;
   }
   statusMessage(root, !cards.length ? t('Biblioteca pendiente.') : count ? '' : t('No hay recursos para estos filtros.'));
@@ -212,7 +213,7 @@ function drawNews(root, snapshot, query) {
   const requested = location.hash.split('/')[1], selected = items.find(item => item.id === requested) || items[0];
   if (selected && requested && selected.id !== requested) history.replaceState(history.state, '', `#novedades/${selected.id}`);
   const list = find('items');
-  keepListPosition(list, selected?.id, () => list.replaceChildren(...items.map(item => newsCard(item, root.dataset.rssCover, selected?.id, ordinals.get(item.id), query.value))));
+  keepListPosition(list, selected?.id, () => list.replaceChildren(...items.map(item => newsCard(item, root.dataset.rssCover, mobileList(root) ? null : selected?.id, ordinals.get(item.id), query.value))));
   newsDetail(root, selected, ordinals.get(selected?.id));
   statusMessage(root, !snapshot.sources.length ? t('Todavía no hay fuentes disponibles.') : !items.length ? t('No hay novedades para estos filtros.') : '');
   drawSourceStatuses(find('health'), snapshot.sources);
@@ -287,6 +288,16 @@ async function loadNews(root, signal) {
   }
 }
 
+/** Switches the mobile reader shell without replacing its list, query or native history. */
+function syncMobileView(root, tabs, view) {
+  const previous = root.dataset.rssMobile;
+  root.dataset.rssMobile = location.hash.includes('/') || !location.pathname.endsWith('/certirss/') ? 'article' : 'list';
+  root.querySelector('[data-rss-list]').hash = view;
+  if (matchMedia('(max-width: 800px)').matches && previous !== root.dataset.rssMobile) {
+    const target = root.dataset.rssMobile === 'article' ? root.querySelector('[data-rss-detail]') : tabs.find(tab => tab.dataset.rssTab === view);
+    target?.focus({ preventScroll: true });
+  }
+}
 /** Monta pestañas accesibles y lecturas cancelables; los enlaces externos se muestran como texto inerte. */
 export function mountRss(signal) {
   const root = document.querySelector('[data-certirss]');
@@ -323,6 +334,7 @@ export function mountRss(signal) {
   const setView = value => {
     const requested = value.split('/')[0];
     view = ['biblioteca', 'novedades'].includes(requested) ? requested : root.dataset.rssInitial;
+    syncMobileView(root, tabs, view);
     activateView(root, tabs, view);
     render();
     if (snapshot) drawSync(root, snapshot);
@@ -334,6 +346,7 @@ export function mountRss(signal) {
   find('clear').addEventListener('click', () => { query.value = ''; query.focus(); render(); }, { signal });
   mountTabs(tabs, setView, signal);
   window.addEventListener('hashchange', () => setView(location.hash.slice(1)), { signal });
+  matchMedia('(max-width: 800px)').addEventListener('change', () => setView(location.hash.slice(1)), { signal });
   signal.addEventListener('abort', () => request?.abort(), { once: true });
   setView(location.hash.slice(1));
 }

@@ -1,17 +1,17 @@
-import { navigateSite } from "../site/navigation.js?v=283ef5ffed52";
-import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=283ef5ffed52";
-import { readStored, writeStored } from "../site/storage.js?v=283ef5ffed52";
-import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=283ef5ffed52";
-import { installVoiceChatControls } from "./voz/chat.js?v=283ef5ffed52";
-import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=283ef5ffed52";
-import { activityTrail, validActivityTrail } from "./activity.js?v=283ef5ffed52";
-import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=283ef5ffed52";
-import { runtimeClient, runtimeCapability, runtimeOperation } from './runtime.js?v=283ef5ffed52';
-import { watchChatPresentation } from './presentation.js?v=283ef5ffed52';
-import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=283ef5ffed52';
-import { chatRoom, latestCaseScope, mergeCaseHistory, mergeServerHistory, retainMessageMetadata, sameTurnContext } from './conversation.js?v=283ef5ffed52';
-import { voiceDiagnostics } from './voz/telemetry.js?v=283ef5ffed52';
-export { safeSourceURL } from "./trace.js?v=283ef5ffed52";
+import { navigateSite } from "../site/navigation.js?v=e0dd86d53568";
+import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=e0dd86d53568";
+import { readStored, writeStored } from "../site/storage.js?v=e0dd86d53568";
+import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=e0dd86d53568";
+import { installVoiceChatControls } from "./voz/chat.js?v=e0dd86d53568";
+import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=e0dd86d53568";
+import { activityTrail, validActivityTrail } from "./activity.js?v=e0dd86d53568";
+import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=e0dd86d53568";
+import { runtimeClient, runtimeCapability, runtimeOperation } from './runtime.js?v=e0dd86d53568';
+import { watchChatPresentation } from './presentation.js?v=e0dd86d53568';
+import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=e0dd86d53568';
+import { chatRoom, latestCaseScope, mergeCaseHistory, mergeServerHistory, retainMessageMetadata, sameTurnContext } from './conversation.js?v=e0dd86d53568';
+import { voiceDiagnostics } from './voz/telemetry.js?v=e0dd86d53568';
+export { safeSourceURL } from "./trace.js?v=e0dd86d53568";
 
 const escapeChat = text => String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const responseIdPattern = /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -633,7 +633,7 @@ if (root) {
   async function initialize() {
     const epoch = accessEpoch;
     if (!chat) {
-      await import("../deep-chat.js?v=283ef5ffed52");
+      await import("../deep-chat.js?v=e0dd86d53568");
       window.remarkable_plugins = [{ plugin: markdown => configureChatMarkdown(markdown, root.dataset.siteRoot) }];
       chat = document.createElement("deep-chat");
       chat.chatStyle = { border: "none", width: "100%", height: "100%", backgroundColor: "var(--paper)", color: "var(--ink)", fontFamily: "inherit" };
@@ -649,7 +649,7 @@ if (root) {
       chat.messageStyles = { default: { shared: { bubble: { maxWidth: "92%", fontSize: "14px", lineHeight: "1.45" } }, ai: { bubble: { backgroundColor: "var(--hover)", color: "var(--ink)" } }, user: { bubble: { backgroundColor: "var(--accent)", color: "var(--on-red)" } } } };
       chat.messageStyles.loading = { message: { styles: { bubble: { backgroundColor: "var(--hover)", color: "var(--muted)", display: "flex", alignItems: "center", justifyContent: "center", width: "56px", height: "36px", padding: "0", boxSizing: "border-box" } } } };
       chat.remarkable = { html: false, applyHTML: false };
-      chat.auxiliaryStyle = "* { overflow-wrap: anywhere; } #messages, #text-input { scrollbar-color: var(--scrollbar) transparent; scrollbar-width: thin; } #chat-view { grid-template-rows: minmax(0, 1fr) auto auto; } #certichat-quota { justify-self: center; max-width: calc(100% - 24px); box-sizing: border-box; margin: 8px 12px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--chrome-bg); color: var(--muted); text-align: center; font-size: .68rem; font-variant-numeric: tabular-nums; line-height: 1.4; } #certichat-quota[hidden] { display: none; } a { color: var(--blue); text-decoration: underline; } a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; } @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }";
+      chat.auxiliaryStyle = "* { overflow-wrap: anywhere; } #messages, #text-input { scrollbar-color: var(--scrollbar) transparent; scrollbar-width: thin; } #chat-view { grid-template-rows: minmax(0, 1fr) auto auto; } #input { margin-bottom: var(--chat-composer-bottom-space, 0px); } #certichat-quota { justify-self: center; max-width: calc(100% - 24px); box-sizing: border-box; margin: 8px 12px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--chrome-bg); color: var(--muted); text-align: center; font-size: .68rem; font-variant-numeric: tabular-nums; line-height: 1.4; } #certichat-quota[hidden] { display: none; } a { color: var(--blue); text-decoration: underline; } a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; } @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }";
       // ponytail: the native completion class also covers restored history; no extra render pass or observers.
       // ponytail: override the native disabled filter on hover; the submission guard stays unchanged.
       chat.auxiliaryStyle += `.outer-message-container:last-child { margin-bottom: 10px; }

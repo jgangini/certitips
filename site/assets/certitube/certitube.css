@@ -130,3 +130,7 @@
   .tube-watch { max-height: none; }
   .tube-browse { flex: none; overflow: visible; }
 }
+
+@media (max-width: 800px) {
+  .tube-browse > .tube-chapters::after { content: ""; position: absolute; inset: 100% 0 auto; height: 16px; background: linear-gradient(to bottom, var(--white), transparent); pointer-events: none; }
+}

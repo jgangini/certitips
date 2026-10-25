@@ -1,6 +1,6 @@
-import { t, localizedURL, language } from '../../site/i18n.js?v=283ef5ffed52';
-import { readTrace, sourcePath } from '../trace.js?v=283ef5ffed52';
-import { createPilotState, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=283ef5ffed52';
+import { t, localizedURL, language } from '../../site/i18n.js?v=e0dd86d53568';
+import { readTrace, sourcePath } from '../trace.js?v=e0dd86d53568';
+import { createPilotState, validatePilotSnapshot, applyPilotProgress, setPilotBanks, showPilotTrace, pilotNodeCollection, pilotSourceCollection, pilotColors } from './state.js?v=e0dd86d53568';
 
 let mounted;
 const instances = new WeakMap();
@@ -198,7 +198,7 @@ export function mountGraphPilot(scope = document) {
   function renderCollections() {
     for (const legend of root.querySelectorAll('.chat-graph-legend [data-source]')) {
       const bank = state.collections.find(value => sourceName(value.id) === legend.dataset.source);
-      legend.disabled = !bank?.available;
+      legend.disabled = loadFailed || !bank?.available;
       legend.setAttribute('aria-busy', String(banksPending));
       legend.removeAttribute('title');
       legend.setAttribute('aria-label', bank?.available ? legend.textContent.trim() : `${legend.textContent.trim()} · ${t('Sin documentos indexados')}`); legend.dataset.available = String(Boolean(bank?.available));
@@ -214,9 +214,9 @@ export function mountGraphPilot(scope = document) {
   }
   function renderFreshness() {
     const warning = freshness;
-    root.dataset.graphSource = serverLoaded ? 'api' : 'local';
-    warning.hidden = !state || !serverSettled || serverLoaded && !snapshotRetry;
-    const message = serverLoaded ? t('No se pudo comprobar el mapa actual; se conserva la última instantánea verificada.') : t('Instantánea local: no se pudo comprobar el mapa publicado.');
+    root.dataset.graphSource = loadFailed || !serverLoaded ? 'unavailable' : 'api';
+    warning.hidden = !loadFailed;
+    const message = t('No se pudo cargar la instantánea del mapa. Actualiza la página para volver a intentarlo.');
     warning.title = message; warning.setAttribute('aria-label', message);
   }
   function renderMeta() {
@@ -234,6 +234,7 @@ export function mountGraphPilot(scope = document) {
     updating.hidden = !indexing; version.append(updating, freshness);
   }
   function render(shouldFollow = follow) {
+    if (loadFailed) { loadFailure(); return; }
     status.textContent = statusMessage(); root.dataset.phase = state.phase; root.dataset.provisional = String(state.provisional); root.dataset.versionMismatch = String(state.mismatch);
     if (!selectedId) { card.hidden = true; connector.setAttribute('hidden', ''); }
     renderCollections(); renderEvidence(); renderMeta(); renderFreshness(); updateScroll(); activeFit.disabled = !state.active.size; scene?.update(state, shouldFollow, serverLoaded || serverSettled);
@@ -284,8 +285,9 @@ export function mountGraphPilot(scope = document) {
     bankRequest = json(`${apiBase}/api/graph/banks`, true).then(data => {
       if (!state || signal.aborted) return;
       if (data?.version !== state.graphVersion || state.expectedContentVersion && data.contentVersion !== state.expectedContentVersion || !Array.isArray(data.banks) || !Array.isArray(data.memberships)) throw new Error('Incompatible memberships');
-      banks = data; setPilotBanks(state, banks); render(false);
-    }).catch(() => { snapshotRetry = true; }).finally(() => {
+      validatePilotSnapshot({version:state.graphVersion,nodes:state.graph.nodes,edges:state.graph.edges},data);
+      banks = data; if(!setPilotBanks(state, banks)) throw new Error('Incompatible memberships'); render(false);
+    }).catch(() => { snapshotRetry = true; if(!signal.aborted) loadFailure(); }).finally(() => {
       bankRequest = null;
       if (!signal.aborted) { snapshotRetry ||= Boolean(state?.bankMismatch); renderFreshness(); }
     });
@@ -297,21 +299,26 @@ export function mountGraphPilot(scope = document) {
     if (events.length) for (const event of events) applyPilotProgress(next, event); else { const saved = readTrace(siteRoot); if (saved) showPilotTrace(next, saved); }
     generatedAt = snapshot.generatedAt; state = next; banks = matchingBanks; serverLoaded ||= server;
     if (selectedId && !state.graph.byId.has(selectedId)) selectedId = undefined;
+    const recovering=loadFailed; loadFailed=false;
     render(); if (selectedId) select(selectedId); if (state.bankMismatch) refreshBanks();
-    if (loadFailed) { loadFailed = false; availability(root.dataset.renderer === 'webgl2'); }
+    if (recovering) { for (const button of root.querySelectorAll('.chat-graph-toolbar > button')) button.disabled = false; availability(root.dataset.renderer === 'webgl2'); renderCollections(); }
+  }
+  async function readSnapshot() {
+    const first=await json(apiBase+'/api/health', true);
+    const pair=await Promise.all([json(apiBase+'/api/graph',true),json(apiBase+'/api/graph/banks',true)]);
+    const last=await json(apiBase+'/api/health', true);
+    if(first.ok!==true || last.ok!==true || first.knowledge?.graphVersion!==last.knowledge?.graphVersion ||
+        first.knowledge?.version!==last.knowledge?.version) throw new Error('Knowledge identity changed');
+    validatePilotSnapshot(pair[0],pair[1],last.knowledge);
+    return pair;
   }
   const tasks = [];
-  if (root.dataset.graphUrl) tasks.push(json(root.dataset.graphUrl).then(data => install(data)));
-  if (root.dataset.localBanksUrl) {
-    tasks.push(json(root.dataset.localBanksUrl).then(data => {
-      banks = data;
-      if (state && setPilotBanks(state, banks)) render(false);
-    }).catch(() => {}));
-  }
   if (apiBase) {
-    snapshotRequest = json(`${apiBase}/api/graph`, true).then(data => { install(data, true); nextSnapshotCheck = Date.now() + 300000; }).catch(error => { snapshotRetry = true; throw error; }).finally(() => { snapshotRequest = null; serverSettled = true; if (state && !signal.aborted) render(false); });
+    snapshotRequest = readSnapshot()
+      .then(([snapshot, matchingBanks]) => acceptSnapshot(snapshot, matchingBanks))
+      .catch(error => { snapshotRetry = true; throw error; })
+      .finally(() => { snapshotRequest = null; serverSettled = true; banksPending = false; if (state && !signal.aborted && !loadFailed) render(false); });
     tasks.push(snapshotRequest);
-    tasks.push(json(`${apiBase}/api/graph/banks`, true).then(data => { banks = data; if (state) { setPilotBanks(state, banks); render(); } }).catch(error => { snapshotRetry = true; throw error; }).finally(() => { banksPending = false; if (state && !signal.aborted) { snapshotRetry ||= Boolean(banks && banks.version !== state.graphVersion); renderCollections(); renderFreshness(); } }));
   }
   /** Reuse health identity; older backends receive a bounded full check every five minutes. */
   function needsSnapshot(version) {
@@ -326,20 +333,22 @@ export function mountGraphPilot(scope = document) {
   }
   /** Validate the pair before mutating the visible snapshot; stale pairs keep the last good view. */
   function acceptSnapshot(snapshot, matchingBanks, checkedAt) {
+    validatePilotSnapshot(snapshot, matchingBanks);
     const candidate = createPilotState(snapshot, matchingBanks, siteRoot);
     if (!candidate.graph.nodes.length || !setPilotBanks(candidate, matchingBanks)) throw new Error('Graph and memberships are not coherent');
     if (signal.aborted) return;
     snapshotRetry = false; lastBankCheck = checkedAt; nextSnapshotCheck = Date.now() + 300000;
     if (!serverLoaded || state?.graphVersion !== snapshot.version) install(snapshot, true, matchingBanks);
+    else if (loadFailed) install(snapshot, true, matchingBanks);
     else if (state.bankContentVersion !== matchingBanks.contentVersion || state.bankMismatch) { banks = matchingBanks; setPilotBanks(state, banks); render(false); }
   }
   /** Revalidate after a version change/failure, keeping one request and an atomic graph/banks pair. */
   function refreshSnapshot(version, checkedAt) {
     if (!serverSettled || banksPending || snapshotRequest || bankRequest || signal.aborted) return;
     if (!needsSnapshot(version)) { refreshCurrentBanks(checkedAt); return; }
-    snapshotRequest = Promise.all([json(`${apiBase}/api/graph`, true), json(`${apiBase}/api/graph/banks`, true)])
+    snapshotRequest = readSnapshot()
       .then(([snapshot, matchingBanks]) => acceptSnapshot(snapshot, matchingBanks, checkedAt))
-      .catch(() => { snapshotRetry = true; }).finally(() => { snapshotRequest = null; if (!signal.aborted) renderFreshness(); });
+      .catch(() => { snapshotRetry = true; if (!signal.aborted) loadFailure(); }).finally(() => { snapshotRequest = null; if (!signal.aborted) renderFreshness(); });
   }
   function refreshHealth() {
     if (!apiBase || document.hidden || signal.aborted || healthRequest) return;
@@ -348,9 +357,9 @@ export function mountGraphPilot(scope = document) {
       // Only server-confirmed, timezone-aware sync times may advance the visible date.
       const value = data.knowledge?.checkedAt;
       if (typeof value === 'string' && /(?:Z|[+-]\d{2}:\d{2})$/i.test(value) && Number.isFinite(Date.parse(value))) checkedAt = new Date(value);
-      if (!data.knowledge) snapshotRetry = true;
+      if (!data.knowledge || !/^[a-f0-9]{64}$/.test(data.knowledge.graphVersion || '')) throw new Error('Knowledge identity unavailable');
       refreshSnapshot(data.knowledge?.graphVersion, data.knowledge?.checkedAt);
-    }).catch(() => { indexing = false; snapshotRetry = true; }).finally(() => { healthRequest = null; if (state && !signal.aborted) { renderMeta(); renderFreshness(); } });
+    }).catch(() => { indexing = false; snapshotRetry = true; if (!signal.aborted) loadFailure(); }).finally(() => { healthRequest = null; if (state && !signal.aborted) { renderMeta(); renderFreshness(); } });
     return healthRequest;
   }
   tasks.push(refreshHealth());
@@ -358,7 +367,12 @@ export function mountGraphPilot(scope = document) {
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshHealth(); }, { signal });
   function loadFailure() {
     loadFailed = true; scene?.stop(); canvas.setAttribute('aria-busy', 'false'); canvas.hidden = true; renderStatus.hidden = false;
-    renderStatus.textContent = status.textContent = t('No se pudo cargar la instantánea del mapa. Actualiza la página para volver a intentarlo.');
+    labels.hidden = true; syncContactCards([]); card.hidden = true; connector.hidden = true;
+    for (const button of root.querySelectorAll('.chat-graph-toolbar > button, .chat-graph-legend > button')) button.disabled = true;
+    status.textContent = t('No se pudo cargar la instantánea del mapa. Actualiza la página para volver a intentarlo.');
+    const retry = element('button', t('Reintentar conexión')); retry.type = 'button'; retry.className = 'button button-secondary';
+    retry.addEventListener('click', () => { retry.disabled = true; refreshHealth()?.finally(() => { retry.disabled = false; }); }, { signal });
+    renderStatus.replaceChildren(document.createTextNode(status.textContent + ' '), retry);
   }
   Promise.allSettled(tasks).then(() => { if (!signal.aborted && !state) loadFailure(); });
   function availability(available) {
@@ -372,7 +386,7 @@ export function mountGraphPilot(scope = document) {
     const revision = ++sceneRevision; scene?.destroy(); scene = undefined; discoveryCounts = { nodes: 0, edges: 0 };
     if (compact.matches) { availability(false); return; }
     try {
-      const { createPilotScene } = await import('./scene.js?v=283ef5ffed52');
+      const { createPilotScene } = await import('./scene.js?v=e0dd86d53568');
       if (signal.aborted || revision !== sceneRevision) return;
       availability(true); canvas.dataset.disposed = 'false';
       scene = createPilotScene(canvas, labels, select, () => { follow = false; root.dataset.followPaused = 'true'; }, availability, anchorCard, value => { zoom.textContent = `${Math.round(value * 100)}%`; }, (running, bank = '') => {
@@ -394,7 +408,7 @@ export function mountGraphPilot(scope = document) {
   const instance = {
     root,
     resetPerformance: () => scene?.resetPerformance(),
-    debug: () => ({ snapshot: { source: serverLoaded ? 'api' : 'local', refreshing: Boolean(snapshotRequest || bankRequest), retry: snapshotRetry }, phase: state?.phase || 'loading', graphVersion: state?.graphVersion, requestId: state?.requestId, seq: state?.seq, activeIds: [...(state?.active || [])], provisional: state?.provisional, sources: state?.sources.map(source => ({ ...source })), memberships: state ? [...state.memberships].map(([nodeId, values]) => ({ nodeId, banks: [...values] })) : [], renderer: scene?.stats(), follow, selectedId, contactIds: [...contactCards.keys()] }),
+    debug: () => ({ snapshot: { source: serverLoaded ? 'api' : 'unavailable', refreshing: Boolean(snapshotRequest || bankRequest), retry: snapshotRetry }, phase: state?.phase || 'loading', graphVersion: state?.graphVersion, requestId: state?.requestId, seq: state?.seq, activeIds: [...(state?.active || [])], provisional: state?.provisional, sources: state?.sources.map(source => ({ ...source })), memberships: state ? [...state.memberships].map(([nodeId, values]) => ({ nodeId, banks: [...values] })) : [], renderer: scene?.stats(), follow, selectedId, contactIds: [...contactCards.keys()] }),
     destroy() { if (signal.aborted) return; abort.abort(); clearInterval(healthTimer); scene?.destroy(); syncContactCards([]); stripSize.disconnect(); renderStatus.remove(); instances.delete(root); if (mounted === instance) mounted = undefined; },
   };
   parentSignal?.addEventListener('abort', () => instance.destroy(), { once: true });
