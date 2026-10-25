@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "releaseId": "2026-10-25-09-08-06--098cc4cb5a91--40179368846-1",
+  "releaseId": "2026-10-25-10-04-42--8f1c4295fb0d--40183257907-1",
   "site": {
-    "sha256": "f60a083d5550c222e577134ec6802f2033b95fe4e348c1f19054de8a5a310710",
+    "sha256": "049d6ce669fd398505270f06cf4d8b76d81ebc93d1b4207e1be4ba2cc7d1568e",
     "files": [
       {
         "path": ".nojekyll",
@@ -1362,7 +1362,7 @@
       {
         "path": "assets/certirss/news.json",
         "size": 234968,
-        "sha256": "dfb413518c075f044ff6f325875f49a5ab0b6523b2d09cc8bb97d8d09da10386"
+        "sha256": "3cfc3089286e7fc0160f4110636fc405cc0d8178bf49490e0f96fb3f5feed559"
       },
       {
         "path": "assets/certirss/push-messages.json",
