@@ -1,4 +1,4 @@
-import { language } from "../../site/i18n.js?v=e53cf0bb714b";
+import { language } from "../../site/i18n.js?v=bba027f873e5";
 
 /** Index a public snapshot without mutating it, dropping malformed nodes and dangling edges. */
 export function indexGraph(data) {

@@ -1,5 +1,5 @@
-import { t } from '../site/i18n.js?v=e53cf0bb714b';
-import { captureVoice, encodeVoiceWav } from '../certichat/voz/audio.js?v=e53cf0bb714b';
+import { t } from '../site/i18n.js?v=bba027f873e5';
+import { captureVoice, encodeVoiceWav } from '../certichat/voz/audio.js?v=bba027f873e5';
 
 /** Validate request/case correlation before an editable transcript can reach the current case. */
 function validateDictationResponse(current,pending,result){

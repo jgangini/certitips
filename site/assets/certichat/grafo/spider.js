@@ -1,6 +1,6 @@
-import * as THREE from '../../vendor/three/three.module.js?v=e53cf0bb714b';
-import { pilotWorldPixel } from './motion.js?v=e53cf0bb714b';
-import { pilotSpiderEnvelope } from './replay.js?v=e53cf0bb714b';
+import * as THREE from '../../vendor/three/three.module.js?v=bba027f873e5';
+import { pilotWorldPixel } from './motion.js?v=bba027f873e5';
+import { pilotSpiderEnvelope } from './replay.js?v=bba027f873e5';
 
 // A small decorative cursor and its feelers; these are not knowledge nodes or edges.
 export function createPilotSpider(scene) {

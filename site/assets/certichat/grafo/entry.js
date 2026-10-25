@@ -1,4 +1,4 @@
-import * as THREE from '../../vendor/three/three.module.js?v=e53cf0bb714b';
+import * as THREE from '../../vendor/three/three.module.js?v=bba027f873e5';
 
 const MINIMUM_HOLD_MS = 1500;
 
