@@ -1,5 +1,5 @@
-import { validateCase, assertCurrentResponse } from './case.js?v=849f77efdc35';
-import { validateMeetingJournal, journalFromHistory } from './meeting.js?v=849f77efdc35';
+import { validateCase, assertCurrentResponse } from './case.js?v=bbc7627528f5';
+import { validateMeetingJournal, journalFromHistory } from './meeting.js?v=bbc7627528f5';
 
 export const IMAGE_LIMIT = 384 * 1024;
 export const ARCHIVE_LIMIT = 8 * 1024 * 1024;

@@ -1,4 +1,4 @@
-import { t, locale, siteBase } from '../site/i18n.js?v=849f77efdc35';
+import { t, locale, siteBase } from '../site/i18n.js?v=bbc7627528f5';
 const mounted = new WeakMap();
 const capabilityKey = 'certirss-push-token';
 const validToken = value => /^[A-Za-z0-9_-]{43}$/.test(value || '');
@@ -15,7 +15,6 @@ function deviceToken() {
 class PushControl {
   constructor(root, button, signal) {
     this.button = button; this.signal = signal; this.active = false;
-    this.notice = root.querySelector('[data-rss-push-status]');
     const api = document.querySelector('[data-certichat]')?.dataset.api;
     this.endpoint = api ? new URL('/api/rss/push', api).href : null;
     this.supported = isSecureContext && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
@@ -23,7 +22,7 @@ class PushControl {
     this.needsInstall = /iPad|iPhone|iPod/.test(navigator.userAgent) && !installed;
     button.addEventListener('click', () => this.toggle(), { signal });
   }
-  message(text) { this.notice.textContent = t(text); this.notice.hidden = !text; }
+  message(text) { this.button.setAttribute('aria-description', t(text)); }
   render() {
     const label = t(this.active ? 'Desactivar notificaciones' : 'Activar notificaciones');
     this.button.setAttribute('aria-pressed', String(this.active)); this.button.title = label; this.button.setAttribute('aria-label', label);

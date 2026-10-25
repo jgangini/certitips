@@ -1,4 +1,4 @@
-import { t } from '../site/i18n.js?v=849f77efdc35';
+import { t } from '../site/i18n.js?v=bbc7627528f5';
 
 /** Build an inert view miniature without controls or a second case controller. */
 function thumbnail(tab,html,index) {

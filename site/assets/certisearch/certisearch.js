@@ -1,16 +1,16 @@
-import { t, locale, siteBase } from '../site/i18n.js?v=849f77efdc35';
-import { createCase, validateCase, migrateDialogue, reviseCase, applyProposal, applyEstimate, canRetryRequest, assertCurrentResponse, stageIssues, recordStageReview, stageName, caseStorage, downloadJSON } from './case.js?v=849f77efdc35';
-import { esc, caseView, architectureView, estimateView, stagesView, reportView, sourceLinks, oracleChangesView, proposalReview } from './view.js?v=849f77efdc35';
-import { mountDecks } from './deck.js?v=849f77efdc35';
-import { captureReport } from './report.js?v=849f77efdc35';
-import { validateArchitectureComponents } from './architecture.js?v=849f77efdc35';
-import { setSearchAdvisor, refreshSearchChat, searchRequest, sharedChatRequest, caseRequest, pendingSearchRun, releaseSearchRun } from './api-client.js?v=849f77efdc35';
-import { mountCaseAnnotation, annotatedMessage } from './annotate.js?v=849f77efdc35';
-import { mountChapterScroll } from '../site/chapter-scroll.js?v=849f77efdc35';
-import { mountCaseReview } from './review.js?v=849f77efdc35';
-import { voiceContext } from '../certichat/voz/actions.js?v=849f77efdc35';
-import { validateMeetingJournal, appendMeetingSegment, mergeMeetingJournal, journalFromHistory, caseDialogue } from './meeting.js?v=849f77efdc35';
-import { validateIllustration, caseArchive, parseCaseArchive, requestIllustration, requestsIllustration, ARCHIVE_LIMIT } from './image.js?v=849f77efdc35';
+import { t, locale, siteBase } from '../site/i18n.js?v=bbc7627528f5';
+import { createCase, validateCase, migrateDialogue, reviseCase, applyProposal, applyEstimate, canRetryRequest, assertCurrentResponse, stageIssues, recordStageReview, stageName, caseStorage, downloadJSON } from './case.js?v=bbc7627528f5';
+import { esc, caseView, architectureView, estimateView, stagesView, reportView, sourceLinks, oracleChangesView, proposalReview } from './view.js?v=bbc7627528f5';
+import { mountDecks } from './deck.js?v=bbc7627528f5';
+import { captureReport } from './report.js?v=bbc7627528f5';
+import { validateArchitectureComponents } from './architecture.js?v=bbc7627528f5';
+import { setSearchAdvisor, refreshSearchChat, searchRequest, sharedChatRequest, caseRequest, pendingSearchRun, releaseSearchRun } from './api-client.js?v=bbc7627528f5';
+import { mountCaseAnnotation, annotatedMessage } from './annotate.js?v=bbc7627528f5';
+import { mountChapterScroll } from '../site/chapter-scroll.js?v=bbc7627528f5';
+import { mountCaseReview } from './review.js?v=bbc7627528f5';
+import { voiceContext } from '../certichat/voz/actions.js?v=bbc7627528f5';
+import { validateMeetingJournal, appendMeetingSegment, mergeMeetingJournal, journalFromHistory, caseDialogue } from './meeting.js?v=bbc7627528f5';
+import { validateIllustration, caseArchive, parseCaseArchive, requestIllustration, requestsIllustration, ARCHIVE_LIMIT } from './image.js?v=bbc7627528f5';
 
 export async function mountSearch(signal) {
   const root=document.querySelector('[data-certisearch]');

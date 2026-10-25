@@ -1,8 +1,8 @@
-import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=849f77efdc35";
-import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=849f77efdc35";
-import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=849f77efdc35";
-import { sourcePath } from '../trace.js?v=849f77efdc35';
-import { rememberPausedReference } from '../../certitube/certitube.js?v=849f77efdc35';
+import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=bbc7627528f5";
+import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=bbc7627528f5";
+import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=bbc7627528f5";
+import { sourcePath } from '../trace.js?v=bbc7627528f5';
+import { rememberPausedReference } from '../../certitube/certitube.js?v=bbc7627528f5';
 
 function nextPresentationSlide(doc) {
   const slides = [...doc.querySelectorAll('#diagram-viewer[open].is-presenting .diagram-presentation-nav button[data-slide-number][data-source-id]')];

@@ -1,5 +1,5 @@
-import { indexGraph } from './model.js?v=849f77efdc35';
-import { normalizeTrace } from '../trace.js?v=849f77efdc35';
+import { indexGraph } from './model.js?v=bbc7627528f5';
+import { normalizeTrace } from '../trace.js?v=bbc7627528f5';
 
 export const collectionIds = ['certitips', 'certiquiz', 'certitube', 'certirss', 'certisearch'];
 export const pilotPreviewIds = [...collectionIds, 'cognee'];
