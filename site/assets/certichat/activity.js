@@ -1,6 +1,6 @@
-import { siteBase } from "../site/i18n.js?v=c4308aee0381";
-import { safeSourceURL } from "./trace.js?v=c4308aee0381";
-import { voicePageURL } from "./voz/actions.js?v=c4308aee0381";
+import { siteBase } from "../site/i18n.js?v=849f77efdc35";
+import { safeSourceURL } from "./trace.js?v=849f77efdc35";
+import { voicePageURL } from "./voz/actions.js?v=849f77efdc35";
 
 const key = `certichat:${siteBase}:activity`;
 const bytes = value => new TextEncoder().encode(JSON.stringify(value)).length;

@@ -1,5 +1,6 @@
-import { highlightSearch } from '../site/content-search.js?v=c4308aee0381';
-import { t, locale } from '../site/i18n.js?v=c4308aee0381';
+import { mountPush } from './push.js?v=849f77efdc35';
+import { highlightSearch } from '../site/content-search.js?v=849f77efdc35';
+import { t, locale } from '../site/i18n.js?v=849f77efdc35';
 
 const snapshots = new WeakMap();
 const mobileList = root => matchMedia('(max-width: 800px)').matches && root.dataset.rssMobile === 'list';
@@ -283,11 +284,7 @@ function drawSync(root, snapshot) {
 async function loadNews(root, signal) {
   const refresh = root.querySelector('[data-rss-refresh]'), items = root.querySelector('[data-rss-items]');
   refresh.disabled = true; items.setAttribute('aria-busy', 'true');
-  try {
-    return await readSnapshot(root.dataset.rssUrl, AbortSignal.any([signal, AbortSignal.timeout(15000)]));
-  } finally {
-    if (!signal.aborted) { refresh.disabled = false; items.removeAttribute('aria-busy'); }
-  }
+  return await readSnapshot(root.dataset.rssUrl, AbortSignal.any([signal, AbortSignal.timeout(15000)]));
 }
 
 /** Switches the mobile reader shell without replacing its list, query or native history. */
@@ -340,6 +337,8 @@ function mountMobileReturn(root, signal) {
 }
 /** Monta pestañas accesibles y lecturas cancelables; los enlaces externos se muestran como texto inerte. */
 export function mountRss(signal) {
+  const pushRoot = document.querySelector("[data-certirss]");
+  if (pushRoot) mountPush(pushRoot, signal);
   const root = document.querySelector('[data-certirss]');
   if (!root || root.dataset.mounted) return;
   root.dataset.mounted = 'true';
@@ -369,6 +368,8 @@ export function mountRss(signal) {
       render();
     } catch (error) {
       if (!signal.aborted && error.name !== 'AbortError' && view === 'novedades') statusMessage(root, t('No se pudieron cargar las novedades. Reintenta con Actualizar lista.'));
+    } finally {
+      if (!combined.aborted) { refresh.disabled = false; find('items').removeAttribute('aria-busy'); }
     }
   };
   const setView = value => {

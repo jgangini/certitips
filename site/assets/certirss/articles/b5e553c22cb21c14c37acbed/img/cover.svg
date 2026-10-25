@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="400" viewBox="0 0 1600 400" role="img" aria-labelledby="oracle-general-r2-title oracle-general-r2-desc" font-family="Didact Gothic,Arial,sans-serif" text-rendering="geometricPrecision" data-design-policy="certirss-svg-2" id="oracle-general-r2-root">
+<title id="oracle-general-r2-title">Documentación Técnica</title><desc id="oracle-general-r2-desc">Documentación técnica de la fuente del artículo.</desc>
+<metadata>ISC License
+
+Copyright (c) 2026 Lucide Icons and Contributors
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot; AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+---
+
+The following Lucide icons are derived from the Feather project:
+
+airplay, alert-circle, alert-octagon, alert-triangle, aperture, arrow-down-circle, arrow-down-left, arrow-down-right, arrow-down, arrow-left-circle, arrow-left, arrow-right-circle, arrow-right, arrow-up-circle, arrow-up-left, arrow-up-right, arrow-up, at-sign, calendar, cast, check, chevron-down, chevron-left, chevron-right, chevron-up, chevrons-down, chevrons-left, chevrons-right, chevrons-up, circle, clipboard, clock, code, columns, command, compass, corner-down-left, corner-down-right, corner-left-down, corner-left-up, corner-right-down, corner-right-up, corner-up-left, corner-up-right, crosshair, database, divide-circle, divide-square, dollar-sign, download, external-link, feather, frown, hash, headphones, help-circle, info, italic, key, layout, life-buoy, link-2, link, loader, lock, log-in, log-out, maximize, meh, minimize, minimize-2, minus-circle, minus-square, minus, monitor, moon, more-horizontal, more-vertical, move, music, navigation-2, navigation, octagon, pause-circle, percent, plus-circle, plus-square, plus, power, radio, rss, search, server, share, shopping-bag, sidebar, smartphone, smile, square, table-2, tablet, target, terminal, trash-2, trash, triangle, tv, type, upload, x-circle, x-octagon, x-square, x, zoom-in, zoom-out
+
+The MIT License (MIT) (for the icons listed above)
+
+Copyright (c) 2013-present Cole Bemis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+# Oracle artwork provenance
+
+The Oracle wordmark is the exact inline SVG from the header of
+https://www.oracle.com/news/resources/ (svg.u38-oicn, viewBox 0 0 231 30),
+retrieved on 2026-10-24. Its path, fill, transform and proportions are unchanged.
+The official newsroom also provides https://www.oracle.com/a/pr/docs/oracle-logo.zip;
+that archive contains a PNG and was retained only in the internal design job.
+No raster or traced reproduction is used in these vector covers.
+
+The Autonomous Database symbol is an exact copy from OCI Architecture Diagram
+0.4.10, assets/oci-icons/oracle-autonomous-database.svg. That catalog records the
+Oracle source as Autonomous Database.svg / OCI_Database.vssx. The Generative AI
+symbol uses the existing assets/oci/oci-generative-ai.svg and its original notice.
+Paths, colors and viewBoxes are preserved. Composition adds only placement,
+uniform scaling, decorative accessibility attributes and scoped IDs/classes.
+
+Oracle retains its product artwork and trademarks. This provenance record does
+not assign an open-source license or imply Oracle sponsorship. Usage information:
+https://www.oracle.com/legal/logos/ . Hashes are in icons-manifest.json.
+
+# Oracle Cloud Infrastructure icon provenance
+
+These seven SVG assets come from the local OCI Architecture Diagram plugin, version 0.4.10, assets/oci-icons/catalog.json. The plugin catalog identifies their source as Oracle OCI local SVG artwork. Oracle product names and their artwork remain attributable to Oracle.
+
+The reviewed plugin bundle did not supply a separate license or redistribution notice for this artwork. This file records provenance; it does not assign an open-source license or assert additional permission.
+
+Six SVG files are exact copies, including object-storage.svg. data-lakehouse.svg removes only Inkscape/Sodipodi editor metadata whose undeclared XML prefixes prevented standalone SVG loading; geometry, colors and viewBox are preserved. Original and delivered hashes are recorded in icons-manifest.json. Dark-mode white outlines use presentation CSS only; the original SVG bytes remain unchanged.
+
+The Data Lakehouse and Analytics pictograms are catalog symbols, not newly invented product logos. Product identity comes from the accompanying Oracle Autonomous AI Lakehouse and Oracle Analytics Cloud labels. The AI Data Platform asset is the catalog&#x27;s Workbench pictogram.
+</metadata><defs>
+      <style>#oracle-general-r2-root { color: #3C4545; font-family: Arial,sans-serif; }
+      #oracle-general-r2-root .diagram-container { width:100%;overflow-x:auto }</style><marker id="oracle-general-r2-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="#59616E" stroke-width="1.5"/></marker></defs>
+<rect width="1600" height="400" fill="#F1EFED"/>
+<g data-cover-content="true"><svg xmlns="http://www.w3.org/2000/svg" class="oracle-492-32-u38-oicn" width="184.8" height="24" viewBox="0 0 231 30" preserveAspectRatio="xMinYMid" x="492" y="32" color="#3C4545" data-asset="oracle" aria-hidden="true">
+<path fill="#C74634" d="M99.61,19.52h15.24l-8.05-13L92,30H85.27l18-28.17a4.29,4.29,0,0,1,7-.05L128.32,30h-6.73l-3.17-5.25H103l-3.36-5.23m69.93,5.23V0.28h-5.72V27.16a2.76,2.76,0,0,0,.85,2,2.89,2.89,0,0,0,2.08.87h26l3.39-5.25H169.54M75,20.38A10,10,0,0,0,75,.28H50V30h5.71V5.54H74.65a4.81,4.81,0,0,1,0,9.62H58.54L75.6,30h8.29L72.43,20.38H75M14.88,30H32.15a14.86,14.86,0,0,0,0-29.71H14.88a14.86,14.86,0,1,0,0,29.71m16.88-5.23H15.26a9.62,9.62,0,0,1,0-19.23h16.5a9.62,9.62,0,1,1,0,19.23M140.25,30h17.63l3.34-5.23H140.64a9.62,9.62,0,1,1,0-19.23h16.75l3.38-5.25H140.25a14.86,14.86,0,1,0,0,29.71m69.87-5.23a9.62,9.62,0,0,1-9.26-7h24.42l3.36-5.24H200.86a9.61,9.61,0,0,1,9.26-7h16.76l3.35-5.25h-20.5a14.86,14.86,0,0,0,0,29.71h17.63l3.35-5.23h-20.6" transform="translate(-0.02 0)" />
+</svg><text x="1112" y="54" font-size="24" text-anchor="end" fill="#59616E">DOCUMENTACIÓN</text><path d="M492 80H1112" stroke="#A0A6A6" stroke-width="1"/><g data-cover-scene="true"><rect x="648" y="104" width="304" height="212" rx="8" fill="#FFFFFF" stroke="#7F8787" stroke-width="2"/><svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" x="744" y="116" color="#3C4545" data-asset="document" aria-hidden="true">
+  <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+  <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+  <path d="M10 9H8" />
+  <path d="M16 13H8" />
+  <path d="M16 17H8" />
+</svg><text x="800" y="284" font-size="32" text-anchor="middle" fill="#3C4545">Documentación</text></g><text x="800" y="364" font-size="26" text-anchor="middle" fill="#3C4545">Guías y Referencias Técnicas</text></g></svg>
