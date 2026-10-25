@@ -1,5 +1,5 @@
-import { mountChapterScroll } from '../site/chapter-scroll.js?v=bbc7627528f5';
-import { t, language } from '../site/i18n.js?v=bbc7627528f5';
+import { mountChapterScroll } from '../site/chapter-scroll.js?v=e53cf0bb714b';
+import { t, language } from '../site/i18n.js?v=e53cf0bb714b';
 let youtubeReady;
 let pausedReference;
 

@@ -1,5 +1,5 @@
-import { t } from "../../site/i18n.js?v=bbc7627528f5";
-import { voiceContext } from "./actions.js?v=bbc7627528f5";
+import { t } from "../../site/i18n.js?v=e53cf0bb714b";
+import { voiceContext } from "./actions.js?v=e53cf0bb714b";
 
 /** Commands recheck availability at activation, beyond Deep Chat's visual disabled state. */
 function voiceCommandBlocked(command, state, busy, quotaBlocked) {

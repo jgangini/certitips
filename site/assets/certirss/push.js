@@ -1,4 +1,4 @@
-import { t, locale, siteBase } from '../site/i18n.js?v=bbc7627528f5';
+import { t, locale, siteBase } from '../site/i18n.js?v=e53cf0bb714b';
 const mounted = new WeakMap();
 const capabilityKey = 'certirss-push-token';
 const validToken = value => /^[A-Za-z0-9_-]{43}$/.test(value || '');

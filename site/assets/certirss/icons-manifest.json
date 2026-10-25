@@ -24,5 +24,18 @@
     "license": "ISC and Feather MIT",
     "color": null,
     "adaptation": "Reuse of project book-open geometry; local ID book-open for the Biblioteca tab; license retained in LICENSE.txt"
+  },
+  "notifications": {
+    "library": "lucide",
+    "name": "bell",
+    "theme": "default",
+    "file": "bell.svg",
+    "source": "https://raw.githubusercontent.com/lucide-icons/lucide/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/bell.svg",
+    "commit": "1ef60af944de207e0d5176905a0759ba12e6ee8d",
+    "source_sha256": "394889e9631fe3a9a63be9a479a95b451b708e432d895978d21d9130b5ee5dbe",
+    "sha256": "1c4d26fcfed3b8084f453c6b89671c65fbd9583900f58756b30ab9497533e81b",
+    "license": "ISC and Feather MIT",
+    "color": null,
+    "adaptation": "ID certirss-bell para referencia SVG local; geometría conservada. Avisos completos en LICENSE.txt."
   }
 }

@@ -1,17 +1,17 @@
-import { navigateSite } from "../site/navigation.js?v=bbc7627528f5";
-import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=bbc7627528f5";
-import { readStored, writeStored } from "../site/storage.js?v=bbc7627528f5";
-import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=bbc7627528f5";
-import { installVoiceChatControls } from "./voz/chat.js?v=bbc7627528f5";
-import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=bbc7627528f5";
-import { activityTrail, validActivityTrail } from "./activity.js?v=bbc7627528f5";
-import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=bbc7627528f5";
-import { runtimeClient, runtimeCapability, runtimeOperation } from './runtime.js?v=bbc7627528f5';
-import { watchChatPresentation } from './presentation.js?v=bbc7627528f5';
-import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=bbc7627528f5';
-import { chatRoom, latestCaseScope, mergeCaseHistory, mergeServerHistory, retainMessageMetadata, sameTurnContext } from './conversation.js?v=bbc7627528f5';
-import { voiceDiagnostics } from './voz/telemetry.js?v=bbc7627528f5';
-export { safeSourceURL } from "./trace.js?v=bbc7627528f5";
+import { navigateSite } from "../site/navigation.js?v=e53cf0bb714b";
+import { t, locale, language, localizedURL, siteBase } from "../site/i18n.js?v=e53cf0bb714b";
+import { readStored, writeStored } from "../site/storage.js?v=e53cf0bb714b";
+import { normalizeTrace, publishTrace, restoreHistoryTrace, safeSourceURL, sourcePath } from "./trace.js?v=e53cf0bb714b";
+import { installVoiceChatControls } from "./voz/chat.js?v=e53cf0bb714b";
+import { performVoiceAction, voiceContext, voicePageURL } from "./voz/actions.js?v=e53cf0bb714b";
+import { activityTrail, validActivityTrail } from "./activity.js?v=e53cf0bb714b";
+import { getSearchAdvisor, isSearchPage, registerChatTransport } from "../certisearch/api-client.js?v=e53cf0bb714b";
+import { runtimeClient, runtimeCapability, runtimeOperation } from './runtime.js?v=e53cf0bb714b';
+import { watchChatPresentation } from './presentation.js?v=e53cf0bb714b';
+import { createChatAnnotation, chatAnnotationStyles } from './annotation.js?v=e53cf0bb714b';
+import { chatRoom, latestCaseScope, mergeCaseHistory, mergeServerHistory, retainMessageMetadata, sameTurnContext } from './conversation.js?v=e53cf0bb714b';
+import { voiceDiagnostics } from './voz/telemetry.js?v=e53cf0bb714b';
+export { safeSourceURL } from "./trace.js?v=e53cf0bb714b";
 
 const escapeChat = text => String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const responseIdPattern = /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
@@ -633,7 +633,7 @@ if (root) {
   async function initialize() {
     const epoch = accessEpoch;
     if (!chat) {
-      await import("../deep-chat.js?v=bbc7627528f5");
+      await import("../deep-chat.js?v=e53cf0bb714b");
       window.remarkable_plugins = [{ plugin: markdown => configureChatMarkdown(markdown, root.dataset.siteRoot) }];
       chat = document.createElement("deep-chat");
       chat.chatStyle = { border: "none", width: "100%", height: "100%", backgroundColor: "var(--paper)", color: "var(--ink)", fontFamily: "inherit" };

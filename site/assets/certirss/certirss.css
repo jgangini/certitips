@@ -126,4 +126,5 @@ html[data-theme="dark"] .rss-app { --code-bg:var(--paper); --code-ink:var(--on-r
   .rss-controls::after, .rss-summary-header::after { content: ""; position: absolute; inset: 100% 0 auto; height: 16px; background: linear-gradient(to bottom, var(--white), transparent); pointer-events: none; }
 }
 
-.rss-publications [data-rss-push][aria-pressed="true"] { background:var(--red); border-color:var(--red); color:var(--on-red); }
+/* El estado activo prevalece sobre el hover compartido, también en pantallas táctiles. */
+.rss-publications .certichat-actions [data-rss-push][aria-pressed="true"] { background:var(--red); border-color:var(--red); color:var(--on-red); }
