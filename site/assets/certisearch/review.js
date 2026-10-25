@@ -1,6 +1,6 @@
-import { t } from '../site/i18n.js?v=bba027f873e5';
-import { validateCase } from './case.js?v=bba027f873e5';
-import { esc } from './view.js?v=bba027f873e5';
+import { t } from '../site/i18n.js?v=a9c3981cedae';
+import { validateCase } from './case.js?v=a9c3981cedae';
+import { esc } from './view.js?v=a9c3981cedae';
 
 /** Render existing report evidence without exposing a second editor in the review dialog. */
 function paintReport(content,markup){

@@ -35,7 +35,7 @@ self.addEventListener('push', event => {
     if (!data || !['CertiTips', 'CertiRSS'].includes(data.title) || typeof data.body !== 'string' || data.body.length > 500 || typeof data.tag !== 'string' || data.tag.length > 100) return;
     const url = readerURL(data.url), base = new URL(self.registration.scope);
     if (!url) return;
-    await self.registration.showNotification('CertiTips', { body: data.body, tag: data.tag, icon: new URL('assets/icons/share-logo-square.png', base).href, data: { url: url.href } });
+    await self.registration.showNotification('Activities', { body: data.body, tag: data.tag, icon: new URL('assets/icons/share-logo-square.png', base).href, data: { url: url.href } });
   })());
 });
 self.addEventListener('notificationclick', event => {

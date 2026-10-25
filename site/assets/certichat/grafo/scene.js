@@ -1,12 +1,12 @@
-import * as THREE from '../../vendor/three/three.module.js?v=bba027f873e5';
-import { OrbitControls } from '../../vendor/three/OrbitControls.js?v=bba027f873e5';
-import { collectionIds, pilotLayout, pilotNodeCollections, pilotNodeCollection, pilotPreviewZone, pilotPreviewIds, pilotColors } from './state.js?v=bba027f873e5';
-import { pilotCameraStep, pilotFrame, pilotResultCluster } from './camera.js?v=bba027f873e5';
-import { createPilotMotion, pilotWorldPixel } from './motion.js?v=bba027f873e5';
-import { buildPilotReplay, pilotReplayFrame, pilotPresentationFrame, pilotQueryFrame, pilotDiscoveryCounts } from './replay.js?v=bba027f873e5';
-import { createPilotSpider } from './spider.js?v=bba027f873e5';
-import { createPilotHighlight } from './highlight.js?v=bba027f873e5';
-import { createPilotEntry } from './entry.js?v=bba027f873e5';
+import * as THREE from '../../vendor/three/three.module.js?v=a9c3981cedae';
+import { OrbitControls } from '../../vendor/three/OrbitControls.js?v=a9c3981cedae';
+import { collectionIds, pilotLayout, pilotNodeCollections, pilotNodeCollection, pilotPreviewZone, pilotPreviewIds, pilotColors } from './state.js?v=a9c3981cedae';
+import { pilotCameraStep, pilotFrame, pilotResultCluster } from './camera.js?v=a9c3981cedae';
+import { createPilotMotion, pilotWorldPixel } from './motion.js?v=a9c3981cedae';
+import { buildPilotReplay, pilotReplayFrame, pilotPresentationFrame, pilotQueryFrame, pilotDiscoveryCounts } from './replay.js?v=a9c3981cedae';
+import { createPilotSpider } from './spider.js?v=a9c3981cedae';
+import { createPilotHighlight } from './highlight.js?v=a9c3981cedae';
+import { createPilotEntry } from './entry.js?v=a9c3981cedae';
 
 function blendZoneColor(zones, colors, key, value) {
   const matches = zones.filter(zone => zone[key].has(value));
