@@ -1,9 +1,9 @@
-import { readSnapshot } from '../certirss/certirss.js?v=a9c3981cedae';
-import { installPageNavigation, navigateSite } from "./navigation.js?v=a9c3981cedae";
-import { mountCasePresentation } from '../certisearch/presentation.js?v=a9c3981cedae';
-import { t, locale, localizedURL, siteBase } from "./i18n.js?v=a9c3981cedae";
-import { readStored, writeStored } from "./storage.js?v=a9c3981cedae";
-import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, highlightSearch } from "./content-search.js?v=a9c3981cedae";
+import { readSnapshot } from '../certirss/certirss.js?v=ebf266315b85';
+import { installPageNavigation, navigateSite } from "./navigation.js?v=ebf266315b85";
+import { mountCasePresentation } from '../certisearch/presentation.js?v=ebf266315b85';
+import { t, locale, localizedURL, siteBase } from "./i18n.js?v=ebf266315b85";
+import { readStored, writeStored } from "./storage.js?v=ebf266315b85";
+import { indexSearchEntry, searchContent, corpusSearchEntries, searchExcerpt, highlightSearch } from "./content-search.js?v=ebf266315b85";
 
 // The root entry recalls a language; missing routes are handled by the 404 allowlist.
 if (/^(?:index\.html)?$/.test(location.pathname.slice(siteBase.length))) {

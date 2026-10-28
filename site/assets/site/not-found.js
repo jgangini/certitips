@@ -18,7 +18,7 @@ if (await redirectLegacy()) {
       document.body.replaceWith(translated.body);
     } catch { /* The original error remains readable if the localized file is unavailable. */ }
   }
-  await import('./site.js?v=a9c3981cedae');
+  await import('./site.js?v=ebf266315b85');
 }
 
 /** Pages cannot send per-path redirects. Only top-level document navigation can

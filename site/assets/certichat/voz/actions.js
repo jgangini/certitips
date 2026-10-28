@@ -1,8 +1,8 @@
-import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=a9c3981cedae";
-import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=a9c3981cedae";
-import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=a9c3981cedae";
-import { sourcePath } from '../trace.js?v=a9c3981cedae';
-import { rememberPausedReference } from '../../certitube/certitube.js?v=a9c3981cedae';
+import { t, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=ebf266315b85";
+import { practiceTargets, performPracticeAction, guardPracticeNavigation } from "./practice.js?v=ebf266315b85";
+import { studyResults, practiceReturnURL, rememberPracticeReturn, highlightPhrase, explanationHighlights } from "./study.js?v=ebf266315b85";
+import { sourcePath } from '../trace.js?v=ebf266315b85';
+import { rememberPausedReference } from '../../certitube/certitube.js?v=ebf266315b85';
 
 function nextPresentationSlide(doc) {
   const slides = [...doc.querySelectorAll('#diagram-viewer[open].is-presenting .diagram-presentation-nav button[data-slide-number][data-source-id]')];
@@ -67,7 +67,7 @@ export function voicePageURL(doc = document) {
   const publicRoot = page || doc.querySelector("[data-certichat]")?.dataset.siteRoot;
   const path = url && /^[\w-]+\/img\/[\w.-]+\.svg$/.test(url.pathname.slice(`${base}${course}/`.length))
     ? new URL(canonicalURL(new URL("../", url).href)).pathname : new URL(canonicalURL(page || location.href)).pathname;
-  return new URL(path, publicRoot || location.href).href;
+  return new URL(path, doc.querySelector('[data-certichat]')?.dataset.siteRoot || publicRoot || location.href).href;
 }
 
 export function voiceContext(doc = document, completedDiagramId) {

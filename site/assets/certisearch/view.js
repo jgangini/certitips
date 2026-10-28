@@ -1,6 +1,6 @@
-import { t, language, siteBase } from '../site/i18n.js?v=a9c3981cedae';
-import { relevantQuestions, stageName } from './case.js?v=a9c3981cedae';
-import { architectureLayouts, architectureOverview, architectureNodeLabel, architectureNodePurpose, connectorPath, connectionLabel, serviceLayer, segments, wrapArchitectureText } from './architecture.js?v=a9c3981cedae';
+import { t, language, siteBase } from '../site/i18n.js?v=ebf266315b85';
+import { relevantQuestions, stageName } from './case.js?v=ebf266315b85';
+import { architectureLayouts, architectureOverview, architectureNodeLabel, architectureNodePurpose, connectorPath, connectionLabel, serviceLayer, segments, wrapArchitectureText } from './architecture.js?v=ebf266315b85';
 
 export const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 export const money = (value, currency, unitPrice=false) => value === null || value === undefined ? t('Pendiente') : new Intl.NumberFormat(language, { style: 'currency', currency, ...(unitPrice?{maximumFractionDigits:8}:{}) }).format(Number(value));

@@ -1,6 +1,6 @@
-import { t } from '../../site/i18n.js?v=a9c3981cedae';
-import { newAttempt, confirmAnswer, advance, previous, finishAttempt, results, restoreAttempt } from './core.js?v=a9c3981cedae';
-import { readStored, writeStored } from '../../site/storage.js?v=a9c3981cedae';
+import { t } from '../../site/i18n.js?v=ebf266315b85';
+import { newAttempt, confirmAnswer, advance, previous, finishAttempt, results, restoreAttempt } from './core.js?v=ebf266315b85';
+import { readStored, writeStored } from '../../site/storage.js?v=ebf266315b85';
 
 export async function mountQuiz(signal) {
 const root = document.querySelector('#quiz');

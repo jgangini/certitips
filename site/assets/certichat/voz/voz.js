@@ -1,14 +1,14 @@
-import { navigateSite } from "../../site/navigation.js?v=a9c3981cedae";
-import { t, locale, language, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=a9c3981cedae";
-import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./audio.js?v=a9c3981cedae";
-import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./actions.js?v=a9c3981cedae";
-import { diagramPointer } from "./pointer.js?v=a9c3981cedae";
-import { clearVoiceHighlight } from "./study.js?v=a9c3981cedae";
-import { activityTrail } from "../activity.js?v=a9c3981cedae";
-import { voiceDiagnostics } from "./telemetry.js?v=a9c3981cedae";
-import { runtimeClient, runtimeCapability } from '../runtime.js?v=a9c3981cedae';
-import { getSearchAdvisor } from "../../certisearch/api-client.js?v=a9c3981cedae";
-import { MeetingAudioBuffer, MEETING_DURATION } from "../../certisearch/meeting.js?v=a9c3981cedae";
+import { navigateSite } from "../../site/navigation.js?v=ebf266315b85";
+import { t, locale, language, canonicalURL, localizedURL, siteBase } from "../../site/i18n.js?v=ebf266315b85";
+import { animateVoiceEdge, captureVoice, encodeVoiceWav, heardCharacters, nativeSpeechSegments, preferredNativeVoice, restoreVoicePlayback, voiceMemoryFresh, VoiceActivity } from "./audio.js?v=ebf266315b85";
+import { performVoiceAction, explanationSource, voiceContext, voicePageURL, pendingNavigation, shouldResumeNavigation, validVoiceNavigation } from "./actions.js?v=ebf266315b85";
+import { diagramPointer } from "./pointer.js?v=ebf266315b85";
+import { clearVoiceHighlight } from "./study.js?v=ebf266315b85";
+import { activityTrail } from "../activity.js?v=ebf266315b85";
+import { voiceDiagnostics } from "./telemetry.js?v=ebf266315b85";
+import { runtimeClient, runtimeCapability } from '../runtime.js?v=ebf266315b85';
+import { getSearchAdvisor } from "../../certisearch/api-client.js?v=ebf266315b85";
+import { MeetingAudioBuffer, MEETING_DURATION } from "../../certisearch/meeting.js?v=ebf266315b85";
 
 const root = typeof document === "undefined" ? null : document.querySelector("[data-certivoice]");
 if (root) {

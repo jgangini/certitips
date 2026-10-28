@@ -1,6 +1,6 @@
-@import url("./deck.css?v=a9c3981cedae");
-@import url("./stages.css?v=a9c3981cedae");
-@import url("./report.css?v=a9c3981cedae");
+@import url("./deck.css?v=ebf266315b85");
+@import url("./stages.css?v=ebf266315b85");
+@import url("./report.css?v=ebf266315b85");
 
 #diagram-viewer[data-case-presentation] .dialog-content{cursor:default;background:var(--paper)}
 #diagram-viewer[data-case-presentation] .dialog-content>img{display:none}

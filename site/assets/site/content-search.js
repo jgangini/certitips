@@ -1,5 +1,5 @@
-import { sourcePath } from "../certichat/trace.js?v=a9c3981cedae";
-import { locale, language } from './i18n.js?v=a9c3981cedae';
+import { sourcePath } from "../certichat/trace.js?v=ebf266315b85";
+import { locale, language } from './i18n.js?v=ebf266315b85';
 
 const normalize = value => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const words = value => new Set(normalize(value).split(/\s+/).filter(Boolean));

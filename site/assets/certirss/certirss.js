@@ -1,6 +1,6 @@
-import { mountPush } from './push.js?v=a9c3981cedae';
-import { highlightSearch } from '../site/content-search.js?v=a9c3981cedae';
-import { t, locale } from '../site/i18n.js?v=a9c3981cedae';
+import { mountPush } from './push.js?v=ebf266315b85';
+import { highlightSearch } from '../site/content-search.js?v=ebf266315b85';
+import { t, locale } from '../site/i18n.js?v=ebf266315b85';
 
 const snapshots = new WeakMap();
 const mobileList = root => matchMedia('(max-width: 800px)').matches && root.dataset.rssMobile === 'list';

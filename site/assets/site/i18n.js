@@ -29,11 +29,15 @@ export function t(source, values = {}) {
 function routeURL(value, target, base) {
   const origin = globalThis.location?.origin || 'https://jgangini.github.io';
   const url = new URL(value, origin);
-  if (url.origin !== origin && url.origin !== 'https://jgangini.github.io') return value;
+  if (url.origin !== origin && url.origin !== 'https://jgangini.github.io' && url.origin !== document?.body?.dataset.publicOrigin) return value;
   if (!url.pathname.startsWith(base)) return value;
   const relative = url.pathname.slice(base.length).replace(/^(?:es|en|pt|it)\//, '');
   if (relative.startsWith('assets/')) return value;
   url.pathname = base + (target ? target + '/' : '') + relative;
+  // Public links stay on this host; context URLs retain the knowledge identity.
+  const identity = document?.querySelector?.('[data-certichat]')?.dataset.siteRoot;
+  const destination = target ? origin : identity && new URL(identity).origin;
+  if (destination) { const host = new URL(destination); url.protocol = host.protocol; url.host = host.host; }
   return /^https?:/.test(value) ? url.href : url.pathname + url.search + url.hash;
 }
 
